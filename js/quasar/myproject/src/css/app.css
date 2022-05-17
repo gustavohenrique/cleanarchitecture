@@ -1,0 +1,121 @@
+:root {
+  --white-smoke: #f5f5f5;
+  --blue-bell: #A1A4C9;
+  --dolphin: #676778;
+  --confetti: #DEC866;
+  --black-panther: #424242;
+  --concrete: #f3f3f3;
+  --mercury: #e8e8e8;
+  --tundora: #424242;
+}
+
+canvas {
+  outline: none;
+}
+
+.text-blue-bell {
+  color: var(--blue-bell);
+}
+
+.bg-blue-bell {
+  background-color: var(--blue-bell);
+}
+
+.text-white-smoke {
+  color: var(--white-smoke);
+}
+
+.bg-white-smoke {
+  background-color: var(--white-smoke);
+}
+
+.bg-dolphin {
+  background-color: var(--dolphin);
+}
+
+.text-dolphin {
+  color: var(--dolphin);
+}
+
+.bg-confetti {
+  background-color: var(--confetti);
+}
+
+.text-confetti {
+  color: var(--confetti);
+}
+
+.text-black-panther {
+  color: var(--black-panther);
+}
+
+.bg-black-panther {
+  background-color: var(--black-panther);
+}
+
+.bg-concrete {
+  background-color: var(--concrete);
+}
+
+.text-concrete {
+  color: var(--concrete);
+}
+
+.bg-mercury {
+  background-color: var(--mercury);
+}
+
+.text-mercury {
+  color: var(--mercury);
+}
+
+.bg-tundora {
+  background-color: var(--tundora);
+}
+
+.text-tundora {
+  color: var(--tundora);
+}
+
+.field {
+  padding-bottom: 8px;
+}
+
+.break-all, .my-break-all {
+  word-break: break-all;
+}
+
+.my-form {
+  display: block;
+  margin-top: 24px;
+}
+
+.map-delete-menu {
+  position: absolute;
+  background: white;
+  padding: 5px;
+  color: #666;
+  font-weight: bold;
+  border: 1px solid #999;
+  font-size: 14px;
+  box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3);
+  margin-top: -10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.map-delete-menu:hover {
+  background: #eee;
+}
+
+#lightPoleIcon {
+  color: black;
+  border: 1px solid grey;
+}
+
+.fiber-diagram-container {
+  height: calc(100vh - 145px);
+  overflow: hidden;
+  box-sizing: border-box;
+  background: radial-gradient(#dedede, #ffffff 85%);
+}

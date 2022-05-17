@@ -1,0 +1,68 @@
+{
+  "name": "myproject",
+  "version": "0.0.1",
+  "description": "",
+  "productName": "myproject",
+  "author": "Gustavo Henrique",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.vue ./",
+    "start": "npm run serve",
+    "serve": "NODE_ENV=local quasar dev",
+    "test": "jest",
+    "build:dev": "NODE_ENV=dev quasar build",
+    "build:docker": "NODE_ENV=production VERSION=$(git describe --tags --always) docker build . -t=myproject:$VERSION",
+    "build:prod": "NODE_ENV=production VERSION=$(git describe --tags --always) quasar build"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.27.2",
+    "core-js": "^3.6.5",
+    "frenchkiss": "^0.2.3",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.14",
+    "quasar": "^2.6.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.13.14",
+    "@babel/register": "^7.17.7",
+    "@pinia/testing": "^0.0.12",
+    "@quasar/app-webpack": "^3.0.0",
+    "@vue/test-utils": "^2.0.0-rc.21",
+    "@vue/vue3-jest": "^27.0.0",
+    "babel-jest": "^27.5.1",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.10.0",
+    "eslint-config-standard": "^17.0.0-1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^8.5.0",
+    "eslint-webpack-plugin": "^3.1.1",
+    "jest": "^27.5.1",
+    "jsdom": "^19.0.0",
+    "sinon": "^13.0.2",
+    "sinon-chai": "^3.7.0"
+  },
+  "overrides": {
+    "ejs": ">=3.1.7"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 16.14.0",
+    "npm": ">= 8.8.0",
+    "yarn": ">= 1.21.1"
+  }
+}

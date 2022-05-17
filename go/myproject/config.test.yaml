@@ -1,0 +1,23 @@
+debug: true
+log:
+  level: info
+http:
+  port: 8002
+  tls:
+    enabled: false
+grpc:
+  port: 9002
+  tls:
+    enabled: false
+store:
+  postgres:
+    url: postgres://root:root@127.0.0.1/myproject?sslmode=disable
+    max_conns: 500
+    max_conn_lifetime: 480
+    max_conn_iddle_time: 380
+  sqlite:
+    address: "file::memory:?cache=shared"
+    schema: migrations/sqlite/schema.sql
+  dgraph:
+    http: http://localhost:8080
+    grpc: localhost:9080
