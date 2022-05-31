@@ -12,9 +12,13 @@
 
 ## Quasar Framework
 
-VueJS é uma biblioteca Javascript que auxilia o desenvolvimento de interfaces web gráficas interativas. É uma tecnologia que possui curva de aprendizado baixa, quando comparada à outras soluções populares, como AngularJS e ReactJS.
+VueJS é uma biblioteca Javascript que auxilia o desenvolvimento de interfaces
+web gráficas interativas. É uma tecnologia que possui curva de aprendizado
+baixa, quando comparada à outras soluções populares, como AngularJS e ReactJS.
 
-Quasar é um framework baseado em VueJS com uma grande quantidade de componentes customizáveis e bem documentos, fornecendo agilidade e beleza para desenvolvimento de interfaces ricas.
+Quasar é um framework baseado em VueJS com uma grande quantidade de componentes
+customizáveis e bem documentos, fornecendo agilidade e beleza para
+desenvolvimento de interfaces ricas.
 
 Principais vantagens:
 
@@ -53,7 +57,6 @@ As decisões para alcançar as premissas foram:
 - Shared libs devem ser encapsuladas
 - Bus funciona como pub/sub global para comunicação entre componentes Vue
 - Suporte a múltiplos idiomas utilizando uma pasta para cada um
-
 
 ## Estrutura de pastas e diretórios
 
@@ -98,15 +101,19 @@ As decisões para alcançar as premissas foram:
 
 ### Tecnologias
 
-- **Pinia**: gerencia o estado global de um objeto. Quando o valor dele é alterado, todos os componentes com referência ao objeto são atualizados automaticamente com o novo valor.
-- **Vue Router**: gerencia as rotas da aplicação, permitindo executar funções antes ou depois de cada transição de rota.
-- **Jest**: suíte de testes.
+- **Pinia**: gerencia o estado global de um objeto. Quando o valor dele é
+- alterado, todos os componentes com referência ao objeto são atualizados
+- automaticamente com o novo valor. **Vue Router**: gerencia as rotas da
+- aplicação, permitindo executar funções antes ou depois de cada transição de
+- rota. **Jest**: suíte de testes.
 
 ### VueJS
 
-Arquivos com a extensão .vue podem conter múltiplas seções: template (HTML), script (Javascript) e style (CSS ou SCSS).
-O style definido é aplicado apenas ao template do mesmo arquivo, de forma isolada do restante da aplicação.
-As variáveis no template são delimitadas por duplas chaves. Elas são reativas e exibem automaticamente os valores alterados via Javascript.
+Arquivos com a extensão .vue podem conter múltiplas seções: template (HTML),
+script (Javascript) e style (CSS ou SCSS). O style definido é aplicado apenas
+ao template do mesmo arquivo, de forma isolada do restante da aplicação. As
+variáveis no template são delimitadas por duplas chaves. Elas são reativas e
+exibem automaticamente os valores alterados via Javascript.
 
 ```vue
 <template>
@@ -142,29 +149,56 @@ export default {
 
 ### Arquitetura
 
-O Quasar obtém as configurações do arquivo `quasar.conf.js` no momento da inicialização. Esse arquivo possui um array chamado boot contendo o nome dos arquivos que estão dentro da pasta `src/boot` e serão executados na inicialização.
+![Diagram](public/architecture.png)
 
-O que exite em boot está fazendo injeção de código no contexto do Vue. Assim é possível, por exemplo, criar um componente na pasta `src/components` e ele estará disponível, sem precisar importá-lo manualmente.
+O Quasar obtém as configurações do arquivo `quasar.conf.js` no momento da
+inicialização. Esse arquivo possui um array chamado boot contendo o nome dos
+arquivos que estão dentro da pasta `src/boot` e serão executados na
+inicialização.
 
-Em seguida, a página da rota default é renderizada. Essa rota está configurada no arquivo `src/router/route.js` e possui Layout e Page definidos.
-Pages são componentes renderizados a cada mudança de rota. As páginas precisam estar dentro de um componente de nível maior, o Layout. Um caso de uso comum é utilizar 2 layouts, um para páginas públicas e outro para páginas que apenas usuários autenticados podem acessar.
+O que exite em boot está fazendo injeção de código no contexto do Vue. Assim é
+possível, por exemplo, criar um componente na pasta `src/components` e ele
+estará disponível, sem precisar importá-lo manualmente.
 
-As pages contém os componentes interativos. Esses componentes se comunicam com os controllers para processar os eventos do usuário.
-O controller utiliza os adapters para converter um objeto Javascript do Vue para uma entity utilizada pela aplicação. Essa estrutura é enviada para o use case e depois para comunicação com o backend.
+Em seguida, a página da rota default é renderizada. Essa rota está configurada
+no arquivo `src/router/route.js` e possui Layout e Page definidos. Pages são
+componentes renderizados a cada mudança de rota. As páginas precisam estar
+dentro de um componente de nível maior, o Layout. Um caso de uso comum é
+utilizar 2 layouts, um para páginas públicas e outro para páginas que apenas
+usuários autenticados podem acessar.
 
-Tal como os componentes, os controllers também são injetados no contexto do Vue. Assim, é possível invocá-los a partir de qualquer componente Vue. A vantagem de utilizar controllers ao invés de adicionar lógicas em funções dentro do próprio componenente, é a facilidade de testar, sem precisar renderizar o componente durante a execução dos testes, aumentando a velocidade.
+As pages contém os componentes interativos. Esses componentes se comunicam com
+os controllers para processar os eventos do usuário. O controller utiliza os
+adapters para converter um objeto Javascript do Vue para uma entity utilizada
+pela aplicação. Essa estrutura é enviada para o use case e depois para
+comunicação com o backend.
 
-Os use cases são injetados nos controllers, ficando disponíveis sem necessidade de importação e permitindo o uso de mocks durante os testes unitários.
+Tal como os componentes, os controllers também são injetados no contexto do
+Vue. Assim, é possível invocá-los a partir de qualquer componente Vue. A
+vantagem de utilizar controllers ao invés de adicionar lógicas em funções
+dentro do próprio componenente, é a facilidade de testar, sem precisar
+renderizar o componente durante a execução dos testes, aumentando a velocidade.
+
+Os use cases são injetados nos controllers, ficando disponíveis sem necessidade
+de importação e permitindo o uso de mocks durante os testes unitários.
 
 ### Testes automatizados
 
-Essa arquitetura considera dois tipos de testes: unitários e de componentes.
-Os testes unitários permitem que seja testado o que uma função recebe e retorna como parâmetro. O testes de componentes são para verificar o comportamento de um componente Vue de acordo com um determinado valor. Exemplos desse tipo de teste são verificar os parâmetros recebidos por uma função quando o usuário clicar em um botão e ocultar um texto de acordo com o valor de uma variável.
+Essa arquitetura considera dois tipos de testes: unitários e de componentes. Os
+testes unitários permitem que seja testado o que uma função recebe e retorna
+como parâmetro. O testes de componentes são para verificar o comportamento de
+um componente Vue de acordo com um determinado valor. Exemplos desse tipo de
+teste são verificar os parâmetros recebidos por uma função quando o usuário
+clicar em um botão e ocultar um texto de acordo com o valor de uma variável.
 
-O testes ficam dentro de uma pasta `__tests__` no mesmo nível do código a ser testado. A convenção adotada aqui foi a extensão de arquivo `*.spec.js` para testes de componentes Vue e `*.test.js` para os unitários.
+O testes ficam dentro de uma pasta `__tests__` no mesmo nível do código a ser
+testado. A convenção adotada aqui foi a extensão de arquivo `*.spec.js` para
+testes de componentes Vue e `*.test.js` para os unitários.
 
-Os testes podem ser executados via comando `npm test` e será exibido um relatório de cobertura ao final.
-O arquivo `jest.config.js` contém as configurações para rodar os testes e nele é possível definir um threshold indicando qual o nível de cobertura aceitável.
+Os testes podem ser executados via comando `npm test` e será exibido um
+relatório de cobertura ao final. O arquivo `jest.config.js` contém as
+configurações para rodar os testes e nele é possível definir um threshold
+indicando qual o nível de cobertura aceitável.
 
 ## Convenções
 
@@ -172,8 +206,7 @@ As principais convenções adotadas foram:
 
 - Dependências injetadas recebem o prefixo `$`. Ex.: `$crypto`;
 - Nome de arquivos possuem o sufixo de acordo com seu tipo. Ex.: `userEntity.js` para um entity User;
-- Arquivos de testes de componentes recebem a extensão `.spec.js` e os demais `.test.js`;
-- Entities possuem getters e setters.
+- Arquivos de testes de componentes recebem a extensão `.spec.js` e os demais `.test.js`; Entities possuem getters e setters.
 
 ## Novo projeto
 
@@ -195,7 +228,12 @@ npm start
 
 ### Autenticação
 
-O projeto possui uma página para autenticação que deve ser modificada conforme as regras do novo projeto. Nesse exemplo, o processo de autenticação verifica se o email existe, obtendo os dados do usuário como nome e data de criação da conta. Se existir, exibe o campo de senha e verifica se email e senha estão corretos. Caso o email não exista, solicita uma senha, efetua o cadastro e autentica o usuário.
+O projeto possui uma página para autenticação que deve ser modificada conforme
+as regras do novo projeto. Nesse exemplo, o processo de autenticação verifica
+se o email existe, obtendo os dados do usuário como nome e data de criação da
+conta. Se existir, exibe o campo de senha e verifica se email e senha estão
+corretos. Caso o email não exista, solicita uma senha, efetua o cadastro e
+autentica o usuário.
 
 As seguintes premissas foram adotadas para fortalecer a segurança:
 

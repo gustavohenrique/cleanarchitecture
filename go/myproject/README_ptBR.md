@@ -13,6 +13,8 @@
 
 ## Arquitetura
 
+![Diagram](assets/architecture.png)
+
 Arquitetura de software é uma estrutura que suporta os casos de uso do projeto
 com o objetivo de facilitar a manutenção do código.
 A arquitetura criada aqui foi inspirada em Clean Architecture e Domain-Driven
@@ -85,41 +87,39 @@ As decisões para alcançar as premissas foram:
 
 #### Echo Framework
 
-Echo é uma framework para desenvolvimento web que facilita a criação de APIs Rest e renderização de templates HTML.  
-Suas principais características são:
+Echo é uma framework para desenvolvimento web que facilita a criação de APIs
+Rest e renderização de templates HTML.  Suas principais características são:
 
-- Router otimizado com zero alocação de memória dinâmica
-- Organização de APIs em grupos
-- Suporte a HTTP/2
-- Fácil de adicionar middlewares
-- Data binding para o payload de request HTTP
+- Router otimizado com zero alocação de memória dinâmica Organização de APIs em grupos
+- Suporte a HTTP/2 Fácil de adicionar middlewares Data binding para o payload de request HTTP
 - Renderização de templates
 
 #### gRPC (Google Remote Procedure Call)
 
 O gRPC é um protocolo de comunicação criado pelo Google no qual serviços
-distribuídos podem se comunicar sem necessidade de entendimento da camada de rede.  
-Os dados são transmitidos pela rede em formato binário, diferente do HTTP que utiliza texto puro.  
+distribuídos podem se comunicar sem necessidade de entendimento da camada de
+rede.  Os dados são transmitidos pela rede em formato binário, diferente do
+HTTP que utiliza texto puro.  
 
 Esse protocolo utiliza o modelo client/server. O desenvolvedor especifica em um
 arquivo texto, utilizando uma sintaxe chamada Protobuf, quais serviços serão
 expostos no server.  O arquivo deve ser disponibilizado para que outros
 desenvolvedores possam utilizar o compilador `protoc` para ler essas definições
-e criar um **stub** para a linguagem de programação utilizada pelo client.  
-Por fim, o client só precisa importar o stub como uma biblioteca de terceiros e
+e criar um **stub** para a linguagem de programação utilizada pelo client.  Por
+fim, o client só precisa importar o stub como uma biblioteca de terceiros e
 invocar as funções dos serviços expostos pelo server.
 
 #### gRPC Web
 
-O gRPC Web é uma implementação Javascript de gRPC client para browsers.  
-Ele é totalmente compatível com gRPC servers rodando em Go. Para outras linguagens é
+O gRPC Web é uma implementação Javascript de gRPC client para browsers.  Ele é
+totalmente compatível com gRPC servers rodando em Go. Para outras linguagens é
 necessário adicionar o proxy Envoy para traduzir a requisição enviada do
 browser antes de encaminha-la para o server.
 
 Basta importar os stubs gerados para Javascript e chamar as respectivas funções
 de acordo com o serviço exposto. O gRPC Web converte os dados para binário e
-envia usando HTTP POST. O server em Go roda um servidor HTTP que intercepta
-as requisições desse tipo e trata como requisições gRPC.
+envia usando HTTP POST. O server em Go roda um servidor HTTP que intercepta as
+requisições desse tipo e trata como requisições gRPC.
 
 Exemplo de um arquivo com definições de serviços escrito em Protobuf:
 
@@ -162,14 +162,14 @@ As principais convenções adotadas foram:
 - Nome de arquivos possuem o sufixo de acordo com seu tipo. Ex.: `TodoService.go` para um service
 - Arquivos de testes com sufixo `_test` no nome do arquivo e no package, localizados no mesmo diretório das implementações
 - Configuração via arquivo YAML por ambiente
-- Suporte a múltiplos banco de dados
-- Customização de erros para facilitar o retorno dos status code do HTTP e gRPC
+- Suporte a múltiplos banco de dados Customização de erros para facilitar o retorno dos status code do HTTP e gRPC
 
 ## Novo projeto
 
 ### Primeiros passos
 
-Clone o repositório desse exemplo, substitua `gustavohenrique/myproject` pelo nome real da empresa e projeto.
+Clone o repositório desse exemplo, substitua `gustavohenrique/myproject` pelo
+nome real da empresa e projeto.
 
 ```sh
 git clone <myproject>
