@@ -7,6 +7,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/google/uuid v1.3.0
 	github.com/gustavohenrique/coolconf v1.0.2
+	github.com/gustavohenrique/gometrics v0.0.9
 	github.com/improbable-eng/grpc-web v0.15.0
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/jmoiron/sqlx v1.3.5

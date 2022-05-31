@@ -17,6 +17,7 @@ import (
 	"myproject/src/services"
 	"myproject/src/shared/conf"
 	log "myproject/src/shared/logger"
+	"myproject/src/shared/metrics"
 )
 
 type HttpServer struct {
@@ -50,6 +51,9 @@ func (s *HttpServer) Configure(params interface{}) {
 	e := s.rawServer
 	e.GET("/health", func(c echo.Context) error {
 		return c.String(http.StatusOK, "ok")
+	})
+	e.GET("/metrics", func(c echo.Context) error {
+		return c.String(http.StatusOK, metrics.Collect())
 	})
 	s.router.ServeEmbedWebPage(e, assets.NewWebPage())
 	s.router.ServeEmbedStaticFiles(e, assets.NewStaticFile())

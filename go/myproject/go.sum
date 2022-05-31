@@ -173,6 +173,8 @@ github.com/grpc-ecosystem/grpc-gateway v1.9.5/go.mod h1:vNeuVxBJEsws4ogUvrchl83t
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/gustavohenrique/coolconf v1.0.2 h1:q+lGg//9ZsOfiMxVOqsbGS5nygRKAb8/PKXwCfM9vpg=
 github.com/gustavohenrique/coolconf v1.0.2/go.mod h1:DtWUrSolMVPfflJ3XqKzMz1go3k8P47U7342zT+9mRI=
+github.com/gustavohenrique/gometrics v0.0.9 h1:zTDI8cgsptfYyj5U/KZk1Eg2viV+l+fzninfvK2tg6g=
+github.com/gustavohenrique/gometrics v0.0.9/go.mod h1:FsVgOPhmhJc0OS06UvWOqATKlQiofloedv1IfK0stG8=
 github.com/hashicorp/consul/api v1.3.0/go.mod h1:MmDNSzIMUjNpY/mQ398R4bk2FnqQLoPndWW5VkKPlCE=
 github.com/hashicorp/consul/sdk v0.3.0/go.mod h1:VKf9jXwCTEY1QZP2MOLRhb5i/I/ssyNV1vwHyQBF0x8=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
