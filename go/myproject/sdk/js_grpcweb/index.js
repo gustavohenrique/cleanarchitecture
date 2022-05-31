@@ -9,7 +9,10 @@ class SDK {
 
   getTodoClient() {
     const todoClient = this._todoClient
-    const metadata = this.getHeaders()
+    const metadata = {
+      ...this.getHeaders(),
+      ...this.getDeadline()
+    }
     return {
       ...todoClient,
       search: req => todoClient.search(req, metadata)
@@ -20,6 +23,14 @@ class SDK {
     const { token } = this._config
     return {
       'X-CSRF-Token': token
+    }
+  }
+
+  getDeadline() {
+    const now = new Date();
+    now.setSeconds(now.getSeconds() + this._config.deadline || 10)
+    return {
+      deadline: now.getTime()
     }
   }
 }

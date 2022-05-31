@@ -5,6 +5,7 @@ describe('#Search', () => {
   test('Should fetch all TODO items', async () => {
     const config = {
       token: 'XPTO-123',
+        deadline: 5, // 5s timeout
       url: 'http://localhost:8001'
     }
     const sdk = new SDK(config)

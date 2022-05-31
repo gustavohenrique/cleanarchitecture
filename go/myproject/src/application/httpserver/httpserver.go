@@ -100,6 +100,7 @@ func (s *HttpServer) addMiddlewares() {
 		ExposeHeaders: []string{
 			"grpc-status",
 			"grpc-message",
+			"grpc-timeout",
 			"content-length",
 			"X-CSRF-Token",
 		},
@@ -116,6 +117,7 @@ func (s *HttpServer) addMiddlewares() {
 			"X-grpc-web",
 			"grpc-status",
 			"grpc-message",
+			"grpc-timeout",
 			"Content-Type",
 			"Content-Length",
 			"User-Agent",
