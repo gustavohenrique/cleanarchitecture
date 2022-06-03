@@ -12,7 +12,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const { configure } = require('quasar/wrappers')
 
 module.exports = configure(function (ctx) {
-  require('dotenv').config({ path: require('path').join(__dirname, `./.env.${process.env.NODE_ENV}`)})
+  require('dotenv').config({ path: require('path').join(__dirname, `./.env.${process.env.NODE_ENV}`) })
   return {
     supportTS: false,
     // https://v2.quasar.dev/quasar-cli-webpack/prefetch-feature

@@ -8,13 +8,15 @@ import (
 	"os"
 	"path/filepath"
 
+	"generator/assets"
 	"generator/src/fileutils"
 	"generator/src/models"
 )
 
 func main() {
 	http.HandleFunc("/download", download)
-	http.HandleFunc("/", generate)
+	http.HandleFunc("/generate", generate)
+	http.Handle("/", assets.New().GetFS())
 	port := getPortOrDefault("8003")
 	log.Println("Listening", port)
 	log.Fatal(http.ListenAndServe(port, nil))

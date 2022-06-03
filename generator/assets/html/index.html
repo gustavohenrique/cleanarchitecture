@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Clean Architecture Generator</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+body.screen--xs .my-card {
+  width: 90vw;
+}
+body.screen--sm .my-card {
+  width: 60vw;
+}
+.my-card {
+  width: 500px;
+  overflow-y: hidden;
+}
+    </style>
+  </head>
+  <body>
+    <div id="q-app">
+      <q-layout view="hHh lpR fFf">
+        <q-header class="bg-primary text-white">
+          <q-toolbar>
+            <q-toolbar-title>
+              {{ title }}
+            </q-toolbar-title>
+          </q-toolbar>
+        </q-header>
+        <q-page-container>
+          <q-page class="flex flex-center my-page">
+            <my-form>
+            </my-form>
+          </q-page>
+        </q-page-container>
+      </q-layout>
+    </div>
+
+    <template id="my-form">
+      <q-form ref="form" @submit.prevent="generate">
+        <q-card square class="q-pa-md no-border-radius my-card">
+          <q-card-section>
+            <q-radio
+              v-model="language"
+              checked-icon="task_alt"
+              unchecked-icon="panorama_fish_eye"
+              dense
+              val="golang"
+              label="Golang"
+              class="q-pr-lg"
+            >
+            </q-radio>
+            <q-radio
+              v-model="language"
+              checked-icon="task_alt"
+              unchecked-icon="panorama_fish_eye"
+              dense
+              val="javascript"
+              label="Javascript"
+            >
+            </q-radio>
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="projectName"
+              :label="label"
+              stack-label
+              filled
+              square
+              bg-color="blue-grey-1"
+              :rules="[
+              val => !!val || 'This filed is required',
+              val => val.trim().length > 2 || 'At least 3 chars'
+              ]"
+              maxlength="100"
+            >
+            </q-input>
+          </q-card-section>
+          <q-card-section>
+            <q-separator class="q-mb-md"></q-separator>
+            <div class="flex row q-gutter-md justify-align">
+              <q-btn
+                :disable="!!downloadUrl"
+                :loading="loading"
+                unelevated
+                square
+                type="submit"
+                color="primary"
+                label="Generate"
+                class="no-border-radius"
+              >
+              </q-btn> 
+              <q-btn
+                v-if="downloadUrl"
+                unelevated
+                square
+                type="href"
+                :href="downloadUrl"
+                target="_blank"
+                color="positive"
+                label="Download"
+                class="col no-border-radius"
+              >
+              </q-btn> 
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-form>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.umd.prod.js"></script>
+    <script>
+      const MyForm = {
+        template: '#my-form',
+        data() {
+          return {
+            loading: false,
+            downloadUrl: '',
+            projectName: 'myproject',
+            language: 'golang'
+          }
+        },
+        computed: {
+          label() {
+            if (this.language === 'golang') {
+              return 'Module name'
+            }
+            return 'Project name'
+          }
+        },
+        methods: {
+          generate() {
+            const form = this.$refs.form
+            form.validate().then(success => {
+              if (success) {
+                form.resetValidation()
+                const projectName = this.projectName
+                const language = this.language
+                const req = {
+                  language: language,
+                  placeholders: {
+                    ProjectName: projectName
+                  }
+                };
+                const options = {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                  },
+                  body: JSON.stringify(req)
+                };
+
+                this.loading = true;
+                fetch('/generate', options)
+                  .then(res => res.json())
+                  .then(data => {
+                    this.downloadUrl = data.message; 
+                    this.loading = false;
+                  })
+                  .catch(err => {
+                    console.error('Failed to generate:', err)
+                    this.loading = false;
+                  });
+              }
+            })
+          }
+        }
+      };
+      const app = Vue.createApp({
+        setup() {
+          return {
+            title: 'Clean Architecture Generator'
+          }
+        }
+      });
+      app.use(Quasar);
+      app.component('MyForm', MyForm);
+      app.mount('#q-app');
+    </script>
+  </body>
+</html>
