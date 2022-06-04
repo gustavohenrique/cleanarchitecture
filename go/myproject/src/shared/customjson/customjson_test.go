@@ -3,7 +3,7 @@ package customjson_test
 import (
 	"testing"
 
-	"myproject/src/shared/customjson"
+	"{{ .ProjectName }}/src/shared/customjson"
 )
 
 func TestMarshalJsonTag(t *testing.T) {

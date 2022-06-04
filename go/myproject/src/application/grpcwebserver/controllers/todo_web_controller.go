@@ -3,10 +3,10 @@ package controllers
 import (
 	"context"
 
-	"myproject/src/adapters"
-	"myproject/src/interfaces"
-	pb "myproject/src/proto"
-	"myproject/src/services"
+	"{{ .ProjectName }}/src/adapters"
+	"{{ .ProjectName }}/src/interfaces"
+	pb "{{ .ProjectName }}/src/proto"
+	"{{ .ProjectName }}/src/services"
 )
 
 type TodoWebController struct {

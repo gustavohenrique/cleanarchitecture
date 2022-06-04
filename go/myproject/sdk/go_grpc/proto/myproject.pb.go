@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        v3.18.1
-// source: myproject.proto
+// source: {{ .ProjectName }}.proto
 
 package proto
 
@@ -34,7 +34,7 @@ type TodoItem struct {
 func (x *TodoItem) Reset() {
 	*x = TodoItem{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_myproject_proto_msgTypes[0]
+		mi := &file_{{ .ProjectName }}_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -47,7 +47,7 @@ func (x *TodoItem) String() string {
 func (*TodoItem) ProtoMessage() {}
 
 func (x *TodoItem) ProtoReflect() protoreflect.Message {
-	mi := &file_myproject_proto_msgTypes[0]
+	mi := &file_{{ .ProjectName }}_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +60,7 @@ func (x *TodoItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TodoItem.ProtoReflect.Descriptor instead.
 func (*TodoItem) Descriptor() ([]byte, []int) {
-	return file_myproject_proto_rawDescGZIP(), []int{0}
+	return file_{{ .ProjectName }}_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *TodoItem) GetId() string {
@@ -100,7 +100,7 @@ type Nothing struct {
 func (x *Nothing) Reset() {
 	*x = Nothing{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_myproject_proto_msgTypes[1]
+		mi := &file_{{ .ProjectName }}_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -113,7 +113,7 @@ func (x *Nothing) String() string {
 func (*Nothing) ProtoMessage() {}
 
 func (x *Nothing) ProtoReflect() protoreflect.Message {
-	mi := &file_myproject_proto_msgTypes[1]
+	mi := &file_{{ .ProjectName }}_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -126,7 +126,7 @@ func (x *Nothing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Nothing.ProtoReflect.Descriptor instead.
 func (*Nothing) Descriptor() ([]byte, []int) {
-	return file_myproject_proto_rawDescGZIP(), []int{1}
+	return file_{{ .ProjectName }}_proto_rawDescGZIP(), []int{1}
 }
 
 type SearchRequest struct {
@@ -142,7 +142,7 @@ type SearchRequest struct {
 func (x *SearchRequest) Reset() {
 	*x = SearchRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_myproject_proto_msgTypes[2]
+		mi := &file_{{ .ProjectName }}_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -155,7 +155,7 @@ func (x *SearchRequest) String() string {
 func (*SearchRequest) ProtoMessage() {}
 
 func (x *SearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_myproject_proto_msgTypes[2]
+	mi := &file_{{ .ProjectName }}_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +168,7 @@ func (x *SearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchRequest.ProtoReflect.Descriptor instead.
 func (*SearchRequest) Descriptor() ([]byte, []int) {
-	return file_myproject_proto_rawDescGZIP(), []int{2}
+	return file_{{ .ProjectName }}_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *SearchRequest) GetPage() int32 {
@@ -203,7 +203,7 @@ type SearchResponse struct {
 func (x *SearchResponse) Reset() {
 	*x = SearchResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_myproject_proto_msgTypes[3]
+		mi := &file_{{ .ProjectName }}_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -216,7 +216,7 @@ func (x *SearchResponse) String() string {
 func (*SearchResponse) ProtoMessage() {}
 
 func (x *SearchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_myproject_proto_msgTypes[3]
+	mi := &file_{{ .ProjectName }}_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -229,7 +229,7 @@ func (x *SearchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchResponse.ProtoReflect.Descriptor instead.
 func (*SearchResponse) Descriptor() ([]byte, []int) {
-	return file_myproject_proto_rawDescGZIP(), []int{3}
+	return file_{{ .ProjectName }}_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SearchResponse) GetTodoItems() []*TodoItem {
@@ -239,9 +239,9 @@ func (x *SearchResponse) GetTodoItems() []*TodoItem {
 	return nil
 }
 
-var File_myproject_proto protoreflect.FileDescriptor
+var File_{{ .ProjectName }}_proto protoreflect.FileDescriptor
 
-var file_myproject_proto_rawDesc = []byte{
+var file_{{ .ProjectName }}_proto_rawDesc = []byte{
 	0x0a, 0x0f, 0x6d, 0x79, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x12, 0x09, 0x6d, 0x79, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x68, 0x0a, 0x08,
 	0x54, 0x6f, 0x64, 0x6f, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
@@ -280,34 +280,34 @@ var file_myproject_proto_rawDesc = []byte{
 }
 
 var (
-	file_myproject_proto_rawDescOnce sync.Once
-	file_myproject_proto_rawDescData = file_myproject_proto_rawDesc
+	file_{{ .ProjectName }}_proto_rawDescOnce sync.Once
+	file_{{ .ProjectName }}_proto_rawDescData = file_{{ .ProjectName }}_proto_rawDesc
 )
 
-func file_myproject_proto_rawDescGZIP() []byte {
-	file_myproject_proto_rawDescOnce.Do(func() {
-		file_myproject_proto_rawDescData = protoimpl.X.CompressGZIP(file_myproject_proto_rawDescData)
+func file_{{ .ProjectName }}_proto_rawDescGZIP() []byte {
+	file_{{ .ProjectName }}_proto_rawDescOnce.Do(func() {
+		file_{{ .ProjectName }}_proto_rawDescData = protoimpl.X.CompressGZIP(file_{{ .ProjectName }}_proto_rawDescData)
 	})
-	return file_myproject_proto_rawDescData
+	return file_{{ .ProjectName }}_proto_rawDescData
 }
 
-var file_myproject_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_myproject_proto_goTypes = []interface{}{
-	(*TodoItem)(nil),       // 0: myproject.TodoItem
-	(*Nothing)(nil),        // 1: myproject.Nothing
-	(*SearchRequest)(nil),  // 2: myproject.SearchRequest
-	(*SearchResponse)(nil), // 3: myproject.SearchResponse
+var file_{{ .ProjectName }}_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_{{ .ProjectName }}_proto_goTypes = []interface{}{
+	(*TodoItem)(nil),       // 0: {{ .ProjectName }}.TodoItem
+	(*Nothing)(nil),        // 1: {{ .ProjectName }}.Nothing
+	(*SearchRequest)(nil),  // 2: {{ .ProjectName }}.SearchRequest
+	(*SearchResponse)(nil), // 3: {{ .ProjectName }}.SearchResponse
 }
-var file_myproject_proto_depIdxs = []int32{
-	0, // 0: myproject.SearchResponse.todoItems:type_name -> myproject.TodoItem
-	2, // 1: myproject.TodoRpc.Search:input_type -> myproject.SearchRequest
-	0, // 2: myproject.TodoRpc.Create:input_type -> myproject.TodoItem
-	0, // 3: myproject.TodoRpc.Update:input_type -> myproject.TodoItem
-	0, // 4: myproject.TodoRpc.Remove:input_type -> myproject.TodoItem
-	3, // 5: myproject.TodoRpc.Search:output_type -> myproject.SearchResponse
-	0, // 6: myproject.TodoRpc.Create:output_type -> myproject.TodoItem
-	0, // 7: myproject.TodoRpc.Update:output_type -> myproject.TodoItem
-	1, // 8: myproject.TodoRpc.Remove:output_type -> myproject.Nothing
+var file_{{ .ProjectName }}_proto_depIdxs = []int32{
+	0, // 0: {{ .ProjectName }}.SearchResponse.todoItems:type_name -> {{ .ProjectName }}.TodoItem
+	2, // 1: {{ .ProjectName }}.TodoRpc.Search:input_type -> {{ .ProjectName }}.SearchRequest
+	0, // 2: {{ .ProjectName }}.TodoRpc.Create:input_type -> {{ .ProjectName }}.TodoItem
+	0, // 3: {{ .ProjectName }}.TodoRpc.Update:input_type -> {{ .ProjectName }}.TodoItem
+	0, // 4: {{ .ProjectName }}.TodoRpc.Remove:input_type -> {{ .ProjectName }}.TodoItem
+	3, // 5: {{ .ProjectName }}.TodoRpc.Search:output_type -> {{ .ProjectName }}.SearchResponse
+	0, // 6: {{ .ProjectName }}.TodoRpc.Create:output_type -> {{ .ProjectName }}.TodoItem
+	0, // 7: {{ .ProjectName }}.TodoRpc.Update:output_type -> {{ .ProjectName }}.TodoItem
+	1, // 8: {{ .ProjectName }}.TodoRpc.Remove:output_type -> {{ .ProjectName }}.Nothing
 	5, // [5:9] is the sub-list for method output_type
 	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -315,13 +315,13 @@ var file_myproject_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_myproject_proto_init() }
-func file_myproject_proto_init() {
-	if File_myproject_proto != nil {
+func init() { file_{{ .ProjectName }}_proto_init() }
+func file_{{ .ProjectName }}_proto_init() {
+	if File_{{ .ProjectName }}_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_myproject_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_{{ .ProjectName }}_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TodoItem); i {
 			case 0:
 				return &v.state
@@ -333,7 +333,7 @@ func file_myproject_proto_init() {
 				return nil
 			}
 		}
-		file_myproject_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_{{ .ProjectName }}_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Nothing); i {
 			case 0:
 				return &v.state
@@ -345,7 +345,7 @@ func file_myproject_proto_init() {
 				return nil
 			}
 		}
-		file_myproject_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_{{ .ProjectName }}_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SearchRequest); i {
 			case 0:
 				return &v.state
@@ -357,7 +357,7 @@ func file_myproject_proto_init() {
 				return nil
 			}
 		}
-		file_myproject_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_{{ .ProjectName }}_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SearchResponse); i {
 			case 0:
 				return &v.state
@@ -374,18 +374,18 @@ func file_myproject_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_myproject_proto_rawDesc,
+			RawDescriptor: file_{{ .ProjectName }}_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_myproject_proto_goTypes,
-		DependencyIndexes: file_myproject_proto_depIdxs,
-		MessageInfos:      file_myproject_proto_msgTypes,
+		GoTypes:           file_{{ .ProjectName }}_proto_goTypes,
+		DependencyIndexes: file_{{ .ProjectName }}_proto_depIdxs,
+		MessageInfos:      file_{{ .ProjectName }}_proto_msgTypes,
 	}.Build()
-	File_myproject_proto = out.File
-	file_myproject_proto_rawDesc = nil
-	file_myproject_proto_goTypes = nil
-	file_myproject_proto_depIdxs = nil
+	File_{{ .ProjectName }}_proto = out.File
+	file_{{ .ProjectName }}_proto_rawDesc = nil
+	file_{{ .ProjectName }}_proto_goTypes = nil
+	file_{{ .ProjectName }}_proto_depIdxs = nil
 }

@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	"myproject/src/entities"
+	"{{ .ProjectName }}/src/entities"
 )
 
 type ITodoRepository interface {

@@ -4,13 +4,13 @@ import (
 	"context"
 	"testing"
 
-	"myproject/src/application/httpserver"
-	"myproject/src/entities"
-	"myproject/src/infra/sqlite"
-	"myproject/src/shared/test"
-	"myproject/src/shared/test/assert"
-	"myproject/src/shared/test/httpclient"
-	"myproject/src/valueobjects"
+	"{{ .ProjectName }}/src/application/httpserver"
+	"{{ .ProjectName }}/src/entities"
+	"{{ .ProjectName }}/src/infra/sqlite"
+	"{{ .ProjectName }}/src/shared/test"
+	"{{ .ProjectName }}/src/shared/test/assert"
+	"{{ .ProjectName }}/src/shared/test/httpclient"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 func TestReadAll(ts *testing.T) {

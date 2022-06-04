@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for myproject
+ * @fileoverview gRPC-Web generated client stub for {{ .ProjectName }}
  * @enhanceable
  * @public
  */
@@ -16,7 +16,7 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 const proto = {};
-proto.myproject = require('./myproject_pb.js');
+proto.{{ .ProjectName }} = require('./{{ .ProjectName }}_pb.js');
 
 /**
  * @param {string} hostname
@@ -26,7 +26,7 @@ proto.myproject = require('./myproject_pb.js');
  * @struct
  * @final
  */
-proto.myproject.TodoRpcClient =
+proto.{{ .ProjectName }}.TodoRpcClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'binary';
@@ -52,7 +52,7 @@ proto.myproject.TodoRpcClient =
  * @struct
  * @final
  */
-proto.myproject.TodoRpcPromiseClient =
+proto.{{ .ProjectName }}.TodoRpcPromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'binary';
@@ -73,39 +73,39 @@ proto.myproject.TodoRpcPromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.myproject.SearchRequest,
- *   !proto.myproject.SearchResponse>}
+ *   !proto.{{ .ProjectName }}.SearchRequest,
+ *   !proto.{{ .ProjectName }}.SearchResponse>}
  */
 const methodDescriptor_TodoRpc_Search = new grpc.web.MethodDescriptor(
-  '/myproject.TodoRpc/Search',
+  '/{{ .ProjectName }}.TodoRpc/Search',
   grpc.web.MethodType.UNARY,
-  proto.myproject.SearchRequest,
-  proto.myproject.SearchResponse,
+  proto.{{ .ProjectName }}.SearchRequest,
+  proto.{{ .ProjectName }}.SearchResponse,
   /**
-   * @param {!proto.myproject.SearchRequest} request
+   * @param {!proto.{{ .ProjectName }}.SearchRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.myproject.SearchResponse.deserializeBinary
+  proto.{{ .ProjectName }}.SearchResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.myproject.SearchRequest} request The
+ * @param {!proto.{{ .ProjectName }}.SearchRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.myproject.SearchResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.{{ .ProjectName }}.SearchResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.myproject.SearchResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.{{ .ProjectName }}.SearchResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.myproject.TodoRpcClient.prototype.search =
+proto.{{ .ProjectName }}.TodoRpcClient.prototype.search =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/myproject.TodoRpc/Search',
+      '/{{ .ProjectName }}.TodoRpc/Search',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Search,
@@ -114,17 +114,17 @@ proto.myproject.TodoRpcClient.prototype.search =
 
 
 /**
- * @param {!proto.myproject.SearchRequest} request The
+ * @param {!proto.{{ .ProjectName }}.SearchRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.myproject.SearchResponse>}
+ * @return {!Promise<!proto.{{ .ProjectName }}.SearchResponse>}
  *     Promise that resolves to the response
  */
-proto.myproject.TodoRpcPromiseClient.prototype.search =
+proto.{{ .ProjectName }}.TodoRpcPromiseClient.prototype.search =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/myproject.TodoRpc/Search',
+      '/{{ .ProjectName }}.TodoRpc/Search',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Search);
@@ -134,39 +134,39 @@ proto.myproject.TodoRpcPromiseClient.prototype.search =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.myproject.TodoItem,
- *   !proto.myproject.TodoItem>}
+ *   !proto.{{ .ProjectName }}.TodoItem,
+ *   !proto.{{ .ProjectName }}.TodoItem>}
  */
 const methodDescriptor_TodoRpc_Create = new grpc.web.MethodDescriptor(
-  '/myproject.TodoRpc/Create',
+  '/{{ .ProjectName }}.TodoRpc/Create',
   grpc.web.MethodType.UNARY,
-  proto.myproject.TodoItem,
-  proto.myproject.TodoItem,
+  proto.{{ .ProjectName }}.TodoItem,
+  proto.{{ .ProjectName }}.TodoItem,
   /**
-   * @param {!proto.myproject.TodoItem} request
+   * @param {!proto.{{ .ProjectName }}.TodoItem} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.myproject.TodoItem.deserializeBinary
+  proto.{{ .ProjectName }}.TodoItem.deserializeBinary
 );
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.myproject.TodoItem)}
+ * @param {function(?grpc.web.RpcError, ?proto.{{ .ProjectName }}.TodoItem)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.myproject.TodoItem>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.{{ .ProjectName }}.TodoItem>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.myproject.TodoRpcClient.prototype.create =
+proto.{{ .ProjectName }}.TodoRpcClient.prototype.create =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/myproject.TodoRpc/Create',
+      '/{{ .ProjectName }}.TodoRpc/Create',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Create,
@@ -175,17 +175,17 @@ proto.myproject.TodoRpcClient.prototype.create =
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.myproject.TodoItem>}
+ * @return {!Promise<!proto.{{ .ProjectName }}.TodoItem>}
  *     Promise that resolves to the response
  */
-proto.myproject.TodoRpcPromiseClient.prototype.create =
+proto.{{ .ProjectName }}.TodoRpcPromiseClient.prototype.create =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/myproject.TodoRpc/Create',
+      '/{{ .ProjectName }}.TodoRpc/Create',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Create);
@@ -195,39 +195,39 @@ proto.myproject.TodoRpcPromiseClient.prototype.create =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.myproject.TodoItem,
- *   !proto.myproject.TodoItem>}
+ *   !proto.{{ .ProjectName }}.TodoItem,
+ *   !proto.{{ .ProjectName }}.TodoItem>}
  */
 const methodDescriptor_TodoRpc_Update = new grpc.web.MethodDescriptor(
-  '/myproject.TodoRpc/Update',
+  '/{{ .ProjectName }}.TodoRpc/Update',
   grpc.web.MethodType.UNARY,
-  proto.myproject.TodoItem,
-  proto.myproject.TodoItem,
+  proto.{{ .ProjectName }}.TodoItem,
+  proto.{{ .ProjectName }}.TodoItem,
   /**
-   * @param {!proto.myproject.TodoItem} request
+   * @param {!proto.{{ .ProjectName }}.TodoItem} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.myproject.TodoItem.deserializeBinary
+  proto.{{ .ProjectName }}.TodoItem.deserializeBinary
 );
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.myproject.TodoItem)}
+ * @param {function(?grpc.web.RpcError, ?proto.{{ .ProjectName }}.TodoItem)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.myproject.TodoItem>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.{{ .ProjectName }}.TodoItem>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.myproject.TodoRpcClient.prototype.update =
+proto.{{ .ProjectName }}.TodoRpcClient.prototype.update =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/myproject.TodoRpc/Update',
+      '/{{ .ProjectName }}.TodoRpc/Update',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Update,
@@ -236,17 +236,17 @@ proto.myproject.TodoRpcClient.prototype.update =
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.myproject.TodoItem>}
+ * @return {!Promise<!proto.{{ .ProjectName }}.TodoItem>}
  *     Promise that resolves to the response
  */
-proto.myproject.TodoRpcPromiseClient.prototype.update =
+proto.{{ .ProjectName }}.TodoRpcPromiseClient.prototype.update =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/myproject.TodoRpc/Update',
+      '/{{ .ProjectName }}.TodoRpc/Update',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Update);
@@ -256,39 +256,39 @@ proto.myproject.TodoRpcPromiseClient.prototype.update =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.myproject.TodoItem,
- *   !proto.myproject.Nothing>}
+ *   !proto.{{ .ProjectName }}.TodoItem,
+ *   !proto.{{ .ProjectName }}.Nothing>}
  */
 const methodDescriptor_TodoRpc_Remove = new grpc.web.MethodDescriptor(
-  '/myproject.TodoRpc/Remove',
+  '/{{ .ProjectName }}.TodoRpc/Remove',
   grpc.web.MethodType.UNARY,
-  proto.myproject.TodoItem,
-  proto.myproject.Nothing,
+  proto.{{ .ProjectName }}.TodoItem,
+  proto.{{ .ProjectName }}.Nothing,
   /**
-   * @param {!proto.myproject.TodoItem} request
+   * @param {!proto.{{ .ProjectName }}.TodoItem} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.myproject.Nothing.deserializeBinary
+  proto.{{ .ProjectName }}.Nothing.deserializeBinary
 );
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.myproject.Nothing)}
+ * @param {function(?grpc.web.RpcError, ?proto.{{ .ProjectName }}.Nothing)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.myproject.Nothing>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.{{ .ProjectName }}.Nothing>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.myproject.TodoRpcClient.prototype.remove =
+proto.{{ .ProjectName }}.TodoRpcClient.prototype.remove =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/myproject.TodoRpc/Remove',
+      '/{{ .ProjectName }}.TodoRpc/Remove',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Remove,
@@ -297,22 +297,22 @@ proto.myproject.TodoRpcClient.prototype.remove =
 
 
 /**
- * @param {!proto.myproject.TodoItem} request The
+ * @param {!proto.{{ .ProjectName }}.TodoItem} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.myproject.Nothing>}
+ * @return {!Promise<!proto.{{ .ProjectName }}.Nothing>}
  *     Promise that resolves to the response
  */
-proto.myproject.TodoRpcPromiseClient.prototype.remove =
+proto.{{ .ProjectName }}.TodoRpcPromiseClient.prototype.remove =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/myproject.TodoRpc/Remove',
+      '/{{ .ProjectName }}.TodoRpc/Remove',
       request,
       metadata || {},
       methodDescriptor_TodoRpc_Remove);
 };
 
 
-module.exports = proto.myproject;
+module.exports = proto.{{ .ProjectName }};
 

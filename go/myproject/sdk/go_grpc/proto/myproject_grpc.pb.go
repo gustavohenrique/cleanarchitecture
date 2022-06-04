@@ -34,7 +34,7 @@ func NewTodoRpcClient(cc grpc.ClientConnInterface) TodoRpcClient {
 
 func (c *todoRpcClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
 	out := new(SearchResponse)
-	err := c.cc.Invoke(ctx, "/myproject.TodoRpc/Search", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/{{ .ProjectName }}.TodoRpc/Search", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (c *todoRpcClient) Search(ctx context.Context, in *SearchRequest, opts ...g
 
 func (c *todoRpcClient) Create(ctx context.Context, in *TodoItem, opts ...grpc.CallOption) (*TodoItem, error) {
 	out := new(TodoItem)
-	err := c.cc.Invoke(ctx, "/myproject.TodoRpc/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/{{ .ProjectName }}.TodoRpc/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (c *todoRpcClient) Create(ctx context.Context, in *TodoItem, opts ...grpc.C
 
 func (c *todoRpcClient) Update(ctx context.Context, in *TodoItem, opts ...grpc.CallOption) (*TodoItem, error) {
 	out := new(TodoItem)
-	err := c.cc.Invoke(ctx, "/myproject.TodoRpc/Update", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/{{ .ProjectName }}.TodoRpc/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (c *todoRpcClient) Update(ctx context.Context, in *TodoItem, opts ...grpc.C
 
 func (c *todoRpcClient) Remove(ctx context.Context, in *TodoItem, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := c.cc.Invoke(ctx, "/myproject.TodoRpc/Remove", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/{{ .ProjectName }}.TodoRpc/Remove", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func _TodoRpc_Search_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/myproject.TodoRpc/Search",
+		FullMethod: "/{{ .ProjectName }}.TodoRpc/Search",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoRpcServer).Search(ctx, req.(*SearchRequest))
@@ -136,7 +136,7 @@ func _TodoRpc_Create_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/myproject.TodoRpc/Create",
+		FullMethod: "/{{ .ProjectName }}.TodoRpc/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoRpcServer).Create(ctx, req.(*TodoItem))
@@ -154,7 +154,7 @@ func _TodoRpc_Update_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/myproject.TodoRpc/Update",
+		FullMethod: "/{{ .ProjectName }}.TodoRpc/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoRpcServer).Update(ctx, req.(*TodoItem))
@@ -172,7 +172,7 @@ func _TodoRpc_Remove_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/myproject.TodoRpc/Remove",
+		FullMethod: "/{{ .ProjectName }}.TodoRpc/Remove",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoRpcServer).Remove(ctx, req.(*TodoItem))
@@ -184,7 +184,7 @@ func _TodoRpc_Remove_Handler(srv interface{}, ctx context.Context, dec func(inte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var TodoRpc_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "myproject.TodoRpc",
+	ServiceName: "{{ .ProjectName }}.TodoRpc",
 	HandlerType: (*TodoRpcServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -205,5 +205,5 @@ var TodoRpc_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "myproject.proto",
+	Metadata: "{{ .ProjectName }}.proto",
 }

@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"myproject/src/infra/sqlite"
-	"myproject/src/shared/conf"
+	"{{ .ProjectName }}/src/infra/sqlite"
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 type SqliteFN func(t *testing.T, store *sqlite.SqliteStore, ctx context.Context)

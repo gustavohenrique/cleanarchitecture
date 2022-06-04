@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	pb "myproject/sdk/gogrpc/proto"
+	pb "{{ .ProjectName }}/sdk/gogrpc/proto"
 )
 
 type Client struct {

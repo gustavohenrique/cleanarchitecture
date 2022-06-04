@@ -7,11 +7,11 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"myproject/assets"
-	"myproject/src/application/httpserver/controllers/todo"
-	"myproject/src/application/httpserver/templaterender"
-	"myproject/src/services"
-	"myproject/src/shared/conf"
+	"{{ .ProjectName }}/assets"
+	"{{ .ProjectName }}/src/application/httpserver/controllers/todo"
+	"{{ .ProjectName }}/src/application/httpserver/templaterender"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 type Router struct {

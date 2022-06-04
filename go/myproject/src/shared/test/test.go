@@ -1,9 +1,9 @@
 package test
 
 import (
-	"myproject/src/repositories"
-	"myproject/src/services"
-	"myproject/src/infra"
+	"{{ .ProjectName }}/src/repositories"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/infra"
 )
 
 func GetServiceContainer() services.ServiceContainer {

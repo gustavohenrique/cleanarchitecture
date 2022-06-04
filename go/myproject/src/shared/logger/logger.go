@@ -10,7 +10,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"myproject/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 var log = logrus.NewEntry(logrus.New())

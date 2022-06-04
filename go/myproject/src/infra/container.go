@@ -1,9 +1,9 @@
 package infra
 
 import (
-	"myproject/src/infra/dgraph"
-	"myproject/src/infra/postgres"
-	"myproject/src/infra/sqlite"
+	"{{ .ProjectName }}/src/infra/dgraph"
+	"{{ .ProjectName }}/src/infra/postgres"
+	"{{ .ProjectName }}/src/infra/sqlite"
 )
 
 type InfraContainer struct {

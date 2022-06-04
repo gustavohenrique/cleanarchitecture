@@ -3,10 +3,10 @@ package todo
 import (
 	"context"
 
-	"myproject/src/entities"
-	"myproject/src/interfaces"
-	"myproject/src/repositories"
-	"myproject/src/shared/uuid"
+	"{{ .ProjectName }}/src/entities"
+	"{{ .ProjectName }}/src/interfaces"
+	"{{ .ProjectName }}/src/repositories"
+	"{{ .ProjectName }}/src/shared/uuid"
 )
 
 type TodoService struct {

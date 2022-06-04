@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"myproject/src/infra/dgraph"
+	"{{ .ProjectName }}/src/infra/dgraph"
 )
 
 type DgraphFN func(t *testing.T, store *dgraph.DgraphStore, ctx context.Context)

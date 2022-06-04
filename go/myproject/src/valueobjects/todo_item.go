@@ -1,8 +1,8 @@
 package valueobjects
 
 import (
-	"myproject/src/shared/customerror"
-	"myproject/src/shared/strings"
+	"{{ .ProjectName }}/src/shared/customerror"
+	"{{ .ProjectName }}/src/shared/strings"
 )
 
 type TodoItemRequest struct {

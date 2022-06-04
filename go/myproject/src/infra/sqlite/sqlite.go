@@ -7,8 +7,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 
-	"myproject/src/shared/conf"
-	"myproject/src/shared/customerror"
+	"{{ .ProjectName }}/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/customerror"
 )
 
 type SqliteStore struct {

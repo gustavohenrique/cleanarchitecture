@@ -27,7 +27,7 @@ func New(jwtConfig Config) *Jwt {
 		jwtConfig.Audience = "web"
 	}
 	if jwtConfig.Issuer == "" {
-		jwtConfig.Issuer = "myproject"
+		jwtConfig.Issuer = "{{ .ProjectName }}"
 	}
 	return &Jwt{jwtConfig}
 }

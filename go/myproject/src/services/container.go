@@ -1,9 +1,9 @@
 package services
 
 import (
-	"myproject/src/interfaces"
-	"myproject/src/repositories"
-	"myproject/src/services/todo"
+	"{{ .ProjectName }}/src/interfaces"
+	"{{ .ProjectName }}/src/repositories"
+	"{{ .ProjectName }}/src/services/todo"
 )
 
 type ServiceContainer struct {

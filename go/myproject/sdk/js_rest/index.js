@@ -67,6 +67,6 @@ const sdk = {
   }
 }
 if (window) {
-  window.myproject = sdk;
+  window.{{ .ProjectName }} = sdk;
 }
 export default sdk;

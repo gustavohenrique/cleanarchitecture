@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	DEFAULT_HOST = "server.myproject.com"
+	DEFAULT_HOST = "server.{{ .ProjectName }}.com"
 	DEFAULT_PORT = 80
 )
 

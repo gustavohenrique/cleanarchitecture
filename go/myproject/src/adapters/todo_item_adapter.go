@@ -1,10 +1,10 @@
 package adapters
 
 import (
-	"myproject/src/entities"
-	pb "myproject/src/proto"
-	"myproject/src/valueobjects"
-	"myproject/src/shared/datetime"
+	"{{ .ProjectName }}/src/entities"
+	pb "{{ .ProjectName }}/src/proto"
+	"{{ .ProjectName }}/src/valueobjects"
+	"{{ .ProjectName }}/src/shared/datetime"
 )
 
 type TodoItemAdapter struct{}

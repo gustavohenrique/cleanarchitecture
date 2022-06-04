@@ -7,8 +7,8 @@ import (
 	"encoding/pem"
 	"testing"
 
-	"myproject/src/shared/jsonwebtoken"
-	"myproject/src/shared/test/assert"
+	"{{ .ProjectName }}/src/shared/jsonwebtoken"
+	"{{ .ProjectName }}/src/shared/test/assert"
 )
 
 const (

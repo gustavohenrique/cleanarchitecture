@@ -5,9 +5,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"myproject/src/shared/cryptus"
-	"myproject/src/shared/datetime"
-	"myproject/src/shared/uuid"
+	"{{ .ProjectName }}/src/shared/cryptus"
+	"{{ .ProjectName }}/src/shared/datetime"
+	"{{ .ProjectName }}/src/shared/uuid"
 )
 
 func CreateSqliteDB(file, schema string) error {

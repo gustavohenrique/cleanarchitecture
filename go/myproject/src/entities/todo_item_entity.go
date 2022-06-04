@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"myproject/src/shared/datetime"
-	"myproject/src/shared/uuid"
+	"{{ .ProjectName }}/src/shared/datetime"
+	"{{ .ProjectName }}/src/shared/uuid"
 )
 
 type TodoItemEntity struct {

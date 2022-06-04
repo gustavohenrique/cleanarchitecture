@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 
-	"myproject/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 type PostgresStore struct {

@@ -3,7 +3,7 @@ package dgraph
 import (
 	"fmt"
 
-	"myproject/src/shared/strings"
+	"{{ .ProjectName }}/src/shared/strings"
 )
 
 const OperatorAny = "anyofterms"

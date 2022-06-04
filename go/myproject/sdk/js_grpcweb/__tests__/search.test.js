@@ -1,5 +1,5 @@
-import myproject from '../'
-const { SDK, entities } = myproject
+import {{ .ProjectName }} from '../'
+const { SDK, entities } = {{ .ProjectName }}
 
 describe('#Search', () => {
   test('Should fetch all TODO items', async () => {

@@ -168,21 +168,16 @@ As principais convenções adotadas foram:
 
 ### Primeiros passos
 
-Clone o repositório desse exemplo, substitua `gustavohenrique/myproject` pelo
-nome real da empresa e projeto.
+Instale as dependências com `make setup` e siga as instruções para a instalação manual das ferramentas para gRPC.
 
 ```sh
-git clone <myproject>
-cd myproject
-sed -i 's+'gustavohenrique/myproject'+'minhaempresa/meuprojeto'+g' *          # Linux
-# sed -i '' 's,'gustavohenrique/myproject','gustavohenrique/meuprojeto',g' *  # MacOS
-
-make setup
-make sqlite
-make proto
-make lint
-make test
-make run
+make setup     # Instala as dependências
+make sqlite    # Cria um arquivo database.db utilizando migrations/sqlite/schema.sql
+make postgres  # Cria um container Docker rodando Postgres utilizando migrations/postgres/schema.sql
+make proto     # Roda o compilador protoc para gerar os stubs a partir do assets/static/main.proto
+make lint      # Roda o goimports para formatar o código Go
+make test      # Executa os testes unitários
+make run       # Roda a aplicação em localhost
 ```
 
 ## Como contribuir?

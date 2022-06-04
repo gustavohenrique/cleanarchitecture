@@ -3,7 +3,7 @@ package sqlite_test
 import (
 	"testing"
 
-	"myproject/src/valueobjects/sqlite"
+	"{{ .ProjectName }}/src/valueobjects/sqlite"
 )
 
 var req sqlite.SearchRequest

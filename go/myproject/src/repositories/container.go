@@ -3,10 +3,10 @@ package repositories
 import (
 	"context"
 
-	"myproject/src/infra"
-	"myproject/src/interfaces"
-	todoSqlite "myproject/src/repositories/todo/sqlite"
-	"myproject/src/shared/strings"
+	"{{ .ProjectName }}/src/infra"
+	"{{ .ProjectName }}/src/interfaces"
+	todoSqlite "{{ .ProjectName }}/src/repositories/todo/sqlite"
+	"{{ .ProjectName }}/src/shared/strings"
 )
 
 const (

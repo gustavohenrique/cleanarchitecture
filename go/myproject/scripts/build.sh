@@ -56,8 +56,8 @@ gox \
     -arch="${XC_ARCH}" \
     -osarch="${XC_EXCLUDE_OSARCH}" \
     -ldflags "${LD_FLAGS}" \
-    -output "${OUTPUT_DIR}/releases/{{.OS}}_{{.Arch}}/myproject" \
-    ${OUTPUT_DIR}/cmd/myproject
+    -output "${OUTPUT_DIR}/releases/{{.OS}}_{{.Arch}}/{{ .ProjectName }}" \
+    ${OUTPUT_DIR}/cmd/{{ .ProjectName }}
 
 # Copy our OS/Arch to the bin/ directory
 DEV_PLATFORM="${OUTPUT_DIR}/releases/$(go env GOOS)_$(go env GOARCH)"

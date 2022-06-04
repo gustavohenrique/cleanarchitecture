@@ -50,7 +50,7 @@ type Config struct {
 	}
 	Store struct {
 		Postgres struct {
-			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://root:root@127.0.0.1/myproject?sslmode=disable"`
+			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://root:root@127.0.0.1/{{ .ProjectName }}?sslmode=disable"`
 			MaxConns        int32  `env:"STORE_POSTGRES_MAX_CONN" yaml:"max_conns" default:"500"`
 			MaxConnLifetime int    `env:"STORE_POSTGRES_MAX_CONN_LIFETIME" yaml:"max_conn_lifetime" default:"480"`
 			MaxConnIdleTime int    `env:"STORE_POSTGRES_MAX_CON_IDLETIME" yaml:"max_conn_iddle_time" default:"380"`

@@ -15,11 +15,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"myproject/src/application/grpcserver/controllers"
-	"myproject/src/application/server"
-	pb "myproject/src/proto"
-	"myproject/src/services"
-	"myproject/src/shared/conf"
+	"{{ .ProjectName }}/src/application/grpcserver/controllers"
+	"{{ .ProjectName }}/src/application/server"
+	pb "{{ .ProjectName }}/src/proto"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 type GrpcServer struct {

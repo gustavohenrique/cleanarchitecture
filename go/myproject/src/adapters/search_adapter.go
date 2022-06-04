@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 
-	"myproject/src/interfaces"
-	pb "myproject/src/proto"
-	"myproject/src/valueobjects/sqlite"
+	"{{ .ProjectName }}/src/interfaces"
+	pb "{{ .ProjectName }}/src/proto"
+	"{{ .ProjectName }}/src/valueobjects/sqlite"
 )
 
 type SearchAdapter struct{}

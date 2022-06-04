@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"myproject/src/adapters"
-	"myproject/src/entities"
-	"myproject/src/infra"
-	st "myproject/src/infra/sqlite"
-	"myproject/src/interfaces"
-	"myproject/src/valueobjects"
+	"{{ .ProjectName }}/src/adapters"
+	"{{ .ProjectName }}/src/entities"
+	"{{ .ProjectName }}/src/infra"
+	st "{{ .ProjectName }}/src/infra/sqlite"
+	"{{ .ProjectName }}/src/interfaces"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 const TODOITEMS = "todo_items"

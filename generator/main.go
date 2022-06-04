@@ -36,15 +36,15 @@ func generate(w http.ResponseWriter, r *http.Request) {
 		w.Write(getMessage("Method now allowed"))
 		return
 	}
-	sourceDir, distDir := getTemplateDirs()
 	decoder := json.NewDecoder(r.Body)
 	var project models.Project
 	err := decoder.Decode(&project)
-	if err != nil {
+	if err != nil || !project.IsValid() {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(getMessage(err))
 		return
 	}
+	sourceDir, distDir := project.GetTemplatesDirs()
 	extensions := project.GetFileExtensionsToBeReplaced()
 	placeholders := project.GetPlaceholders()
 	outputDir, err := fileutils.NewSed().From(sourceDir).To(distDir).Only(extensions).Replace(placeholders).Run()
@@ -67,12 +67,6 @@ func generate(w http.ResponseWriter, r *http.Request) {
 
 func getMessage(i interface{}) []byte {
 	return []byte(fmt.Sprintf(`{"message": "%s"}`, i))
-}
-
-func getTemplateDirs() (string, string) {
-	sourceDir, _ := filepath.Abs(filepath.Dir(os.Getenv("SOURCE_DIR")))
-	distDir, _ := filepath.Abs(filepath.Dir(os.Getenv("DIST_DIR")))
-	return sourceDir, distDir
 }
 
 func getPortOrDefault(def string) string {

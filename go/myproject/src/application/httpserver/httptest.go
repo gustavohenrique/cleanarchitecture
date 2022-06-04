@@ -8,8 +8,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"myproject/src/services"
-	"myproject/src/valueobjects"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 type HttpTest struct {

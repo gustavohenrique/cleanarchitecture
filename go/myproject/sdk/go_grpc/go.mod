@@ -1,4 +1,4 @@
-module myproject/sdk/gogrpc
+module {{ .ProjectName }}/sdk/gogrpc
 
 go 1.18
 

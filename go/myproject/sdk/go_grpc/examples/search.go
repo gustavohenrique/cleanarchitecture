@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"myproject/sdk/gogrpc"
-	pb "myproject/sdk/gogrpc/proto"
+	"{{ .ProjectName }}/sdk/gogrpc"
+	pb "{{ .ProjectName }}/sdk/gogrpc/proto"
 )
 
 func main() {

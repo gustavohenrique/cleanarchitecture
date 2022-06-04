@@ -11,13 +11,13 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"myproject/assets"
-	r "myproject/src/application/httpserver/router"
-	"myproject/src/application/server"
-	"myproject/src/services"
-	"myproject/src/shared/conf"
-	log "myproject/src/shared/logger"
-	"myproject/src/shared/metrics"
+	"{{ .ProjectName }}/assets"
+	r "{{ .ProjectName }}/src/application/httpserver/router"
+	"{{ .ProjectName }}/src/application/server"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/shared/conf"
+	log "{{ .ProjectName }}/src/shared/logger"
+	"{{ .ProjectName }}/src/shared/metrics"
 )
 
 type HttpServer struct {

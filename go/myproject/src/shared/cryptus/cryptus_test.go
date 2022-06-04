@@ -3,8 +3,8 @@ package cryptus_test
 import (
 	"testing"
 
-	"myproject/src/shared/cryptus"
-	"myproject/src/shared/test/assert"
+	"{{ .ProjectName }}/src/shared/cryptus"
+	"{{ .ProjectName }}/src/shared/test/assert"
 )
 
 func TestRsaGenerateKeyPairAndEncryptAndDecrypt(t *testing.T) {

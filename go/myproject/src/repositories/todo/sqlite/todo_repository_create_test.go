@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"testing"
 
-	"myproject/src/entities"
-	"myproject/src/infra"
-	"myproject/src/infra/sqlite"
-	db "myproject/src/repositories/todo/sqlite"
-	"myproject/src/shared/test"
-	"myproject/src/shared/test/assert"
-	"myproject/src/valueobjects"
+	"{{ .ProjectName }}/src/entities"
+	"{{ .ProjectName }}/src/infra"
+	"{{ .ProjectName }}/src/infra/sqlite"
+	db "{{ .ProjectName }}/src/repositories/todo/sqlite"
+	"{{ .ProjectName }}/src/shared/test"
+	"{{ .ProjectName }}/src/shared/test/assert"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 func TestTodoItemRepositoryCreate(ts *testing.T) {

@@ -3,7 +3,7 @@ package main
 import (
 	"runtime/debug"
 
-	"myproject/src/application"
+	"{{ .ProjectName }}/src/application"
 )
 
 func init() {

@@ -2,7 +2,7 @@
 
 export CGO_ENABLED=1
 export GO111MODULE=on
-export PKG="myproject/..."
+export PKG="{{ .ProjectName }}/..."
 
 if [ -n "$CI" ]; then
     echo -n "Checking go vet in ${PWD}: "

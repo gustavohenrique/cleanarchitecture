@@ -9,12 +9,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"myproject/src/application/grpcwebserver/controllers"
-	"myproject/src/application/server"
-	pb "myproject/src/proto"
-	"myproject/src/services"
-	"myproject/src/shared/conf"
-	"myproject/src/shared/customerror"
+	"{{ .ProjectName }}/src/application/grpcwebserver/controllers"
+	"{{ .ProjectName }}/src/application/server"
+	pb "{{ .ProjectName }}/src/proto"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/customerror"
 )
 
 type GrpcWebServer struct {
@@ -49,8 +49,8 @@ func (g *GrpcWebServer) Configure(params interface{}) {
 
 	httpServer := params.(server.Server)
 	e := httpServer.GetRawServer().(*echo.Echo)
-	// myproject is the package name in .proto file
-	e.Any("myproject.*", func(c echo.Context) error {
+	// {{ .ProjectName }} is the package name in .proto file
+	e.Any("{{ .ProjectName }}.*", func(c echo.Context) error {
 		req := c.Request()
 		res := c.Response()
 		if wrapped.IsGrpcWebRequest(req) || wrapped.IsAcceptableGrpcCorsRequest(req) {

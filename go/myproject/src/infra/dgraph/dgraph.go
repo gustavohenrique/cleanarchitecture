@@ -7,8 +7,8 @@ import (
 	"github.com/dgraph-io/dgo/v210/protos/api"
 	"google.golang.org/grpc"
 
-	"myproject/src/shared/conf"
-	"myproject/src/shared/customjson"
+	"{{ .ProjectName }}/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/customjson"
 )
 
 type DgraphStore struct {

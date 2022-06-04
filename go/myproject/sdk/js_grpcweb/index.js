@@ -1,5 +1,5 @@
-import { TodoItem, SearchRequest } from './myproject_pb'
-import { TodoRpcPromiseClient } from './myproject_grpc_web_pb'
+import { TodoItem, SearchRequest } from './{{ .ProjectName }}_pb'
+import { TodoRpcPromiseClient } from './{{ .ProjectName }}_grpc_web_pb'
 
 class SDK {
   constructor(config) {
@@ -43,6 +43,6 @@ const sdk = {
   }
 }
 if (window) {
-  window.myproject = sdk;
+  window.{{ .ProjectName }} = sdk;
 }
 export default sdk;

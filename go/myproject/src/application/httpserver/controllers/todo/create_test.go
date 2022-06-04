@@ -3,10 +3,10 @@ package todo_test
 import (
 	"testing"
 
-	"myproject/src/application/httpserver"
-	"myproject/src/shared/test"
-	"myproject/src/shared/test/assert"
-	"myproject/src/shared/test/httpclient"
+	"{{ .ProjectName }}/src/application/httpserver"
+	"{{ .ProjectName }}/src/shared/test"
+	"{{ .ProjectName }}/src/shared/test/assert"
+	"{{ .ProjectName }}/src/shared/test/httpclient"
 )
 
 func TestCreateWithEmptyBody(t *testing.T) {

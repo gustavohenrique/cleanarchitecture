@@ -5,13 +5,13 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"myproject/src/adapters"
-	"myproject/src/interfaces"
-	"myproject/src/services"
-	"myproject/src/shared/conf"
-	"myproject/src/shared/customerror"
-	log "myproject/src/shared/logger"
-	"myproject/src/valueobjects"
+	"{{ .ProjectName }}/src/adapters"
+	"{{ .ProjectName }}/src/interfaces"
+	"{{ .ProjectName }}/src/services"
+	"{{ .ProjectName }}/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/customerror"
+	log "{{ .ProjectName }}/src/shared/logger"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 type TodoController struct {

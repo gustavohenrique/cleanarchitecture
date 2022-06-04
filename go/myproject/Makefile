@@ -3,6 +3,10 @@
 go := $(shell which go)
 scripts_dir := $(CURDIR)/scripts
 pgoptions := "-q -X -v VERBOSITY=terse -v ON_ERROR_STOP=1 -A -t -w"
+postgres_user := root
+postgres_password := $(postgres_user)
+postgres_db := $(postgres_user)
+postgres_url := postgres://$(postgres_user):$(postgres_password)@127.0.0.1/$(postgres_db)?sslmode=disable
 watch_files := (.go$$)|(.html$$)
 proto_source_dir := assets/static/proto
 go_proto_out_dir := src/proto
@@ -65,16 +69,15 @@ sqlite:
 	@$(MAKE) migrate db=sqlite
 
 migrate_postgres:
-	@bash -c "DB_ENGINE=postgres DATABASE_URL=$(POSTGRES_URL) MIGRATIONS_DIR=$(CURDIR)/migrations/postgres '$(scripts_dir)/sql.sh' menu"
+	@bash -c "DB_ENGINE=postgres DATABASE_URL=$(postgres_url) MIGRATIONS_DIR=$(CURDIR)/migrations/postgres '$(scripts_dir)/sql.sh' menu"
 
 postgres: drop_postgres
 	@docker run -d --name postgres \
 		-m 2G \
 		-e TZ=America/Sao_Paulo \
-		-e POSTGRES_USER=$(POSTGRES_USER) \
-		-e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
-		-e POSTGRES_DB=$(POSTGRES_DB) \
-		-e ADDITIONAL_DB=root \
+		-e POSTGRES_USER=$(postgres_user) \
+		-e POSTGRES_PASSWORD=$(postgres_password) \
+		-e POSTGRES_DB=$(postgres_db) \
 		-p 5432:5432 \
 		gustavohenrique/postgres:13-alpine \
 	&& echo "Waiting for 3s..." \
@@ -84,14 +87,13 @@ drop_postgres:
 	@docker rm -f postgres 2>/dev/null || exit 0
 
 psql:
-	@docker exec -it postgres sh -c "PGPASSWORD=$(POSTGRES_PASSWORD) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) $(pgoptions)"
+	@docker exec -it postgres sh -c "PGPASSWORD=$(postgres_password) psql -U $(postgres_user) -d $(postgres_db) $(pgoptions)"
 
 proto:
 	@echo "Generating Go stubs..."
 	@protoc -I $(proto_source_dir) $(proto_source_dir)/*.proto --proto_path=$(go_proto_out_dir) --go_out=$(go_proto_out_dir) --go-grpc_out=$(go_proto_out_dir)
 	@echo "Generating JS stubs for gRPC Web..."
 	@protoc -I $(proto_source_dir) $(proto_source_dir)/*.proto --js_out=import_style=commonjs,binary:$(grpc_web_proto_out_dir) --grpc-web_out=import_style=commonjs,mode=grpcweb:$(grpc_web_proto_out_dir)
-	@#cat $(grpc_web_proto_out_dir)/*grpc_web_pb.js | sed 's,module.exports =,export default,g' | tee $(grpc_web_proto_out_dir)/myproject_grpc_web_pb.js >/dev/null
 	@echo "Copying Go stubs to SDK Go dir..."
 	@cp -r $(go_proto_out_dir) sdk/go_grpc/
 	@echo "Done."
