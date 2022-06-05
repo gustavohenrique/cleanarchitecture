@@ -212,14 +212,9 @@ As principais convenções adotadas foram:
 
 ### Primeiros passos
 
-Clone o repositório desse exemplo, substitua `myproject` pelo nome real do projeto.
+Instale o Quasar Framework globalmente e depois as dependências do projeto.
 
 ```sh
-git clone <myproject>
-cd myproject
-sed -i 's+'myproject'+'meu-projeto'+g' *       # Linux
-# sed -i '' 's,'myproject','meu-projeto',g' *  # MacOS
-
 npm i -g @quasar/cli
 npm install
 npm test

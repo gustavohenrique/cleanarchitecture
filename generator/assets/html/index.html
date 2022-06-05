@@ -57,8 +57,8 @@ body.screen--sm .my-card {
               checked-icon="task_alt"
               unchecked-icon="panorama_fish_eye"
               dense
-              val="javascript"
-              label="Javascript"
+              val="quasar"
+              label="Quasar"
             >
             </q-radio>
           </q-card-section>
@@ -66,6 +66,7 @@ body.screen--sm .my-card {
             <q-input
               v-model="projectName"
               :label="label"
+              :disable="!!downloadUrl"
               stack-label
               filled
               square
@@ -92,8 +93,11 @@ body.screen--sm .my-card {
                 class="no-border-radius"
               >
               </q-btn> 
+              <div v-if="hasError" class="text-negative">
+                Something was wrong. We could not generate your {{ engine }} project.
+              </div>
               <q-btn
-                v-if="downloadUrl"
+                v-if="downloadUrl && !hasError"
                 unelevated
                 square
                 type="href"
@@ -118,6 +122,7 @@ body.screen--sm .my-card {
         data() {
           return {
             loading: false,
+            hasError: false,
             downloadUrl: '',
             projectName: 'myproject',
             engine: 'golang'
@@ -154,13 +159,13 @@ body.screen--sm .my-card {
 
                 this.loading = true;
                 fetch('/generate', options)
-                  .then(res => res.json())
+                  .then(res => res.ok ? res.json() : Promise.reject(new Error(res.status)))
                   .then(data => {
                     this.downloadUrl = data.message; 
                     this.loading = false;
                   })
                   .catch(err => {
-                    console.error('Failed to generate:', err)
+                    this.hasError = true;
                     this.loading = false;
                   });
               }

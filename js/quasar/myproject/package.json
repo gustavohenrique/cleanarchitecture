@@ -1,8 +1,8 @@
 {
-  "name": "myproject",
+  "name": "{{ .ProjectName }}",
   "version": "0.0.1",
   "description": "",
-  "productName": "myproject",
+  "productName": "{{ .ProjectName }}",
   "author": "Gustavo Henrique",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "serve": "NODE_ENV=local quasar dev",
     "test": "jest",
     "build:dev": "NODE_ENV=dev quasar build",
-    "build:docker": "NODE_ENV=production VERSION=$(git describe --tags --always) docker build . -t=myproject:$VERSION",
+    "build:docker": "NODE_ENV=production VERSION=$(git describe --tags --always) docker build . -t={{ .ProjectName }}:$VERSION",
     "build:prod": "NODE_ENV=production VERSION=$(git describe --tags --always) quasar build"
   },
   "dependencies": {

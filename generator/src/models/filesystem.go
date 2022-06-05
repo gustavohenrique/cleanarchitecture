@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"generator/src/fileutils/random"
 )
 
 const (
@@ -23,7 +25,7 @@ var engines = map[string]map[string]string{
 	QUASAR: map[string]string{
 		REPO:       "js/quasar/myproject",
 		DIST:       "quasar_projects",
-		EXTENSIONS: ".js,.vue,.json",
+		EXTENSIONS: ".js,.json",
 		SKIP:       "node_modules,coverage",
 	},
 }
@@ -47,7 +49,9 @@ func NewFilesystem(engine string) *Filesystem {
 	repoDir, _ := filepath.Abs(filepath.Dir(os.Getenv("REPO_DIR")))
 	repo := filepath.Join(repoDir, getRepoByEngine(engine))
 
-	distDir, _ := filepath.Abs(filepath.Dir(os.Getenv("DIST_DIR")))
+	d, _ := filepath.Abs(filepath.Dir(os.Getenv("DIST_DIR")))
+	distDir := filepath.Join(d, random.Strings(6))
+	os.RemoveAll(distDir)
 	os.MkdirAll(distDir, os.ModePerm)
 	dist := filepath.Join(distDir, getDistByEngine(engine))
 

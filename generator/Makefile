@@ -1,6 +1,8 @@
 repo_dir := $(CURDIR)/../
 dist_dir := /tmp/clean_architecture_generator/
 download_dir := $(dist_dir)
+resources_dir := $(CURDIR)/resources
+binary := generator
 
 clear:
 	@rm -rf $(dist_dir) || echo
@@ -11,3 +13,10 @@ tests: clear
 
 run: clear
 	@DEBUG=true REPO_DIR=$(repo_dir) DIST_DIR=$(dist_dir) DOWNLOAD_DIR=$(download_dir) go run main.go
+
+build:
+	rm $(binary)-* 2>/dev/null || echo
+	bash $(resources_dir)/build.sh $(binary)
+
+deploy:
+	bash $(resources_dir)/deploy.sh $(binary)

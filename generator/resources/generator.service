@@ -1,0 +1,22 @@
+[Unit]
+Description=generator
+Documentation=http://github.com/gustavohenrique/clean-architecture
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-abnormal
+RemainAfterExit=true
+StandardOutput=journal
+
+EnvironmentFile=/home/ubuntu/apps/generator/env
+ExecStart=/home/ubuntu/apps/generator/generator
+ExecReload=/bin/kill -USR1
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+
+[Install]
+WantedBy=default.target

@@ -117,8 +117,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'myproject',
-        short_name: 'myproject',
+        name: '{{ .ProjectName }}',
+        short_name: '{{ .ProjectName }}',
         description: '',
         display: 'standalone',
         orientation: 'portrait',
