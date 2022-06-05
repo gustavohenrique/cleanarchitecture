@@ -43,7 +43,7 @@ body.screen--sm .my-card {
         <q-card square class="q-pa-md no-border-radius my-card">
           <q-card-section>
             <q-radio
-              v-model="language"
+              v-model="engine"
               checked-icon="task_alt"
               unchecked-icon="panorama_fish_eye"
               dense
@@ -53,7 +53,7 @@ body.screen--sm .my-card {
             >
             </q-radio>
             <q-radio
-              v-model="language"
+              v-model="engine"
               checked-icon="task_alt"
               unchecked-icon="panorama_fish_eye"
               dense
@@ -120,12 +120,12 @@ body.screen--sm .my-card {
             loading: false,
             downloadUrl: '',
             projectName: 'myproject',
-            language: 'golang'
+            engine: 'golang'
           }
         },
         computed: {
           label() {
-            if (this.language === 'golang') {
+            if (this.engine === 'golang') {
               return 'Module name'
             }
             return 'Project name'
@@ -138,12 +138,10 @@ body.screen--sm .my-card {
               if (success) {
                 form.resetValidation()
                 const projectName = this.projectName
-                const language = this.language
+                const engine = this.engine
                 const req = {
-                  language: language,
-                  placeholders: {
-                    ProjectName: projectName
-                  }
+                  engine: engine,
+                  name: projectName ? projectName.replace(' ', '_') : ''
                 };
                 const options = {
                   method: 'POST',

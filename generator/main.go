@@ -24,8 +24,10 @@ func main() {
 
 func download(w http.ResponseWriter, r *http.Request) {
 	filename := r.URL.Query().Get("file")
-	_, distDir := getTemplateDirs()
-	file := filepath.Join(distDir, "..", filename)
+	engine := r.URL.Query().Get("engine")
+	filesystem := models.NewFilesystem(engine)
+	file := filesystem.Download(filename)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
 	http.ServeFile(w, r, file)
 }
 
@@ -33,7 +35,7 @@ func generate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write(getMessage("Method now allowed"))
+		w.Write(getMessage("Method not allowed"))
 		return
 	}
 	decoder := json.NewDecoder(r.Body)
@@ -44,16 +46,28 @@ func generate(w http.ResponseWriter, r *http.Request) {
 		w.Write(getMessage(err))
 		return
 	}
-	sourceDir, distDir := project.GetTemplatesDirs()
-	extensions := project.GetFileExtensionsToBeReplaced()
+	filesystem := models.NewFilesystem(project.GetEngine())
+	extensions := filesystem.GetExtensions()
 	placeholders := project.GetPlaceholders()
-	outputDir, err := fileutils.NewSed().From(sourceDir).To(distDir).Only(extensions).Replace(placeholders).Run()
+	parsedDir, err := fileutils.
+		NewSed().
+		From(filesystem.GetRepo()).
+		To(filesystem.Dist(project.GetName())).
+		Only(extensions).
+		Replace(placeholders).
+		Run()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(getMessage(err))
 		return
 	}
-	compressedFile, err := fileutils.NewCompress().Target(outputDir).Exclude(project.GetSkipDirs()).Run()
+	compressedFile, err := fileutils.
+		NewCompress().
+		Input(parsedDir).
+		Output(filesystem.GetDownload()).
+		Name(project.GetName()).
+		Exclude(filesystem.GetSkipDirs()).
+		Run()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(getMessage(err))
@@ -61,7 +75,7 @@ func generate(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	downloadUrl := "/download?file=" + filepath.Base(compressedFile)
+	downloadUrl := fmt.Sprintf("/download?file=%s&engine=%s", filepath.Base(compressedFile), project.GetEngine())
 	w.Write(getMessage(downloadUrl))
 }
 

@@ -38,10 +38,12 @@ watch:
 test: tests
 tests:
 	@clear
+	@chmod +x $(scripts_dir)/*
 	@$(scripts_dir)/test.sh
 
+mock: mocks
 mocks:
-	./scripts/mocks.sh
+	@./$(scripts_dir)/mocks.sh
 
 lint:
 	@goimports -w cmd src
@@ -91,6 +93,7 @@ psql:
 
 proto:
 	@echo "Generating Go stubs..."
+	@mkdir -p $(go_proto_out_dir) || echo
 	@protoc -I $(proto_source_dir) $(proto_source_dir)/*.proto --proto_path=$(go_proto_out_dir) --go_out=$(go_proto_out_dir) --go-grpc_out=$(go_proto_out_dir)
 	@echo "Generating JS stubs for gRPC Web..."
 	@protoc -I $(proto_source_dir) $(proto_source_dir)/*.proto --js_out=import_style=commonjs,binary:$(grpc_web_proto_out_dir) --grpc-web_out=import_style=commonjs,mode=grpcweb:$(grpc_web_proto_out_dir)

@@ -9,19 +9,36 @@ import (
 	"path/filepath"
 	"strings"
 )
+
 const BUFFERSIZE = int64(20)
 
 type Compress struct {
-	compressDir  string
-	excludeDirs  []string
+	inputDir string
+	outputDir string
+	outputFile  string
+	excludeDirs []string
 }
 
 func NewCompress() *Compress {
 	return &Compress{}
 }
 
-func (cp *Compress) Target(dir string) *Compress {
-	cp.compressDir = dir
+func (cp *Compress) Input(dir string) *Compress {
+	cp.inputDir = dir
+	return cp
+}
+
+func (cp *Compress) Output(dir string) *Compress {
+	cp.outputDir = dir
+	return cp
+}
+
+func (cp *Compress) getOutputFile() string {
+	return filepath.Join(cp.outputDir, cp.outputFile)
+}
+
+func (cp *Compress) Name(name string) *Compress {
+	cp.outputFile = name
 	return cp
 }
 
@@ -31,23 +48,22 @@ func (cp *Compress) Exclude(dirs []string) *Compress {
 }
 
 func (cp *Compress) Run() (string, error) {
-	dir := cp.compressDir
+	inputDir := cp.inputDir
 	excludeDirs := cp.excludeDirs
-	tarFile, err := Tar(dir, excludeDirs)
+	outputFile := cp.getOutputFile()
+	tarFile, err := runTar(inputDir, outputFile, excludeDirs)
 	if err != nil {
 		return "", err
 	}
-	gzFile, err := Gzip(tarFile)
+	gzFile, err := runGzip(tarFile)
 	return gzFile, err
 }
 
-func Tar(source string, excludeDirs []string) (string, error) {
-	dirName := filepath.Base(source)
-	parent := strings.ReplaceAll(filepath.Clean(source), dirName, "")
-	target := filepath.Join(parent, fmt.Sprintf("%s.tar", dirName))
-	tarfile, err := os.Create(target)
+func runTar(inputDir, outputFile string, excludeDirs []string) (string, error) {
+	tarfilePath := fmt.Sprintf("%s.tar", outputFile)
+	tarfile, err := os.Create(tarfilePath)
 	if err != nil {
-		logInfo("Failed to create", target)
+		logInfo("Failed to create", outputFile)
 		return "", err
 	}
 	defer tarfile.Close()
@@ -55,18 +71,18 @@ func Tar(source string, excludeDirs []string) (string, error) {
 	tarball := tar.NewWriter(tarfile)
 	defer tarball.Close()
 
-	info, err := os.Stat(source)
+	info, err := os.Stat(inputDir)
 	if err != nil {
-		logInfo("Failed to get stat of source dir", source, ". ERROR:", err)
+		logInfo("Failed to get stat of source dir", inputDir, ". ERROR:", err)
 		return "", nil
 	}
 
 	var baseDir string
 	if info.IsDir() {
-		baseDir = filepath.Base(source)
+		baseDir = filepath.Base(inputDir)
 	}
 
-	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(inputDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			logInfo("Failed to walk. ERROR:", err)
 			return err
@@ -83,7 +99,7 @@ func Tar(source string, excludeDirs []string) (string, error) {
 		}
 
 		if baseDir != "" {
-			header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
+			header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, inputDir))
 		}
 
 		if err := tarball.WriteHeader(header); err != nil {
@@ -104,10 +120,10 @@ func Tar(source string, excludeDirs []string) (string, error) {
 		_, err = io.Copy(tarball, file)
 		return err
 	})
-	return target, err
+	return tarfilePath, err
 }
 
-func Untar(tarball, target string) error {
+func runUntar(tarball, target string) error {
 	reader, err := os.Open(tarball)
 	if err != nil {
 		return err
@@ -145,7 +161,7 @@ func Untar(tarball, target string) error {
 	return nil
 }
 
-func Gzip(source string) (string, error) {
+func runGzip(source string) (string, error) {
 	reader, err := os.Open(source)
 	if err != nil {
 		logInfo("Failed to open tar file", source)
@@ -153,10 +169,10 @@ func Gzip(source string) (string, error) {
 	}
 	filename := filepath.Base(source)
 	parent := strings.ReplaceAll(filepath.Clean(source), filename, "")
-	target := filepath.Join(parent, fmt.Sprintf("%s.gz", filename))
-	writer, err := os.Create(target)
+	gzfilePath := filepath.Join(parent, fmt.Sprintf("%s.gz", filename))
+	writer, err := os.Create(gzfilePath)
 	if err != nil {
-		logInfo("Failed to gzip", target)
+		logInfo("Failed to gzip", gzfilePath)
 		return "", err
 	}
 	defer writer.Close()
@@ -166,10 +182,10 @@ func Gzip(source string) (string, error) {
 	defer archiver.Close()
 
 	_, err = io.Copy(archiver, reader)
-	return target, err
+	return gzfilePath, err
 }
 
-func UnGzip(source, target string) error {
+func runUnGzip(source, target string) error {
 	reader, err := os.Open(source)
 	if err != nil {
 		return err

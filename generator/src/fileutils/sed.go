@@ -12,7 +12,7 @@ import (
 )
 
 type Sed struct {
-	sourceDir    string
+	repoDir    string
 	distDir      string
 	extensions   []string
 	placeholders map[string]string
@@ -23,7 +23,7 @@ func NewSed() *Sed {
 }
 
 func (pt *Sed) From(dir string) *Sed {
-	pt.sourceDir = dir
+	pt.repoDir = dir
 	return pt
 }
 
@@ -43,7 +43,7 @@ func (pt *Sed) Replace(placeholders map[string]string) *Sed {
 }
 
 func (pt *Sed) Run() (string, error) {
-	err := filepath.Walk(pt.sourceDir, pt.walkDirFn)
+	err := filepath.Walk(pt.repoDir, pt.walkDirFn)
 	return pt.distDir, err
 }
 
@@ -61,7 +61,7 @@ func (pt *Sed) walkDirFn(path string, fileInfo os.FileInfo, err error) error {
 		}
 		content, err := ioutil.ReadFile(path)
 		if err != nil {
-			logInfo("Failed to read source file.", path, ". ERROR:", err)
+			logInfo("Failed to read repo file.", path, ". ERROR:", err)
 			return err
 		}
 		tpl, err := template.New("").Parse(string(content))
@@ -85,7 +85,7 @@ func (pt *Sed) walkDirFn(path string, fileInfo os.FileInfo, err error) error {
 
 func (pt *Sed) getDistDirFrom(path string) string {
 	baseDir := filepath.Dir(path)
-	newDir := strings.ReplaceAll(baseDir, pt.sourceDir, pt.distDir)
+	newDir := strings.ReplaceAll(baseDir, pt.repoDir, pt.distDir)
 	return newDir
 }
 
@@ -98,20 +98,20 @@ func (pt *Sed) mkdir(path string) error {
 }
 
 func (pt *Sed) copy(src, dst string) error {
-	sourceFileStat, err := os.Stat(src)
+	repoFileStat, err := os.Stat(src)
 	if err != nil {
 		return err
 	}
 
-	if !sourceFileStat.Mode().IsRegular() {
+	if !repoFileStat.Mode().IsRegular() {
 		return fmt.Errorf("%s is not a regular file.", src)
 	}
 
-	source, err := os.Open(src)
+	repo, err := os.Open(src)
 	if err != nil {
 		return err
 	}
-	defer source.Close()
+	defer repo.Close()
 
 	_, err = os.Stat(dst)
 	if err == nil {
@@ -130,7 +130,7 @@ func (pt *Sed) copy(src, dst string) error {
 
 	buf := make([]byte, BUFFERSIZE)
 	for {
-		n, err := source.Read(buf)
+		n, err := repo.Read(buf)
 		if err != nil && err != io.EOF {
 			return err
 		}
