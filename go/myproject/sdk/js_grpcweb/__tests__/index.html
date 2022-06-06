@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=3, minimum-scale=1, width=device-width, viewport-fit=cover">
+<title>Example gRPC Web</title>
+<script src="bundle.js"></script>
+<script>
+  async function search() {
+    const config = {
+      token: 'XPTO-123',
+      deadline: 5, // 5s timeout
+      url: 'http://localhost:8001'
+    }
+    const entities = window.main.entities;
+    const sdk = new window.main.SDK(config)
+    const client = sdk.getTodoClient()
+    try {
+      const req = new entities.SearchRequest()
+      const res = await client.search(req)
+      const items = res.getTodoitemsList()
+      const div = document.querySelector('#results');
+      items.forEach(item => {
+        div.innerHTML += '<div>'+item.getTitle()+'</div>'
+      });
+    } catch (err) {
+      console.log('[ERROR]', err.message)
+    }
+  }
+</script>
+<style type="text/css">
+body {
+  font-size: 14pt;
+  font-family: Arial;
+  padding: 10px;
+}
+</style>
+</head>
+<body>
+  <h6>gRPC Web Example</h6>
+  <ol>
+    <li>Download SDK</li>
+    <li>npm run build</li>
+    <li>Copy dist/bundle.js</li>
+  </ol>
+  <div id="results"></div>
+  <div>
+    <button onclick="search()">Get All</button>
+  </div>
+</body>
+</html>
