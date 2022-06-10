@@ -11,6 +11,7 @@ import (
 const (
 	KEY_DB            = "db"
 	DB_NAME_SQLITE    = "sqlite"
+	DB_NAME_POSTGRES  = "postgres"
 	DB_NAME_DGRAPH    = "dgraph"
 	EVENT_ACTION_DONE = "action.done"
 )
@@ -50,10 +51,11 @@ type Config struct {
 	}
 	Store struct {
 		Postgres struct {
-			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://root:root@127.0.0.1/{{ .ProjectName }}?sslmode=disable"`
-			MaxConns        int32  `env:"STORE_POSTGRES_MAX_CONN" yaml:"max_conns" default:"500"`
+			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://admin:123456@127.0.0.1/maindb?sslmode=disable"`
+			MaxOpenConns    int    `env:"STORE_POSTGRES_MAX_OPEN_CONN" yaml:"max_open_conns"`
+			MaxIdleConns    int    `env:"STORE_POSTGRES_MAX_IDLE_CONN" yaml:"max_idle_conns"`
 			MaxConnLifetime int    `env:"STORE_POSTGRES_MAX_CONN_LIFETIME" yaml:"max_conn_lifetime" default:"480"`
-			MaxConnIdleTime int    `env:"STORE_POSTGRES_MAX_CON_IDLETIME" yaml:"max_conn_iddle_time" default:"380"`
+			Schema          string `env:"STORE_POSTGRES_SCHEMA" yaml:"schema"`
 		}
 		Sqlite struct {
 			Address string `env:"STORE_SQLITE_ADDRESS" yaml:"address" default:":memory:"`

@@ -11,10 +11,11 @@ grpc:
     enabled: false
 store:
   postgres:
-    url: postgres://root:root@127.0.0.1/root?sslmode=disable
+    url: postgres://admin:123456@127.0.0.1/maindb?sslmode=disable
     max_conns: 500
     max_conn_lifetime: 480
     max_conn_iddle_time: 380
+    schema: migrations/postgres/schema.sql
   sqlite:
     address: "file::memory:?cache=shared"
     schema: migrations/sqlite/schema.sql

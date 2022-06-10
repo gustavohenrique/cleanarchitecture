@@ -142,11 +142,14 @@ body.screen--sm .my-card {
             form.validate().then(success => {
               if (success) {
                 form.resetValidation()
-                const projectName = this.projectName
+                let projectName = this.projectName || ''
+                if (projectName) {
+                  projectName = projectName.replace('-', '_').replace(' ', '_')
+                }
                 const engine = this.engine
                 const req = {
                   engine: engine,
-                  name: projectName ? projectName.replace(' ', '_') : ''
+                  name: projectName
                 };
                 const options = {
                   method: 'POST',

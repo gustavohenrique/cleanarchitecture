@@ -5,6 +5,7 @@ import (
 
 	"{{ .ProjectName }}/src/infra"
 	"{{ .ProjectName }}/src/interfaces"
+	todoPostgres "{{ .ProjectName }}/src/repositories/todo/postgres"
 	todoSqlite "{{ .ProjectName }}/src/repositories/todo/sqlite"
 	"{{ .ProjectName }}/src/shared/strings"
 )
@@ -24,7 +25,8 @@ type RepositoryContainer struct {
 
 func New(infraContainer infra.InfraContainer) RepositoryContainer {
 	todoRepositories := map[string]interfaces.ITodoRepository{
-		SQLITE: todoSqlite.NewRepository(infraContainer),
+		SQLITE:   todoSqlite.NewRepository(infraContainer),
+		POSTGRES: todoPostgres.NewRepository(infraContainer),
 	}
 	return RepositoryContainer{
 		todoRepositories: todoRepositories,

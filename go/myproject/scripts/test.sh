@@ -23,6 +23,7 @@ echo "CONFIG_FILE=${CONTINUUM_CONFIG_FILE}"
 
 export DGRAPH_SCHEMA_FILE="${PWD}/migrations/dgraph/schema.dql"
 export SQLITE_SCHEMA_FILE="${PWD}/migrations/sqlite/schema.sql"
+export POSTGRES_SCHEMA_FILE="${PWD}/migrations/postgres/schema.sql"
 
 if [ -n "$CI" ]; then
     echo "Running go test in CI mode..."

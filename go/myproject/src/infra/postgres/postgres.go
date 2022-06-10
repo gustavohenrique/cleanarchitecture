@@ -2,143 +2,147 @@ package postgres
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"log"
-	"strings"
 	"time"
 
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 
 	"{{ .ProjectName }}/src/shared/conf"
+	"{{ .ProjectName }}/src/shared/customerror"
 )
 
 type PostgresStore struct {
-	connection *pgxpool.Pool
-	pgxconf    *pgxpool.Config
-	tx         pgx.Tx
+	connection *sqlx.DB
+	tx         *sqlx.Tx
+	config     *conf.Config
+	ctx        context.Context
 }
 
-type Row pgx.Row
-
 func NewPostgresStore() *PostgresStore {
-	config := conf.Get()
-	databaseURL := config.Store.Postgres.URL
-	pgxconf, err := pgxpool.ParseConfig(databaseURL)
+	return &PostgresStore{
+		config: conf.Get(),
+		ctx:    context.Background(),
+	}
+}
+
+func (db *PostgresStore) Connect() (*sqlx.DB, error) {
+	config := db.config
+	conn, err := sqlx.ConnectContext(db.getCtx(), "postgres", config.Store.Postgres.URL)
 	if err != nil {
-		log.Fatalln("Cannot connect to postgres=", databaseURL, " error=", err)
+		return nil, err
 	}
-	db := &PostgresStore{}
-
-	pgxconf.MaxConns = int32(config.Store.Postgres.MaxConns)
-	pgxconf.MaxConnLifetime = time.Duration(config.Store.Postgres.MaxConnLifetime) * time.Second
-	pgxconf.MaxConnIdleTime = time.Duration(config.Store.Postgres.MaxConnIdleTime) * time.Second
-
-	if config.Log.Level != "" {
-		level, err := pgx.LogLevelFromString(strings.ToLower(config.Log.Level))
-		if err == nil {
-			pgxconf.ConnConfig.LogLevel = level
-		}
+	if config.Store.Postgres.MaxOpenConns > 0 {
+		conn.SetMaxOpenConns(config.Store.Postgres.MaxOpenConns)
 	}
-	db.pgxconf = pgxconf
+	if config.Store.Postgres.MaxIdleConns > 0 {
+		conn.SetMaxIdleConns(config.Store.Postgres.MaxIdleConns)
+	}
+	if config.Store.Postgres.MaxConnLifetime > 0 {
+		conn.SetConnMaxLifetime(time.Second * time.Duration(config.Store.Postgres.MaxConnLifetime))
+	}
+	db.connection = conn
+	return conn, nil
+}
+
+func (db *PostgresStore) WithContext(ctx context.Context) *PostgresStore {
+	db.ctx = ctx
 	return db
 }
 
-func (db *PostgresStore) SetLogAdapter(l pgx.Logger) {
-	db.pgxconf.ConnConfig.Logger = l
+func (db *PostgresStore) ApplySchemaAndDropData(schema string) error {
+	conn, err := db.getConnection()
+	if err != nil {
+		return err
+	}
+	_, err = conn.Exec(schema)
+	return err
 }
 
-func (db *PostgresStore) Connect(ctx context.Context) (*pgxpool.Pool, error) {
-	return pgxpool.ConnectConfig(ctx, db.pgxconf)
+func (db *PostgresStore) Get(query string, found interface{}, args ...interface{}) error {
+	conn, err := db.getConnection()
+	if err != nil {
+		return err
+	}
+	return conn.GetContext(db.getCtx(), found, query, args...)
 }
 
-func (db *PostgresStore) getConnection(ctx context.Context) (*pgxpool.Pool, error) {
+func (db *PostgresStore) QueryOne(query string, found interface{}, args ...interface{}) error {
+	return db.Get(query, found, args)
+}
+
+func (db *PostgresStore) Query(query string, found interface{}, args ...interface{}) error {
+	conn, err := db.getConnection()
+	if err != nil {
+		return err
+	}
+	err = conn.QueryRowxContext(db.getCtx(), query, args...).StructScan(found)
+	return err
+}
+
+func (db *PostgresStore) QueryAll(query string, found interface{}, args ...interface{}) error {
+	conn, err := db.getConnection()
+	if err != nil {
+		return err
+	}
+	err = conn.SelectContext(db.getCtx(), found, query, args...)
+	return err
+}
+
+func (db *PostgresStore) Exec(query string, args ...interface{}) error {
+	conn, err := db.getConnection()
+	if err != nil {
+		return err
+	}
+	result, err := conn.ExecContext(db.getCtx(), query, args...)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if rows == 0 || err != nil {
+		return customerror.NotFound("No rows affected")
+	}
+	return nil
+}
+
+func (db *PostgresStore) ExecAndReturnID(query string, args ...interface{}) (string, error) {
+	conn, err := db.getConnection()
+	if err != nil {
+		return "", err
+	}
+	result, err := conn.ExecContext(db.getCtx(), query, args...)
+	if err != nil {
+		return "", err
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%d", id), nil
+}
+
+func (db *PostgresStore) ExecAndReturnRowsAffected(query string, args ...interface{}) (int64, error) {
+	conn, err := db.getConnection()
+	if err != nil {
+		return 0, err
+	}
+	result, err := conn.ExecContext(db.getCtx(), query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+func (db *PostgresStore) getConnection() (*sqlx.DB, error) {
 	var err error
 	if db.connection == nil {
-		db.connection, err = db.Connect(ctx)
+		db.connection, err = db.Connect()
 	}
 	return db.connection, err
 }
-
-func (db *PostgresStore) Begin(ctx context.Context) (pgx.Tx, error) {
-	conn, err := db.getConnection(ctx)
-	if err != nil {
-		return nil, err
+func (db *PostgresStore) getCtx() context.Context {
+	if db.ctx != nil {
+		return db.ctx
 	}
-	tx, err := conn.Begin(ctx)
-	db.tx = tx
-	return tx, err
-}
-
-func (db *PostgresStore) GetTx() pgx.Tx {
-	return db.tx
-}
-
-func (db *PostgresStore) Rollback(ctx context.Context) error {
-	return db.GetTx().Rollback(ctx)
-}
-
-func (db *PostgresStore) Commit(ctx context.Context) error {
-	return db.GetTx().Commit(ctx)
-}
-
-func (db *PostgresStore) Query(ctx context.Context, query string, args ...interface{}) (pgx.Rows, error) {
-	conn, err := db.getConnection(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return conn.Query(ctx, query, args...)
-}
-
-func (db *PostgresStore) QueryRow(ctx context.Context, query string, found interface{}, args ...interface{}) error {
-	conn, err := db.getConnection(ctx)
-	if err != nil {
-		return err
-	}
-	var row string
-	err = conn.QueryRow(ctx, query, args...).Scan(&row)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal([]byte(row), &found)
-}
-
-func (db *PostgresStore) QueryOne(ctx context.Context, query string, found interface{}, args ...interface{}) error {
-	conn, err := db.getConnection(ctx)
-	if err != nil {
-		return err
-	}
-	return conn.QueryRow(ctx, query, args...).Scan(found)
-}
-
-func (db *PostgresStore) Exec(ctx context.Context, query string, args ...interface{}) error {
-	conn, err := db.getConnection(ctx)
-	if err != nil {
-		return err
-	}
-	commandTag, err := conn.Exec(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-	if commandTag.RowsAffected() == 0 {
-		return fmt.Errorf("No rows affected")
-	}
-	return nil
-}
-
-func (db *PostgresStore) ForEach(rows pgx.Rows, f func(row string)) error {
-	defer rows.Close()
-	for rows.Next() {
-		var row string
-		err := rows.Scan(&row)
-		if err != nil {
-			return err
-		}
-		f(row)
-	}
-	if rows.Err() != nil {
-		return fmt.Errorf("%v", rows.Err())
-	}
-	return nil
+	return context.Background()
 }
