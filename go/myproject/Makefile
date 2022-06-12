@@ -13,8 +13,11 @@ go_proto_out_dir := src/proto
 grpc_web_proto_out_dir := sdk/js_grpcweb
 grpc_web_version := 1.3.1
 
+chmod:
+	@chmod +x $(scripts_dir)/*
+
 setup: install
-install:
+install: chmod
 	$(go) install google.golang.org/protobuf/cmd/protoc-gen-go
 	$(go) install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	$(go) install golang.org/x/tools/cmd/goimports@latest
@@ -22,7 +25,6 @@ install:
 	$(go) install github.com/golang/mock/mockgen@v1.6.0
 	$(go) install coolconf/.../
 	$(go) mod tidy
-	@chmod +x $(scripts_dir)/*
 	@echo
 	@echo "Download protoc-gen-grpc and put it on PATH. Example:"
 	@echo "curl -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/$(grpc_web_version)/protoc-gen-grpc-web-$(grpc_web_version)-linux-x86_64"
@@ -34,25 +36,25 @@ install:
 	@echo "unzip protobuf-all-*.zip && mkdir ~/.protobuf"
 	@echo "./configure --prefix=$$HOME/.protobuf --bindir=$$HOME/bin && make && make install"
 
-run:
+run: chmod
 	$(go) run cmd/server/main.go -config config.local.yaml
 
 watch:
 	reflex -r "$(watch_files)" -s -- make run
 
 test: tests
-tests:
+tests: chmod
 	@clear
 	@$(scripts_dir)/test.sh
 
 mock: mocks
-mocks:
+mocks: chmod
 	@./$(scripts_dir)/mocks.sh
 
 lint:
 	@goimports -w cmd src
 
-build:
+build: chmod
 	@bash -c "DEV_MODE=1 '$(scripts_dir)/build.sh'"
 
 releases: lint
@@ -65,7 +67,7 @@ else
 	@$(MAKE) -s migrate_sqlite
 endif
 
-migrate_sqlite:
+migrate_sqlite: chmod
 	@#bash -c "DB_ENGINE=sqlite DATABASE_URL=$(CURDIR)/database.db MIGRATIONS_DIR=$(CURDIR)/migrations/sqlite '$(scripts_dir)/sql.sh' menu"
 	@bash -c "DB_ENGINE=sqlite DATABASE_URL=$(CURDIR)/database.db MIGRATIONS_DIR=$(CURDIR)/migrations/sqlite '$(scripts_dir)/sql.sh' apply"
 
@@ -74,7 +76,7 @@ sqlite:
 	@sqlite3 database.db < ./migrations/sqlite/schema.sql
 	@$(MAKE) migrate db=sqlite
 
-migrate_postgres:
+migrate_postgres: chmod
 	@bash -c "DB_ENGINE=postgres DATABASE_URL=$(postgres_url) MIGRATIONS_DIR=$(CURDIR)/migrations/postgres '$(scripts_dir)/sql.sh' apply"
 
 postgres: drop_postgres

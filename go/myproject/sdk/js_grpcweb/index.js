@@ -1,5 +1,5 @@
-import { TodoItem, SearchRequest } from './{{ .ProjectName }}_pb'
-import { TodoRpcPromiseClient } from './{{ .ProjectName }}_grpc_web_pb'
+import { TodoItem, SearchRequest } from './main_pb'
+import { TodoRpcPromiseClient } from './main_grpc_web_pb'
 
 class SDK {
   constructor(config) {
@@ -15,7 +15,14 @@ class SDK {
     }
     return {
       ...todoClient,
-      search: req => todoClient.search(req, metadata)
+      search: async req => {
+        try {
+          const res = await todoClient.search(req, metadata)
+          return res.getTodoitemsList()
+        } catch(err) {
+          throw new Error('Cannot search items: '+err)
+        }
+      }
     }
   }
 
