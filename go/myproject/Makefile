@@ -26,15 +26,14 @@ install: chmod
 	$(go) install coolconf/.../
 	$(go) mod tidy
 	@echo
-	@echo "Download protoc-gen-grpc and put it on PATH. Example:"
-	@echo "curl -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/$(grpc_web_version)/protoc-gen-grpc-web-$(grpc_web_version)-linux-x86_64"
-	@echo "mkdir ~/bin && cp protoc-gen-grpc-web ~/bin"
-	@echo
-	@echo "Do not forget to install manually the protobuf-all binary found in:"
-	@echo "https://github.com/protocolbuffers/protobuf/releases"
-	@echo "Example:"
-	@echo "unzip protobuf-all-*.zip && mkdir ~/.protobuf"
-	@echo "./configure --prefix=$$HOME/.protobuf --bindir=$$HOME/bin && make && make install"
+	@echo "Download protoc-gen-grpc and protoc. Put them on PATH. Linux example:"
+	@echo "export BINDIR=$(HOME)/bin"
+	@echo "mkdir \$$BINDIR"
+	@echo "curl -sL -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/$(grpc_web_version)/protoc-gen-grpc-web-$(grpc_web_version)-linux-x86_64"
+	@echo "cp protoc-gen-grpc-web \$$BINDIR"
+	@echo "curl -sL -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.20.1/protoc-3.20.1-linux-x86_64.zip"
+	@echo "unzip protoc.zip"
+	@echo "cp protoc/bin/* \$$BINDIR/"
 
 run: chmod
 	$(go) run cmd/server/main.go -config config.local.yaml
