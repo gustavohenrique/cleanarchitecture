@@ -16,7 +16,10 @@ run: clear
 
 build:
 	rm $(binary)-* 2>/dev/null || echo
-	bash $(resources_dir)/build.sh $(binary)
+	@bash $(resources_dir)/build.sh $(binary)
+
+update:
+	@bash $(resources_dir)/update_repo.sh
 
 deploy:
-	bash $(resources_dir)/deploy.sh $(binary)
+	@bash $(resources_dir)/deploy.sh $(binary)
