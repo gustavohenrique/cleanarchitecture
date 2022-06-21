@@ -57,6 +57,7 @@ func (s *HttpServer) Configure(params interface{}) {
 	})
 	s.router.ServeEmbedWebPage(e, assets.NewWebPage())
 	s.router.ServeEmbedStaticFiles(e, assets.NewStaticFile())
+	s.router.AddMiddleware(e)
 	s.router.AddRestEndpoints(e)
 }
 

@@ -55,3 +55,17 @@ func (r *Router) ServeEmbedStaticFiles(e *echo.Echo, staticFile assets.StaticFil
 func (r *Router) AddRestEndpoints(e *echo.Echo) {
 	todo.NewTodoController(r.serviceContainer).AddRoutesTo(e.Group("todo"))
 }
+
+func (r *Router) AddMiddleware(e *echo.Echo) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// databaseEngine := c.Request().Header.Get("x-some-header")
+			// if strings.Trim(databaseEngine, " ") == "" {
+			//     return c.JSON(http.StatusExpectationFailed, "Expected the engine header be postgres, sqlite or dgraph")
+			// }
+			// databaseEngine = strings.ToLower(databaseEngine)
+			// c.Set("db", databaseEngine)
+			return next(c)
+		}
+	}
+}

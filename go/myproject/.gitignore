@@ -21,3 +21,4 @@ go.work
 /Godeps/
 
 database.db
+src/proto/
