@@ -19,7 +19,7 @@ fi
 
 echo -n "Running tests: "
 export CONFIG_FILE="${PWD}/config.test.yaml"
-echo "CONFIG_FILE=${CONTINUUM_CONFIG_FILE}"
+echo "CONFIG_FILE=${CONFIG_FILE}"
 
 export DGRAPH_SCHEMA_FILE="${PWD}/migrations/dgraph/schema.dql"
 export SQLITE_SCHEMA_FILE="${PWD}/migrations/sqlite/schema.sql"
