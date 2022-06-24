@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import Alert from '../application/shared/alert'
 import { useAuthUserStore } from 'stores/user'
 
 export default {
@@ -117,6 +118,15 @@ export default {
   },
   created () {
     this.menus = this.$accountController.getAvailableMenusFor(this.user)
+  },
+  mounted () {
+    const alert = new Alert()
+    this.$subscribe('notify', params => {
+      alert.notify(params)
+    })
+  },
+  unmounted () {
+    this.$unsubscribe('notify')
   },
   data () {
     return {
