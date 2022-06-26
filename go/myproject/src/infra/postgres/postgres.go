@@ -68,7 +68,7 @@ func (db *PostgresStore) Get(query string, found interface{}, args ...interface{
 }
 
 func (db *PostgresStore) QueryOne(query string, found interface{}, args ...interface{}) error {
-	return db.Get(query, found, args)
+	return db.Get(query, found, args...)
 }
 
 func (db *PostgresStore) Query(query string, found interface{}, args ...interface{}) error {

@@ -20,7 +20,7 @@ class SDK {
           const res = await todoClient.search(req, metadata)
           return res.getTodoitemsList()
         } catch(err) {
-          throw new Error('Cannot search items: '+err)
+          throw new Error('Cannot search items.', { cause: err.code })
         }
       }
     }
