@@ -99,7 +99,11 @@ func Wrap(err error) error {
 }
 
 func detect(err error) codes.Code {
-	if ce := err.(*CustomError); ce.code > 0 {
+	ce, ok := err.(*CustomError)
+	if !ok {
+		return UNKNOWN
+	}
+	if ce.code > 0 {
 		return ce.code
 	}
 	e := err.Error()
