@@ -11,6 +11,8 @@ export PGPASSWORD=${postgres_password}
 psql="psql -U ${postgres_user} ${postgres_db}"
 migrations_dir=${MIGRATIONS_DIR:="/migrations"}
 
+alias clickhouse="docker run -i --rm --link clickhouse:clickhouse curlimages/curl 'http://clickhouse:8123/?query=' -s --data-binary @-"
+
 function put {
     [ "$#" != 3 ] && exit 1
     mapname=$1; key=$2; value=$3

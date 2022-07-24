@@ -1,0 +1,42 @@
+clickhouse_url := $(shell cat config.local.yaml| grep clickhouse | grep url | awk -F ': ' '{print $$2}')
+
+clickhouse:
+	@docker run -d --name clickhouse \
+		--user $(UID):$(GID) \
+		--cap-add=SYS_NICE --cap-add=NET_ADMIN --cap-add=IPC_LOCK \
+		--ulimit nofile=262144:262144 \
+		-p 18123:8123 \
+		-p 19000:9000 \
+		-e CLICKHOUSE_USER=$(clickhouse_user) \
+		-e CLICKHOUSE_PASSWORD=$(clickhouse_password) \
+		-e CLICKHOUSE_DB=$(clickhouse_db) \
+		-e CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1 \
+		clickhouse/clickhouse-server \
+	&& echo "Waiting for 3s..." \
+	&& sleep 3 \
+	@$(MAKE) -s migrate db=clickhouse
+
+migrate_clickhouse:
+	@#cat migrations/clickhouse/schema.sql | docker run -i --rm \
+		--link clickhouse:clickhouse \
+		curlimages/curl 'http://$(clickhouse_user):$(clickhouse_password)@clickhouse:8123/?query=' -s --data-binary @-
+	@docker run -it --rm \
+		--link clickhouse:clickhouse \
+		--entrypoint clickhouse-client \
+		-e CLICKHOUSE_USER=$(clickhouse_user) \
+		-e CLICKHOUSE_PASSWORD=$(clickhouse_password) \
+		-e CLICKHOUSE_DB=$(clickhouse_db) \
+		-v $(CURDIR)/migrations/clickhouse:/migrations \
+		clickhouse/clickhouse-server --host clickhouse -n --queries-file /migrations/schema.sql
+
+drop_clickhouse:
+	@docker rm -f clickhouse 2>/dev/null || exit 0
+
+clickhouse_client:
+	@docker run -it --rm \
+		--link clickhouse:clickhouse \
+		--entrypoint clickhouse-client \
+		-e CLICKHOUSE_USER=$(clickhouse_user) \
+		-e CLICKHOUSE_PASSWORD=$(clickhouse_password) \
+		-e CLICKHOUSE_DB=$(clickhouse_db) \
+		clickhouse/clickhouse-server --host clickhouse

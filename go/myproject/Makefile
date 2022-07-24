@@ -33,5 +33,3 @@ lint:
 	@goimports -w cmd src
 	@staticcheck ./...
 
-build: lint
-	@./$(scripts_dir)/build.sh

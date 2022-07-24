@@ -12,7 +12,7 @@ grpc:
 store:
   postgres:
     url: postgres://admin:123456@127.0.0.1/maindb?sslmode=disable
-    max_conns: 500
+    max_conns: 10
     max_conn_lifetime: 480
     max_conn_iddle_time: 380
     schema: migrations/postgres/schema.sql
@@ -22,3 +22,8 @@ store:
   dgraph:
     http: http://localhost:8080
     grpc: localhost:9080
+  clickhouse:
+    url: clickhouse://127.0.0.1:9000?dial_timeout=1s&compress=true
+    max_conns: 11
+    max_conn_lifetime: 480
+    max_conn_iddle_time: 380
