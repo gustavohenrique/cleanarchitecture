@@ -17,12 +17,15 @@ type PostgresStore struct {
 	tx         *sqlx.Tx
 	config     *conf.Config
 	ctx        context.Context
+	bulk       *BulkStore
 }
 
 func NewPostgresStore() *PostgresStore {
+	config := conf.Get()
 	return &PostgresStore{
-		config: conf.Get(),
+		config: config,
 		ctx:    context.Background(),
+		bulk:   Bulk(context.Background(), config),
 	}
 }
 
@@ -131,6 +134,10 @@ func (db *PostgresStore) ExecAndReturnRowsAffected(query string, args ...interfa
 		return 0, err
 	}
 	return result.RowsAffected()
+}
+
+func (db *PostgresStore) BulkInsert(table string, columns []string, rows [][]interface{}) error {
+	return db.bulk.Copy(table, columns, rows)
 }
 
 func (db *PostgresStore) getConnection() (*sqlx.DB, error) {

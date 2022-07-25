@@ -15,7 +15,7 @@ var (
 	config = conf.Get()
 )
 
-func TestBulkInsert(t *testing.T) {
+func TestBulkCopy(t *testing.T) {
 	start := time.Now()
 	columns := []string{"id", "title"}
 	rows := getRows(10)
