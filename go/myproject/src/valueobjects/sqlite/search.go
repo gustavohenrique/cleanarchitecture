@@ -82,11 +82,6 @@ var operators = map[string]string{
 	"anyofterms":       "IN",
 }
 
-var logicalOperators = map[string]string{
-	"+": "AND",
-	",": "OR",
-}
-
 var allowedRawValues = []string{
 	"CURRENT_TIMESTAMP",
 	"NOW()",

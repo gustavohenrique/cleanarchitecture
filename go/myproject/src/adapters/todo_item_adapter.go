@@ -3,8 +3,8 @@ package adapters
 import (
 	"{{ .ProjectName }}/src/entities"
 	pb "{{ .ProjectName }}/src/proto"
-	"{{ .ProjectName }}/src/valueobjects"
 	"{{ .ProjectName }}/src/shared/datetime"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 type TodoItemAdapter struct{}

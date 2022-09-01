@@ -6,9 +6,11 @@ import (
 	"{{ .ProjectName }}/src/shared/strings"
 )
 
-const OperatorAny = "anyofterms"
-const OperatorAll = "allofterms"
-const OperatorExact = "eq"
+const (
+	OperatorAny   = "anyofterms"
+	OperatorAll   = "allofterms"
+	OperatorExact = "eq"
+)
 
 var validOperators = []string{OperatorAny, OperatorAll, OperatorExact}
 
@@ -45,7 +47,7 @@ func (s SearchFilter) ValidateOperator() error {
 	if strings.SliceContains(validOperators, s.Operator) {
 		return nil
 	}
-	return fmt.Errorf("Unknown operator %s", s.Operator)
+	return fmt.Errorf("unknown operator %s", s.Operator)
 }
 
 func (s SearchRequest) ParseFilter() (string, error) {

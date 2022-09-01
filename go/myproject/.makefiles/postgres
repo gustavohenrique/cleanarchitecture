@@ -1,0 +1,28 @@
+postgres_url := $(shell cat config.local.yaml| grep postgres | grep url | awk -F ': ' '{print $$2}')
+
+migrate_postgres:
+	@docker exec -it postgres sh -c '/postgres.sh apply'
+
+postgres: drop_postgres
+	@docker run -d --name postgres \
+		-m 2G \
+		-p 5432:5432 \
+		-e TZ=America/Sao_Paulo \
+		-e POSTGRES_USER=$(shell echo $(postgres_url) | awk -F ':' '{print $$2}' | cut -b 3-) \
+		-e POSTGRES_PASSWORD=$(shell echo $(postgres_url) | awk -F ':' '{print $$3}' | awk -F '@' '{print $$1}') \
+		-e POSTGRES_DB=$(shell echo $(postgres_url) | awk -F '/' '{print $$4}' | awk -F '?' '{print $$1}') \
+		-e DATABASE_URL=$(postgres_url) \
+		-e ADDITIONAL_DB=root \
+		-v $(CURDIR)/migrations/postgres:/migrations \
+		--mount type=bind,source=$(CURDIR)/scripts/postgres.sh,target=/postgres.sh \
+		gustavohenrique/postgres:14-alpine \
+	&& echo "Waiting for 3s..." \
+	&& sleep 3 \
+	&& docker exec postgres sh -c "psql $(postgres_url) < /migrations/schema.sql"
+	@$(MAKE) migrate_postgres
+
+drop_postgres:
+	@docker rm -f postgres 2>/dev/null || exit 0
+
+psql:
+	@docker exec -it postgres sh -c '/postgres.sh shell'

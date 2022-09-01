@@ -73,8 +73,8 @@ func (s *HttpServer) Start(address string, port int) error {
 		log.Fatal(e.Start(addr))
 	}()
 
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt, os.Kill, syscall.SIGQUIT)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	<-quit
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

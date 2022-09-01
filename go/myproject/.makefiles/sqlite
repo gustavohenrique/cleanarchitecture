@@ -1,0 +1,10 @@
+sqlite_file := $(shell cat config.local.yaml | grep -A1 sqlite | grep address | awk -F ': ' '{print $$2}')
+
+migrate_sqlite: chmod
+	@bash -c "DATABASE_URL=$(sqlite_file) MIGRATIONS_DIR=$(CURDIR)/migrations/sqlite '$(scripts_dir)/sqlite.sh' apply"
+
+sqlite3: sqlite
+sqlite:
+	@rm $(sqlite_file) 2>/dev/null || echo
+	@sqlite3 $(sqlite_file) < ./migrations/sqlite/schema.sql
+	@$(MAKE) migrate_sqlite

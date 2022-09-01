@@ -14,7 +14,6 @@ import (
 
 type PostgresStore struct {
 	connection *sqlx.DB
-	tx         *sqlx.Tx
 	config     *conf.Config
 	ctx        context.Context
 	bulk       *BulkStore

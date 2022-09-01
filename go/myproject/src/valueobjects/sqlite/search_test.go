@@ -71,7 +71,7 @@ func TestDefaultSorting(t *testing.T) {
 	beforeEach()
 	req.Sorting = sqlite.Sorting{}
 	sql := req.String()
-	if "WHERE 1=1 AND name = 'gustavo' or age >= '20' LIMIT 10 OFFSET 0" != sql {
+	if sql != "WHERE 1=1 AND name = 'gustavo' or age >= '20' LIMIT 10 OFFSET 0" {
 		t.Errorf("Failed")
 	}
 }
@@ -80,7 +80,7 @@ func TestDefaultPagination(t *testing.T) {
 	beforeEach()
 	req.Pagination = sqlite.Pagination{}
 	sql := req.String()
-	if "WHERE 1=1 AND name = 'gustavo' or age >= '20' ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" != sql {
+	if sql != "WHERE 1=1 AND name = 'gustavo' or age >= '20' ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" {
 		t.Errorf("Failed")
 	}
 }
@@ -112,7 +112,7 @@ func TestIgnoreTermWhenItIsEmpty(t *testing.T) {
 	beforeEach()
 	req.Filters = []sqlite.SearchFilter{}
 	sql := req.String()
-	if "WHERE 1=1  ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" != sql {
+	if sql != "WHERE 1=1  ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" {
 		t.Errorf("Failed")
 	}
 }
@@ -121,7 +121,7 @@ func TestIgnoreRequestWhenTotalTermsMismatchTotalParams(t *testing.T) {
 	beforeEach()
 	req.Placeholders = "$1 or $2 and $3"
 	sql := req.String()
-	if "WHERE 1=1  ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" != sql {
+	if sql != "WHERE 1=1  ORDER BY id COLLATE NOCASE DESC LIMIT 10 OFFSET 0" {
 		t.Errorf("Failed")
 	}
 }

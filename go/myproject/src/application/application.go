@@ -6,16 +6,16 @@ import (
 	"log"
 	"os"
 
-	"{{ .ProjectName }}/src/application/server"
 	"{{ .ProjectName }}/src/application/grpcserver"
 	"{{ .ProjectName }}/src/application/grpcwebserver"
 	"{{ .ProjectName }}/src/application/httpserver"
+	"{{ .ProjectName }}/src/application/server"
+	"{{ .ProjectName }}/src/infra"
 	"{{ .ProjectName }}/src/repositories"
 	"{{ .ProjectName }}/src/services"
-	"{{ .ProjectName }}/src/valueobjects"
-	"{{ .ProjectName }}/src/infra"
 	"{{ .ProjectName }}/src/shared/conf"
 	"{{ .ProjectName }}/src/shared/logger"
+	"{{ .ProjectName }}/src/valueobjects"
 )
 
 type Application struct {

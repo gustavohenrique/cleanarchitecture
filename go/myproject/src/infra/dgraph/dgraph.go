@@ -6,6 +6,7 @@ import (
 	"github.com/dgraph-io/dgo/v210"
 	"github.com/dgraph-io/dgo/v210/protos/api"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"{{ .ProjectName }}/src/shared/conf"
 	"{{ .ProjectName }}/src/shared/customjson"
@@ -26,7 +27,7 @@ func NewDgraphStore() *DgraphStore {
 
 func (db *DgraphStore) Connect() error {
 	databaseURL := db.config.Store.Dgraph.Grpc
-	conn, err := grpc.Dial(databaseURL, grpc.WithInsecure())
+	conn, err := grpc.Dial(databaseURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return err
 	}

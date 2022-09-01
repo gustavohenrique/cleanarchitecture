@@ -1,10 +1,14 @@
 package test
 
 import (
+	"{{ .ProjectName }}/src/infra"
 	"{{ .ProjectName }}/src/repositories"
 	"{{ .ProjectName }}/src/services"
-	"{{ .ProjectName }}/src/infra"
 )
+
+type ContextString string
+
+const DB ContextString = "db"
 
 func GetServiceContainer() services.ServiceContainer {
 	infraContainer := infra.New()

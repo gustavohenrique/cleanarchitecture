@@ -77,7 +77,7 @@ func getCaller() string {
 	pc, _, _, ok := runtime.Caller(2)
 	details := runtime.FuncForPC(pc)
 	if ok && details != nil {
-		return fmt.Sprintf("%s", details.Name())
+		return details.Name()
 	}
 	return ""
 }

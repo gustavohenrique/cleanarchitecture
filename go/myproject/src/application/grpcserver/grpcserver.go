@@ -75,8 +75,8 @@ func (g *GrpcServer) Start(address string, port int) error {
 		log.Fatalln(g.rawServer.Serve(lis))
 	}()
 
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt, os.Kill, syscall.SIGQUIT)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	<-quit
 	_, cancel := context.WithCancel(context.Background())
 	cancel()

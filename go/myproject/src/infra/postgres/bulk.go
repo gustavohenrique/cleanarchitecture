@@ -44,14 +44,14 @@ func Bulk(ctx context.Context, config *conf.Config) *BulkStore {
 
 func (db *BulkStore) Copy(table string, columns []string, rows [][]interface{}) error {
 	if len(rows) == 0 || len(columns) == 0 {
-		return fmt.Errorf("Columns ou rows com length zero")
+		return fmt.Errorf("columns ou rows com length zero")
 	}
 	if len(columns) != len(rows[0]) {
-		return fmt.Errorf("O total de columns nao corresponde ao total de valores para inserir")
+		return fmt.Errorf("the total of cols is different from total of rows")
 	}
 	conn := db.connection
 	if conn == nil {
-		return fmt.Errorf("Não conectou ao banco %s", db.config.Store.Postgres.URL)
+		return fmt.Errorf("cannot connect to database %s", db.config.Store.Postgres.URL)
 	}
 	_, err := db.connection.CopyFrom(
 		db.ctx,

@@ -23,7 +23,7 @@ func NewTodoItemEntity() TodoItemEntity {
 
 func (s TodoItemEntity) ValidateInsertRequest() error {
 	if len(strings.TrimSpace(s.Title)) < 1 {
-		return fmt.Errorf("Title should have at least 1 characters")
+		return fmt.Errorf("title should have at least 1 characters")
 	}
 	return nil
 }

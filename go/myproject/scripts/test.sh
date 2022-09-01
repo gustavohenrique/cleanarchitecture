@@ -21,14 +21,12 @@ echo -n "Running tests: "
 export CONFIG_FILE="${PWD}/config.test.yaml"
 echo "CONFIG_FILE=${CONFIG_FILE}"
 
-export DGRAPH_SCHEMA_FILE="${PWD}/migrations/dgraph/schema.dql"
 export SQLITE_SCHEMA_FILE="${PWD}/migrations/sqlite/schema.sql"
 export POSTGRES_SCHEMA_FILE="${PWD}/migrations/postgres/schema.sql"
 
 if [ -n "$CI" ]; then
     echo "Running go test in CI mode..."
-    go test -v -p 1 -coverprofile=coverage.txt -failfast ${PKG}
-    go tool cover -html ./coverage.txt -o coverage.html
+	gocov test ${PKG} | gocov-xml > coverage.xml
 else
     go test -v -failfast -p 1 ${PKG} | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
 fi

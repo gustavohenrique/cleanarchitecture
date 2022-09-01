@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
-db_engine=${DB_ENGINE:-"sqlite"}
-database_url=`echo ${DATABASE_URL} | awk -F '?' '{print $1}'`
 mapdir=`mktemp -d`
-migrations_dir=${MIGRATIONS_DIR:=${PWD}}
+database_url=${DATABASE_URL}
+postgres_user=`echo $database_url | awk -F ':' '{print $2}' | cut -b 3-`
+postgres_password=`echo $database_url | awk -F ':' '{print $3}' | awk -F '@' '{print $1}'`
+postgres_db=`echo $database_url | awk -F '/' '{print $4}' | awk -F '?' '{print $1}'`
+export PGPASSWORD=${postgres_password}
+psql="psql -U ${postgres_user} ${postgres_db}"
+migrations_dir=${MIGRATIONS_DIR:="/migrations"}
 
 function put {
     [ "$#" != 3 ] && exit 1
@@ -40,11 +44,7 @@ function apply_all {
         name=`basename ${f}`
         echo -e "${name}"
         UP=$(sed '/-- <up>/,/-- <\/up>/!d' ${f} | grep -v '^--')
-        if [ "${db_engine}" == "postgres" ]; then
-          psql ${database_url} -c "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
-        else
-          sqlite3 ${database_url} "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
-        fi
+        $psql --command "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
     done
 }
 
@@ -73,22 +73,13 @@ function show_menu {
 
     read -p "Apply (up) or rollback (down)? up|down: " option
 
-    if [ -z "${database_url}" ]; then
-        read -p "DATABASE_URL: " db_url
-        database_url=`echo ${db_url} | awk -F '?' '{print $1}'`
-    fi
-
     case "${option}" in
         up|UP)
             UP=$(sed '/-- <up>/,/-- <\/up>/!d' ${filename} | grep -v '^--')
             echo -e "\nSQL:\n${UP}\n"
             read -p "Confirm? y|n: " confirm
             if [ "${confirm}" == "y" ]; then
-                if [ "${db_engine}" == "postgres" ]; then
-                    psql ${database_url} -c "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
-                else
-                    sqlite3 ${database_url} "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
-                fi
+                $psql -c "BEGIN; ${UP}; COMMIT;" && echo "Migration applied."
             fi
             ;;
         down|DOWN)
@@ -96,11 +87,7 @@ function show_menu {
             echo -e "\nSQL:\n${DOWN}\n"
             read -p "Confirm? y|n: " confirm
             if [ "${confirm}" == "y" ]; then
-                if [ "${db_engine}" == "postgres" ]; then
-                    psql ${database_url} -c "BEGIN; ${DOWN}; COMMIT;" && echo "Migration reverted."
-                else
-                    sqlite3 ${database_url} "BEGIN; ${DOWN}; COMMIT;" && echo "Migration reverted."
-                fi
+                $psql -c "BEGIN; ${DOWN}; COMMIT;" && echo "Migration reverted."
             fi
             ;;
         *) echo "Invalid option."; exit 0 ;;
@@ -118,6 +105,7 @@ case "${1}" in
     menu) show_menu ; exit 0 ;;
     show|ls|view) /bin/ls -1 [0-9]* | sort; exit 0 ;;
     apply) apply_all ; exit 0 ;;
+    shell) $psql -q -X -v VERBOSITY=terse -v ON_ERROR_STOP=1 -A -t -w ;;
     help) helpme ;;
     *) show_menu ;;
 esac

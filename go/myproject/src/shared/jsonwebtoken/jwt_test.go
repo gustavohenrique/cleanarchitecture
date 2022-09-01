@@ -5,6 +5,9 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
+	"fmt"
+	"io/ioutil"
+	"strings"
 	"testing"
 
 	"{{ .ProjectName }}/src/shared/jsonwebtoken"
@@ -31,7 +34,7 @@ func TestGenerateTokenExpiresInOneDay(t *testing.T) {
 		Expiration: "86400",
 	})
 	token, err := jwt.GenerateToken(USER_ID)
-	assert.Nil(t, err)
+	assert.Nil(t, err, fmt.Sprintf("error: %s", err))
 	assert.True(t, len(token) > 0)
 
 	id, err := jwt.ParseToken(token)
@@ -66,16 +69,14 @@ func getRsaPrivateKeyFrom(val string) (*rsa.PrivateKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	block, _ := pem.Decode(privkeyBytes)
-	enc := x509.IsEncryptedPEMBlock(block)
-	b := block.Bytes
-	if enc {
-		b, err = x509.DecryptPEMBlock(block, nil)
-		if err != nil {
-			return nil, err
-		}
+	r := strings.NewReader(string(privkeyBytes))
+	pemBytes, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
 	}
-	privkey, err := x509.ParsePKCS8PrivateKey(b)
+	block, _ := pem.Decode(pemBytes)
+
+	privkey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
@@ -87,16 +88,13 @@ func getRsaPublicKeyFrom(val string) (*rsa.PublicKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	block, _ := pem.Decode(pubkeyBytes)
-	enc := x509.IsEncryptedPEMBlock(block)
-	b := block.Bytes
-	if enc {
-		b, err = x509.DecryptPEMBlock(block, nil)
-		if err != nil {
-			return nil, err
-		}
+	r := strings.NewReader(string(pubkeyBytes))
+	pemBytes, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
 	}
-	pubkey, err := x509.ParsePKIXPublicKey(b)
+	block, _ := pem.Decode(pemBytes)
+	pubkey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}

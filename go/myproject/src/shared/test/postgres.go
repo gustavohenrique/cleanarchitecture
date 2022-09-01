@@ -28,7 +28,7 @@ func WithPostgres(ts *testing.T, name string, fn PostgresFN) {
 	if err := store.ApplySchemaAndDropData(string(b)); err != nil {
 		log.Fatalf("[ERROR] Cannot apply schema. %s", err)
 	}
-	ctx := context.WithValue(context.Background(), "db", "postgres")
+	ctx := context.WithValue(context.Background(), DB, "postgres")
 	ts.Run(name, func(t *testing.T) {
 		fn(t, store, ctx)
 	})

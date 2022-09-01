@@ -56,7 +56,7 @@ gox \
     -arch="${XC_ARCH}" \
     -osarch="${XC_EXCLUDE_OSARCH}" \
     -ldflags "${LD_FLAGS}" \
-    -output "${OUTPUT_DIR}/releases/{{.OS}}_{{.Arch}}/{{ .ProjectName }}" \
+    -output "${OUTPUT_DIR}/releases/<no value>_<no value>/{{ .ProjectName }}" \
     ${OUTPUT_DIR}/cmd/{{ .ProjectName }}
 
 # Copy our OS/Arch to the bin/ directory

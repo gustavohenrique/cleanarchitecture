@@ -13,7 +13,6 @@ import (
 
 type SqliteStore struct {
 	connection *sqlx.DB
-	tx         *sqlx.Tx
 	config     *conf.Config
 	ctx        context.Context
 }
