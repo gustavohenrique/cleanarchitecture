@@ -6,12 +6,15 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"{{ .ProjectName }}/assets"
+	_ "{{ .ProjectName }}/src/application/httpserver/docs"
 	r "{{ .ProjectName }}/src/application/httpserver/router"
 	"{{ .ProjectName }}/src/application/server"
 	"{{ .ProjectName }}/src/services"
@@ -19,6 +22,17 @@ import (
 	log "{{ .ProjectName }}/src/shared/logger"
 	"{{ .ProjectName }}/src/shared/metrics"
 )
+
+// @title Swagger Example
+// @version 1.0
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:8001
+// @schemes http https
+// @BasePath /v1
 
 type HttpServer struct {
 	rawServer        *echo.Echo
@@ -55,6 +69,7 @@ func (s *HttpServer) Configure(params interface{}) {
 	e.GET("/metrics", func(c echo.Context) error {
 		return c.String(http.StatusOK, metrics.Collect())
 	})
+	e.GET("/docs/*", echoSwagger.WrapHandler)
 	s.router.ServeEmbedWebPage(e, assets.NewWebPage())
 	s.router.ServeEmbedStaticFiles(e, assets.NewStaticFile())
 
@@ -131,5 +146,10 @@ func (s *HttpServer) addMiddlewares() {
 		},
 	}))
 	e.Use(middleware.BodyLimit("10M"))
-	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{Level: 5}))
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 5,
+		Skipper: func(c echo.Context) bool {
+			return strings.Contains(c.Request().URL.Path, "docs")
+		},
+	}))
 }

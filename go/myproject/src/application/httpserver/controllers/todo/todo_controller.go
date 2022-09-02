@@ -34,6 +34,11 @@ func (h *TodoController) AddRoutesTo(group *echo.Group) {
 	group.PUT("/:id", h.Update)
 }
 
+// @Description Get all TODO items
+// @Accept json
+// @Produce json
+// @Success 200 {object} valueobjects.HttpResponse{data=valueobjects.TodoItemResponse}
+// @Router /todo [get]
 func (h *TodoController) ReadAll(c echo.Context) error {
 	res := valueobjects.NewHttpResponse()
 	ctx := c.Request().Context()
@@ -46,6 +51,12 @@ func (h *TodoController) ReadAll(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// @Description Create TODO item
+// @Accept json
+// @Produce json
+// @Param TODO body valueobjects.TodoItemRequest true "Payload"
+// @Success 201 {object} valueobjects.HttpResponse{data=valueobjects.TodoItemResponse}
+// @Router /todo [post]
 func (h *TodoController) Create(c echo.Context) error {
 	var req valueobjects.TodoItemRequest
 	res := valueobjects.NewHttpResponse()

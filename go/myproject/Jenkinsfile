@@ -69,6 +69,12 @@ pipeline {
             }
         }
 
+        stage('Swagger: Generate API docs') {
+            steps {
+                sh 'make docs'
+            }
+        }
+
         stage('Tests: Run tests, lint and coverage') {
             when {
                 expression {

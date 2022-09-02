@@ -176,6 +176,8 @@ make sqlite    # Cria um arquivo database.db utilizando migrations/sqlite/schema
 make postgres  # Cria um container Docker rodando Postgres utilizando migrations/postgres/schema.sql
 make proto     # Roda o compilador protoc para gerar os stubs a partir do assets/static/main.proto
 make lint      # Roda o goimports para formatar o código Go
+make docs      # Cria doc swagger
+make mocks     # Cria mocks para os testes
 make test      # Executa os testes unitários
 make run       # Roda a aplicação em localhost
 ```
