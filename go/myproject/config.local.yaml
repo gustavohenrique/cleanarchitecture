@@ -1,7 +1,11 @@
 debug: true
 auth:
   disabled: false
-  token_expiration: 900
+  jwt:
+    audience: web
+    secret: mystrongpass
+    expiration: 86400
+    header: x-auth-token
 log:
   level: info
   output: stdout

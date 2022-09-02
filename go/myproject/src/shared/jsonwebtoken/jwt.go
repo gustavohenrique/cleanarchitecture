@@ -51,11 +51,10 @@ func (j *Jwt) GenerateToken(id string) (string, error) {
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiration)),
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 	}
-	t := jwt.New(jwt.GetSigningMethod("RS256"))
-	t.Claims = claims
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	key := j.jwtConfig.Secret
 	if strings.TrimSpace(key) != "" {
-		return t.SignedString(key)
+		return t.SignedString([]byte(key))
 	}
 	return t.SignedString(j.jwtConfig.PrivateKey)
 }
@@ -64,7 +63,7 @@ func (j *Jwt) ParseToken(tokenString string) (string, error) {
 	t, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		key := j.jwtConfig.Secret
 		if strings.TrimSpace(key) != "" {
-			return key, nil
+			return []byte(key), nil
 		}
 		return j.jwtConfig.PublicKey, nil
 	})
