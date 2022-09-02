@@ -22,6 +22,11 @@ type Config struct {
 			Secret     string `env:"AUTH_TOKEN_SECRET" yaml:"secret"`
 			Expiration string `env:"AUTH_TOKEN_EXPIRATION" yaml:"expiration" default:"86400"`
 			Audience   string `env:"AUTH_AUDIENCE" yaml:"audience" default:"web"`
+			Test       struct {
+				ClientID         string `yaml:"client_id"`
+				ClientSecret     string `yaml:"client_secret"`
+				ClientSecretHash string `yaml:"client_secret_hash"`
+			}
 		}
 	}
 	Log struct {

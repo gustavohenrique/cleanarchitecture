@@ -1,5 +1,6 @@
 package jsonwebtoken_test
 
+/*
 import (
 	"crypto/rsa"
 	"crypto/x509"
@@ -102,3 +103,4 @@ func getRsaPublicKeyFrom(val string) (*rsa.PublicKey, error) {
 	}
 	return pubkey.(*rsa.PublicKey), nil
 }
+*/

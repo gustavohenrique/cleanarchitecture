@@ -14,7 +14,7 @@ import (
 )
 
 type AuthService struct {
-	jwt    *jsonwebtoken.Jwt
+	jwt *jsonwebtoken.Jwt
 }
 
 func NewService(repositoryContainer repositories.RepositoryContainer) interfaces.IAuthService {

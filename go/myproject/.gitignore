@@ -4,21 +4,14 @@
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
 *.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
 go.work
-
-### Go Patch ###
 /vendor/
 /Godeps/
 
-database.db
+*.db
 src/proto/
+sdk/go_grpc/proto/
+sdk/js_grpcweb/main_*.js
+/mocks/

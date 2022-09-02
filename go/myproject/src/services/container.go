@@ -8,21 +8,21 @@ import (
 )
 
 type ServiceContainer struct {
-	todoService interfaces.ITodoService
-	authService interfaces.IAuthService
+	TodoService interfaces.ITodoService
+	AuthService interfaces.IAuthService
 }
 
 func New(repositoryContainer repositories.RepositoryContainer) ServiceContainer {
 	return ServiceContainer{
-		todoService: todo.NewService(repositoryContainer),
-		authService: auth.NewService(repositoryContainer),
+		TodoService: todo.NewService(repositoryContainer),
+		AuthService: auth.NewService(repositoryContainer),
 	}
 }
 
 func (c ServiceContainer) GetTodoService() interfaces.ITodoService {
-	return c.todoService
+	return c.TodoService
 }
 
 func (c ServiceContainer) GetAuthService() interfaces.IAuthService {
-	return c.authService
+	return c.AuthService
 }

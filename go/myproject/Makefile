@@ -15,6 +15,7 @@ install: chmod
 	$(go) install github.com/axw/gocov/gocov@latest
 	$(go) install github.com/AlekSi/gocov-xml@latest
 	$(go) install coolconf/.../
+	$(go) get github.com/golang/mock/gomock
 	$(go) mod tidy
 
 run: chmod
@@ -27,7 +28,7 @@ tests: chmod
 
 mock: mocks
 mocks: chmod
-	@./$(scripts_dir)/mocks.sh
+	@$(scripts_dir)/mocks.sh
 
 lint:
 	@goimports -w cmd src

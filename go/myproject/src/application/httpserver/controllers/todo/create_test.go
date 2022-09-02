@@ -10,9 +10,10 @@ import (
 )
 
 func TestCreateWithEmptyBody(t *testing.T) {
-	t.Skip()
-	req := httpclient.DoPOST("/v1/todo", "")
-	serviceContainer := test.GetServiceContainer()
+	req := httpclient.
+		WithOauth2Mock().
+		DoPOST("/v1/todo", "")
+	serviceContainer := test.NewTestHelper().WithOauth2Mock(t).GetServiceContainer()
 	resp, _ := httpserver.With(&serviceContainer).ServeHTTP(req)
 	assert.HttpStatusCode(t, resp, 400)
 }

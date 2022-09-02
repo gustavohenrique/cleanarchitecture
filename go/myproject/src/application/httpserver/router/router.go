@@ -60,9 +60,9 @@ func (r *Router) ServeEmbedStaticFiles(e *echo.Echo, staticFile assets.StaticFil
 func (r *Router) AddRestEndpoints(e *echo.Echo) {
 	r.tokenController.AddRoutesTo(e.Group("token"))
 
-	v1 := e.Group("v1")
+	v1 := e.Group("/v1")
 	r.addJwtMiddlewareTo(v1)
-	r.todoController.AddRoutesTo(v1.Group("todo"))
+	r.todoController.AddRoutesTo(v1.Group("/todo"))
 }
 
 func (r *Router) addJwtMiddlewareTo(e *echo.Group) {

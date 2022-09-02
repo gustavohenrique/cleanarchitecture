@@ -10,7 +10,6 @@ import (
 	"{{ .ProjectName }}/src/interfaces"
 	"{{ .ProjectName }}/src/services"
 	"{{ .ProjectName }}/src/shared/conf"
-	log "{{ .ProjectName }}/src/shared/logger"
 	"{{ .ProjectName }}/src/valueobjects"
 )
 
@@ -33,13 +32,8 @@ func (h *TokenController) AddRoutesTo(group *echo.Group) {
 
 func (h *TokenController) GenerateCredentials(c echo.Context) error {
 	res := valueobjects.NewHttpResponse()
-	// ctx := c.Request().Context()
-	// credentials, _ := h.authService.GenerateOauth2Credentials(ctx, "")
-	// fake data
-	credentials := entities.Oauth2Entity{
-		ClientID:     "f7f4048b-58d6-4c1b-9c6a-41e96831c17a",
-		ClientSecret: "3hV5bwvcamCnqcCS239d2b83908d4373af829a0c27f34af0",
-	}
+	ctx := c.Request().Context()
+	credentials, _ := h.authService.GenerateOauth2Credentials(ctx, "")
 	res.SetData(credentials)
 	return c.JSON(http.StatusCreated, res)
 }
@@ -59,13 +53,11 @@ func (h *TokenController) Create(c echo.Context) error {
 	}
 	match, err := h.authService.CompareClientSecretAndHash(ctx, req.ClientSecret, hash)
 	if !match {
-		log.Error(err)
 		res.SetError(err, "wrong password")
 		return c.JSON(http.StatusUnauthorized, res)
 	}
 	jwtToken, err := h.authService.GenerateJwt(ctx, req.ClientID)
 	if err != nil {
-		log.Error("Failed to create a token:", err)
 		res.SetError(err)
 		return c.JSON(http.StatusInternalServerError, res)
 	}
@@ -80,7 +72,7 @@ func (h *TokenController) Verify(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		token := c.Request().Header.Get(h.config.Auth.Jwt.Header)
 		if strings.Trim(token, " ") == "" {
-			return c.JSON(http.StatusExpectationFailed, "Expected header " + h.config.Auth.Jwt.Header)
+			return c.JSON(http.StatusExpectationFailed, "Expected header "+h.config.Auth.Jwt.Header)
 		}
 		ctx := c.Request().Context()
 		clientID, err := h.authService.ParseJwt(ctx, token)

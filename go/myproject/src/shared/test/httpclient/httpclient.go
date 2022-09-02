@@ -4,15 +4,17 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"log"
 	"net/http"
+
+	"{{ .ProjectName }}/src/shared/conf"
 )
 
 type HTTPClient struct {
-	Cookie   *http.Cookie
-	Token    string
-	Username string
-	Password string
+	Cookie      *http.Cookie
+	Token       string
+	TokenHeader string
+	Username    string
+	Password    string
 }
 
 func DoGET(url string) *http.Request {
@@ -46,9 +48,19 @@ func WithCookie(name, value string) HTTPClient {
 	return HTTPClient{Cookie: cookie}
 }
 
-func WithTokenInHeader(token string) HTTPClient {
+func WithTokenInHeader(header, token string) HTTPClient {
 	return HTTPClient{
-		Token: token,
+		TokenHeader: header,
+		Token:       token,
+	}
+}
+
+func WithOauth2Mock() HTTPClient {
+	config := conf.Get()
+	header := config.Auth.Jwt.Header
+	return HTTPClient{
+		TokenHeader: header,
+		Token:       "any token because authService is mocked",
 	}
 }
 
@@ -77,13 +89,22 @@ func (h HTTPClient) DoPUT(url, jsonReq string) *http.Request {
 func (h HTTPClient) addTokenIn(req *http.Request) *http.Request {
 	if h.Cookie != nil {
 		req.AddCookie(h.Cookie)
-	} else if h.Token != "" {
-		log.Println("Authorization:", fmt.Sprintf("Bearer %s", h.Token))
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", h.Token))
-	} else {
-		credentials := h.Username + ":" + h.Password
-		auth := base64.StdEncoding.EncodeToString([]byte(credentials))
-		req.Header.Set("Authorization", "basic "+auth)
+		return req
 	}
+	if h.Token != "" {
+		return h.getReqWithTokenHeader(req)
+	}
+	credentials := h.Username + ":" + h.Password
+	auth := base64.StdEncoding.EncodeToString([]byte(credentials))
+	req.Header.Set("Authorization", "basic "+auth)
+	return req
+}
+
+func (h HTTPClient) getReqWithTokenHeader(req *http.Request) *http.Request {
+	if h.TokenHeader != "" {
+		req.Header.Set(h.TokenHeader, h.Token)
+		return req
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", h.Token))
 	return req
 }
