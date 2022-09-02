@@ -57,7 +57,7 @@ func (s *HttpServer) Configure(params interface{}) {
 	})
 	s.router.ServeEmbedWebPage(e, assets.NewWebPage())
 	s.router.ServeEmbedStaticFiles(e, assets.NewStaticFile())
-	s.router.AddMiddleware(e)
+
 	s.router.AddRestEndpoints(e)
 }
 
@@ -103,7 +103,7 @@ func (s *HttpServer) addMiddlewares() {
 			"grpc-message",
 			"grpc-timeout",
 			"content-length",
-			"X-CSRF-Token",
+			"X-Auth-Token",
 		},
 		AllowHeaders: []string{
 			"Accept",
@@ -112,7 +112,7 @@ func (s *HttpServer) addMiddlewares() {
 			"XMLHttpRequest",
 			"X-Requested-With",
 			"X-Request-ID",
-			"X-CSRF-Token",
+			"X-Auth-Token",
 			"X-User-Id",
 			"X-user-agent",
 			"X-grpc-web",

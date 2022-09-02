@@ -9,19 +9,20 @@ import (
 )
 
 const (
-	KEY_DB            = "db"
-	DB_NAME_SQLITE    = "sqlite"
-	DB_NAME_POSTGRES  = "postgres"
-	DB_NAME_DGRAPH    = "dgraph"
-	EVENT_ACTION_DONE = "action.done"
+	CONTEXT_CLIENT_ID = "clientID"
 )
 
 type Config struct {
 	Debug bool `env:"DEBUG" `
 	Auth  struct {
-		Disabled        bool   `env:"AUTH_DISABLED" yaml:"disabled"`
-		TokenExpiration string `env:"AUTH_TOKEN_EXPIRATION" yaml:"token_expiration" default:"900"`
-		SkipRouters     []string
+		Disabled    bool `env:"AUTH_DISABLED" yaml:"disabled"`
+		SkipRouters []string
+		Jwt         struct {
+			Header     string `env:"AUTH_HEADER" yaml:"header" default:"X-Auth-Token"`
+			Secret     string `env:"AUTH_TOKEN_SECRET" yaml:"secret"`
+			Expiration string `env:"AUTH_TOKEN_EXPIRATION" yaml:"expiration" default:"86400"`
+			Audience   string `env:"AUTH_AUDIENCE" yaml:"audience" default:"web"`
+		}
 	}
 	Log struct {
 		Level  string `env:"LOG_LEVEL" yaml:"level" default:"info"`
