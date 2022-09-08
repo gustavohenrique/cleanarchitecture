@@ -48,7 +48,7 @@ func (r *Router) ServeEmbedWebPage(e *echo.Echo, webPage assets.WebPage) {
 		tpl := templaterender.Parse(content, map[string]interface{}{
 			"message": "Hello World!",
 		})
-		return c.String(http.StatusOK, tpl)
+		return c.HTML(http.StatusOK, tpl)
 	})
 }
 

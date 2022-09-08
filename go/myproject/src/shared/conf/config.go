@@ -55,6 +55,19 @@ type Config struct {
 			Cert    string `env:"HTTP_TLS_CERT" yaml:"cert"`
 		}
 	}
+	Websocket struct {
+		RouterPrefix    string `env:"WS_ROUTER_PREFIX" yaml:"router_prefix" default:"/ws"`
+		ReadBufferSize  int    `env:"WS_READ_BUFFER_SIZE" yaml:"read_buffer_size"`
+		WriteBufferSize int    `env:"WS_WRITE_BUFFER_SIZE" yaml:"write_buffer_size"`
+		// Time allowed to write a message to the peer.
+		WriteWait int `env:"WS_WRITE_WAIT" yaml:"write_wait"`
+		// Time allowed to read the next pong message from the peer.
+		PongWait int `env:"WS_PONG_WAIT" yaml:"pong_wait"`
+		// Send pings to peer with this period. Must be less than pongWait.
+		PingPeriod int `env:"WS_PING_PERIOD" yaml:"ping_period"`
+		// Maximum message size allowed from peer.
+		MaxMessageSize int64 `env:"WS_MAX_MESSAGE_SIZE" yaml:"max_message_size"`
+	}
 	Store struct {
 		Postgres struct {
 			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://admin:123456@127.0.0.1/maindb?sslmode=disable"`

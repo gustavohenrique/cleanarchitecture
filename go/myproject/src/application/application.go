@@ -10,6 +10,7 @@ import (
 	"{{ .ProjectName }}/src/application/grpcwebserver"
 	"{{ .ProjectName }}/src/application/httpserver"
 	"{{ .ProjectName }}/src/application/server"
+	"{{ .ProjectName }}/src/application/websocketserver"
 	"{{ .ProjectName }}/src/infra"
 	"{{ .ProjectName }}/src/repositories"
 	"{{ .ProjectName }}/src/services"
@@ -25,6 +26,7 @@ type Application struct {
 	HttpServer       server.Server
 	GrpcWebServer    server.Server
 	GrpcServer       server.Server
+	WebsocketServer  server.Server
 }
 
 func New() *Application {
@@ -69,6 +71,9 @@ func (a *Application) CreateServers() *Application {
 	grpcwebServer.Configure(httpServer)
 	a.GrpcWebServer = grpcwebServer
 
+	websocketServer := websocketserver.New(serviceContainer)
+	websocketServer.Configure(httpServer)
+	a.WebsocketServer = websocketServer
 	return a
 }
 
@@ -82,6 +87,7 @@ func (a *Application) Start() {
 	}()
 	address := a.config.Http.Address
 	port := a.config.Http.Port
+	go a.WebsocketServer.Start(address, port)
 	if err := a.HttpServer.Start(address, port); err != nil {
 		log.Fatal("HTTP server:", err)
 	}
