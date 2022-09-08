@@ -12,3 +12,20 @@ func TestStringContainsAnyTerm(t *testing.T) {
 		t.Error("Expected false but got", has)
 	}
 }
+
+func TestStringSliceContains(t *testing.T) {
+	term := "mocks"
+	slice := []string{
+		"/tmp/mocks",
+		"/somedir",
+	}
+	contains := sliceContains(slice, term)
+	if !contains {
+		t.Errorf("Expected to catch /tmp/mocks")
+	}
+	slice = []string{"/tmp/mocks.sh", "/anything"}
+	contains = sliceContains(slice, term)
+	if contains {
+		t.Errorf("Expected to ignore /tmp/mocks.sh")
+	}
+}

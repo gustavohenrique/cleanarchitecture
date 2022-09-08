@@ -29,7 +29,7 @@ tests: chmod
 
 mock: mocks
 mocks: chmod
-	@$(scripts_dir)/mocks.sh
+	@$(scripts_dir)/mockgen.sh
 
 lint: mocks
 	@goimports -w cmd src

@@ -87,7 +87,7 @@ func runTar(inputDir, outputFile string, excludeDirs []string) (string, error) {
 			logInfo("Failed to walk. ERROR:", err)
 			return err
 		}
-		dirNameShouldBeIgnored := sliceContains(excludeDirs, info.Name())
+		dirNameShouldBeIgnored := sliceContainsDir(excludeDirs, info.Name())
 		pathShouldBeIgnore := contains(path, excludeDirs)
 		if dirNameShouldBeIgnored || pathShouldBeIgnore {
 			return nil
