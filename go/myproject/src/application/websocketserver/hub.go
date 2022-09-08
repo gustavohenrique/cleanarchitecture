@@ -29,9 +29,7 @@ type Hub struct {
 func (h *Hub) SendTo(roomId, message string) {
 	connections := h.rooms[roomId]
 	for c := range connections {
-		select {
-		case c.send <- []byte(message):
-		}
+		c.send <- []byte(message)
 	}
 }
 

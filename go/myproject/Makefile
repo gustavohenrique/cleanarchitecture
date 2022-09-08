@@ -7,7 +7,6 @@ include .makefiles/*
 chmod:
 	@chmod +x $(scripts_dir)/*
 
-setup: install
 install: chmod
 	$(go) install golang.org/x/tools/cmd/goimports@latest
 	$(go) install github.com/golang/mock/mockgen@v1.6.0
@@ -18,6 +17,10 @@ install: chmod
 	$(go) install github.com/gustavohenrique/coolconf/.../
 	$(go) get github.com/golang/mock/gomock
 	$(go) mod tidy
+
+setup: install
+	$(make) proto
+	$(make) docs
 
 run: chmod
 	$(go) run cmd/server/main.go -config config.local.yaml

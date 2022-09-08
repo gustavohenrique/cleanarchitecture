@@ -55,7 +55,6 @@ As decisões para alcançar as premissas foram:
 │   │   │   └── controllers/           # Handle requests and responses
 │   │   ├── grpcwebserver/             # gRPC Web server over the HTTP server
 │   │   │   └── controllers/           # Handle requests and responses
-│   │   ├── websocketserver/           # Websocket server over the HTTP server
 │   │   └── grpcserver/                # gRPC Server
 │   │   │   └── controllers/           # Handle requests and responses
 │   ├── shared/                        # Utilities that could be used by any layers

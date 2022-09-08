@@ -19,7 +19,7 @@ import (
 	"{{ .ProjectName }}/src/application/server"
 	"{{ .ProjectName }}/src/services"
 	"{{ .ProjectName }}/src/shared/conf"
-	log "{{ .ProjectName }}/src/shared/logger"
+	"{{ .ProjectName }}/src/shared/logger"
 	"{{ .ProjectName }}/src/shared/metrics"
 )
 
@@ -63,13 +63,18 @@ func (s *HttpServer) Configure(params interface{}) {
 	s.addMiddlewares()
 
 	e := s.rawServer
-	e.GET("/health", func(c echo.Context) error {
-		return c.String(http.StatusOK, "ok")
+	e.GET("/healthcheck", func(c echo.Context) error {
+		if metrics.CpuUsagePercentage() < 95.0 {
+			return c.String(http.StatusOK, "ok")
+		}
+		return c.String(http.StatusServiceUnavailable, "")
 	})
 	e.GET("/metrics", func(c echo.Context) error {
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return c.String(http.StatusOK, metrics.Collect())
 	})
 	e.GET("/docs/*", echoSwagger.WrapHandler)
+
 	s.router.ServeEmbedWebPage(e, assets.NewWebPage())
 	s.router.ServeEmbedStaticFiles(e, assets.NewStaticFile())
 
@@ -83,9 +88,9 @@ func (s *HttpServer) Start(address string, port int) error {
 		if s.config.Http.TLS.Enabled {
 			key := s.config.Http.TLS.Key
 			cert := s.config.Http.TLS.Cert
-			log.Fatal(e.StartTLS(addr, cert, key))
+			logger.Fatal(e.StartTLS(addr, cert, key))
 		}
-		log.Fatal(e.Start(addr))
+		logger.Fatal(e.Start(addr))
 	}()
 
 	quit := make(chan os.Signal, 1)
