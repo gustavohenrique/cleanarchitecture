@@ -14,6 +14,8 @@ log:
   level: info
 http:
   port: 8002
+  origins:
+    - "*"
   tls:
     enabled: false
 grpc:
@@ -23,13 +25,10 @@ grpc:
 store:
   postgres:
     url: postgres://admin:123456@127.0.0.1/maindb?sslmode=disable
-    max_conns: 500
-    max_conn_lifetime: 480
-    max_conn_iddle_time: 380
-    schema: migrations/postgres/schema.sql
+    max_conns: 10
+    max_conn_lifetime: 10
+    max_conn_iddle_time: 10
   sqlite:
     address: "file::memory:?cache=shared"
-    schema: migrations/sqlite/schema.sql
   dgraph:
-    http: http://localhost:8080
-    grpc: localhost:9080
+    address: localhost:9080

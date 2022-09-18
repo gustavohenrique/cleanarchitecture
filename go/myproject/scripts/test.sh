@@ -19,10 +19,13 @@ fi
 
 echo -n "Running tests: "
 export CONFIG_FILE="${PWD}/config.test.yaml"
+if [ $(uname -s) = "Darwin" ]; then
+    export CONFIG_FILE="${PWD}/config.macos.yaml"
+fi
 echo "CONFIG_FILE=${CONFIG_FILE}"
 
-export SQLITE_SCHEMA_FILE="${PWD}/migrations/sqlite/schema.sql"
-export POSTGRES_SCHEMA_FILE="${PWD}/migrations/postgres/schema.sql"
+export SQLITE_SCHEMA="${PWD}/migrations/sqlite/schema.sql"
+export POSTGRES_SCHEMA="${PWD}/migrations/postgres/schema.sql"
 
 if [ -n "$CI" ]; then
     echo "Running go test in CI mode..."

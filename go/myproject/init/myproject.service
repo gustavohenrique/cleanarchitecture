@@ -1,0 +1,20 @@
+[Unit]
+Description=Example to run via SystemD
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-abnormal
+RemainAfterExit=true
+StandardOutput=journal
+
+ExecStart=/usr/local/bin/mypoject -config /etc/config.prod.yaml
+ExecReload=/bin/kill -USR1
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+
+[Install]
+WantedBy=default.target

@@ -1,6 +1,14 @@
-.PHONY: bin proto mocks
+.PHONY: bin proto mocks run start install setup
 go := $(shell which go)
 scripts_dir := $(CURDIR)/scripts
+
+default_config := config.linux.yaml
+ifeq ($(shell uname), Darwin)
+default_config := config.macos.yaml
+endif
+ifndef config
+override config = $(default_config)
+endif
 
 include .makefiles/*
 
@@ -22,8 +30,9 @@ setup: install
 	$(make) proto
 	$(make) docs
 
+start: run
 run: chmod
-	$(go) run cmd/server/main.go -config config.local.yaml
+	$(go) run cmd/webapp/main.go -config $(config)
 
 test: tests
 tests: chmod
@@ -39,6 +48,6 @@ lint: mocks
 	@staticcheck ./...
 
 docs:
-	@swag init -d ./src/application/httpserver -g httpserver.go -o src/application/httpserver/docs --parseDependency --parseInternal --parseDepth 5
+	@swag init -d ./src/infra/frameworks/httpserver -g httpserver.go -o src/infra/frameworks/httpserver/docs --parseDependency --parseInternal --parseDepth 5
 	@echo
 	@echo "Now open http://localhost:8001/docs/index.html"

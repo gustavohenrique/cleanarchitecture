@@ -8,7 +8,7 @@ ENV GOOS=linux
 
 RUN go mod tidy \
  && go build -a -ldflags '-linkmode external -extldflags "-static"' \
-    -o /goproject/bin/server /goproject/cmd/server
+    -o /goproject/bin/webapp /goproject/cmd/webapp
 
 
 FROM alpine:latest
@@ -21,4 +21,4 @@ WORKDIR /app
 COPY ./migrations /migrations
 VOLUME /data
 
-ENTRYPOINT ["/app/server"]
+ENTRYPOINT ["/app/webapp"]
