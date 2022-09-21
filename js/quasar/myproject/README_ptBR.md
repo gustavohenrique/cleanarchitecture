@@ -48,14 +48,12 @@ A arquitetura criada aqui foi inspirada em Clean Architecture e Domain-Driven De
 As decisões para alcançar as premissas foram:
 
 - Entities representam estrutura de dados do domínio da aplicação e regras de negócio
-- Repositories armazenam e recuperam informações do sistema
-- Uses cases são as funcionalidades da aplicação e atuam orquestrando entities e repositories
-- Adapters convertem uma estrutura de dados para outra que seja mais coeso para utilização nos uses cases
-- Infra é a camada para utilização de recursos externos como rede e armazenamento
-- Controllers manipulam eventos de components, utilizando adapters para converter os dados para os uses cases
+- Gateways armazenam e recuperam informações de sistemas externos, como APIs e banco de dados
+- Services são as funcionalidades da aplicação e atuam orquestrando entities e gateways
+- Workers devem ser utilizados para processamento paralelo
+- Controllers são utilizados pelos stores para aplicar regras da aplicação sobre os inputs
+- Infra é a camada encapsulando libs de terceiros e códigos que não estão relacionados às regras de negócios
 - Components são injetados automaticamente e devem lidar apenas com captura e apresentação da informação
-- Shared libs devem ser encapsuladas
-- Bus funciona como pub/sub global para comunicação entre componentes Vue
 - Suporte a múltiplos idiomas utilizando uma pasta para cada um
 
 ## Estrutura de pastas e diretórios
@@ -73,21 +71,22 @@ As decisões para alcançar as premissas foram:
 │   ├── css/                 # CSS files for your app
 │   ├── App.vue              # Root Vue component of your App
 │   ├── index.template.html  # Template for index.html
-│   └── application/         # The application's core
-│       ├── shared/          # Encapsulates third party libs
+│   └── core/                # The application's core
 │       ├── infra/           # Usage for network communication and storage
-│       ├── locales/         # Language definitions
-│       ├── adapters/        # Convert data from/to the format most convenient for the use cases and entities
+│       │   ├── helpers/     # Encapsulates third party libs
+│       │   ├── i18n/        # Language definitions
+│       │   └── drivers/     # Drivers for data stores and remote APIs
 │       ├── controllers/     # Handle user events
+│       ├── workers/         # Use another thread to computate data
 │       ├── services/        # Application logics for business scenarios
-│       ├── repositories/    # Store and recover data from outside world
+│       ├── gateways/        # Store and recover data from outside world
 │       └── entities/        # A data structure that represents business and its rules
 ├── package.json             # npm scripts and dependencies
 ├── quasar.conf.js           # Quasar App Config file
 ├── babel.config.js          # Babeljs config
 ├── jest/                    # Global beforeEach used by tests
 ├── jest.config.js           # Test's configuration
-├── dist/spa                 # Where production builds go
+├── dist/                    # Where production builds go
 ├── .editorconfig            # Editor config
 ├── .eslintignore            # ESlint ignore paths
 ├── .eslintrc.js             # ESlint config
@@ -101,11 +100,11 @@ As decisões para alcançar as premissas foram:
 
 ### Tecnologias
 
-- **Pinia**: gerencia o estado global de um objeto. Quando o valor dele é
-- alterado, todos os componentes com referência ao objeto são atualizados
-- automaticamente com o novo valor. **Vue Router**: gerencia as rotas da
-- aplicação, permitindo executar funções antes ou depois de cada transição de
-- rota. **Jest**: suíte de testes.
+- **Pinia**: gerencia o estado global de um objeto. Quando o valor dele é alterado, todos os componentes com referência ao objeto são atualizados automaticamente com o novo valor.
+- **Vue Router**: gerencia as rotas da aplicação, permitindo executar funções antes ou depois de cada transição de rota.
+- **Jest**: suíte de testes.
+- **IDB**: Fornece uma API simplificado para trabalhar com IndexDB
+- **Comlink**: Facilita a troca de informações com os workers
 
 ### VueJS
 
@@ -128,7 +127,7 @@ exibem automaticamente os valores alterados via Javascript.
 export default {
   data () {
     return {
-      name: 'GoCache Dev',
+      name: 'MyApp',
       answer: ''
     }
   },
@@ -148,8 +147,6 @@ export default {
 ```
 
 ### Arquitetura
-
-![Diagram](public/architecture.png)
 
 O Quasar obtém as configurações do arquivo `quasar.conf.js` no momento da
 inicialização. Esse arquivo possui um array chamado boot contendo o nome dos

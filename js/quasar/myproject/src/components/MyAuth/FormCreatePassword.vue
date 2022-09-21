@@ -1,6 +1,6 @@
 <template>
   <my-auth-form-base
-    @save="next"
+    @save="$emit('next')"
   >
     <div class="text-left text-dolphin q-pb-md row justify-start q-gutter-x-md items-center">
       <my-avatar
@@ -22,10 +22,11 @@
     </div>
     <div class="q-pt-md">
       <q-input
+        :model-value="user.password"
+        @update:model-value="val => setUser({ password: val.trim() })"
         :label="$t('auth.password')"
         :type="isHiddenPassword ? 'password' : 'text'"
         data-qa="auth_password"
-        v-model="password"
         :hint="$t('auth.hintPassword')"
         square
         dense
@@ -58,33 +59,20 @@
 </template>
 
 <script>
-import { useAuthUserStore } from 'stores/user'
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from 'stores/user'
 
 export default {
-  setup () {
-    const authUserStore = useAuthUserStore()
-    return {
-      authUserStore
-    }
-  },
   data () {
     return {
-      isHiddenPassword: true,
-      password: ''
+      isHiddenPassword: true
     }
   },
   computed: {
-    user () {
-      return this.authUserStore.user
-    }
+    ...mapState(useUserStore, ['user'])
   },
   methods: {
-    cancel () {
-      this.$emit('cancel')
-    },
-    next () {
-      this.$emit('next', this.password.trim())
-    }
+    ...mapActions(useUserStore, ['setUser'])
   }
 }
 </script>

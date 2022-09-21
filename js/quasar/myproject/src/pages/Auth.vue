@@ -13,7 +13,7 @@
       <q-separator />
       <q-card-section>
         <q-carousel
-          v-model="step"
+          v-model="form.step"
           transition-prev="slide-right"
           transition-next="slide-left"
           animated
@@ -21,29 +21,29 @@
           :padding="false"
           class="q-pa-none"
         >
-          <q-carousel-slide name="check-email">
+          <q-carousel-slide name="check_mail">
             <my-auth-form-mail
-              @next="checkEmail"
-              :loading="loading"
+              @next="checkEmailIsRegistered"
+              :loading="form.loading"
             />
           </q-carousel-slide>
-          <q-carousel-slide name="sign-up">
+          <q-carousel-slide name="sign_up">
             <my-auth-form-create-password
               @next="signUp"
-              @cancel="goToStep('check-email')"
+              @cancel="goToCheckMailStep"
             />
           </q-carousel-slide>
-          <q-carousel-slide name="sign-in-first-time">
+          <q-carousel-slide name="sign_in_first_time">
             <my-auth-form-password
               congratulations
               @next="signIn"
-              @cancel="goToStep('check-email')"
+              @cancel="goToCheckMailStep"
             />
           </q-carousel-slide>
-          <q-carousel-slide name="sign-in">
+          <q-carousel-slide name="sign_in">
             <my-auth-form-password
               @next="signIn"
-              @cancel="goToStep('check-email')"
+              @cancel="goToCheckMailStep"
             />
           </q-carousel-slide>
         </q-carousel>
@@ -58,48 +58,38 @@
 </template>
 
 <script>
-import { useAuthUserStore } from 'stores/user'
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from 'stores/user'
 
 export default {
-  setup () {
-    return {
-      authUserStore: useAuthUserStore()
-    }
-  },
   data () {
     return {
-      loading: false,
-      key: 1,
-      step: 'check-email'
+      key: 1
     }
   },
+  computed: {
+    ...mapState(useUserStore, ['form'])
+  },
   methods: {
-    goToStep (step) {
-      this.step = step
-    },
-    async checkEmail (email) {
-      this.loading = true
-      const found = await this.$accountController.findUserByEmail(email)
-      const nextStep = found.salt ? 'sign-in' : 'sign-up'
-      this.authUserStore.setUser(found || { email })
-      this.loading = false
-      this.goToStep(nextStep)
-    },
-    async signUp (rawPassword) {
+    ...mapActions(useUserStore, [
+      'goToCheckMailStep',
+      'goToSignInStep',
+      'goToSignUpStep',
+      'checkEmailIsRegistered',
+      'register',
+      'login'
+    ]),
+    async signUp () {
       try {
-        const { user } = this.authUserStore
-        const authenticated = await this.$accountController.signUp({ ...user, rawPassword })
-        this.authUserStore.setUser(authenticated)
+        this.register()
         this.$router.push({ name: 'home' })
       } catch (err) {
         console.log('>>>', err)
       }
     },
-    async signIn (rawPassword) {
+    async signIn () {
       try {
-        const { user } = this.authUserStore
-        const authenticated = await this.$accountController.signIn({ ...user, rawPassword })
-        this.authUserStore.setUser(authenticated)
+        this.login()
         this.$router.push({ name: 'dashboard' })
       } catch (err) {
         console.log('>>>', err)

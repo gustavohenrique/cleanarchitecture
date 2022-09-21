@@ -7,19 +7,21 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
-    "start": "npm run serve",
-    "serve": "NODE_ENV=local quasar dev",
     "test": "jest",
-    "build:dev": "NODE_ENV=dev quasar build",
-    "build:docker": "NODE_ENV=production VERSION=$(git describe --tags --always) docker build . -t={{ .ProjectName }}:$VERSION",
-    "build:prod": "NODE_ENV=production VERSION=$(git describe --tags --always) quasar build"
+    "start": "npm run serve",
+    "serve": "APP_ENV=local quasar dev",
+    "serve:pwa": "APP_ENV=local quasar dev -m pwa",
+    "build:docker": "NODE_ENV=production APP_ENV=prod VERSION=$(git describe --tags --always) docker build . -t={{ .ProjectName }}:$VERSION",
+    "build:pwa": "NODE_ENV=production APP_ENV=prod quasar build -m pwa",
+    "build:prod": "NODE_ENV=production APP_ENV=prod quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.27.2",
+    "comlink": "^4.3.1",
     "core-js": "^3.6.5",
     "frenchkiss": "^0.2.3",
-    "mitt": "^3.0.0",
+    "idb": "^7.0.2",
     "pinia": "^2.0.14",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
@@ -44,7 +46,8 @@
     "jest": "^27.5.1",
     "jsdom": "^19.0.0",
     "sinon": "^13.0.2",
-    "sinon-chai": "^3.7.0"
+    "sinon-chai": "^3.7.0",
+    "workbox-webpack-plugin": "^6.5.3"
   },
   "overrides": {
     "ejs": ">=3.1.7"
