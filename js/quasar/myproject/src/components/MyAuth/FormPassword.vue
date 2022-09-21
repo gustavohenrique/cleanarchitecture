@@ -1,6 +1,6 @@
 <template>
   <my-auth-form-base
-    @save="next"
+    @save="$emit('next')"
   >
     <div class="text-left text-dolphin q-pb-md row justify-start q-gutter-x-md items-end">
       <my-avatar
@@ -27,10 +27,11 @@
     </div>
     <div class="q-pt-md">
       <q-input
+        :model-value="user.password"
+        @update:model-value="val => setUser({ password: val.trim() })"
         :label="$t('auth.password')"
         :type="isHiddenPassword ? 'password' : 'text'"
         data-qa="auth_password"
-        v-model="password"
         square
         dense
         :rules="[
@@ -64,7 +65,7 @@
           color="primary"
           no-caps
           :label="$t('auth.changeEmail')"
-          @click="cancel"
+          @click="$emit('cancel')"
         />
         <q-btn
           flat
@@ -79,7 +80,8 @@
 </template>
 
 <script>
-import { useAuthUserStore } from 'stores/user'
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from 'stores/user'
 
 export default {
   props: {
@@ -87,30 +89,16 @@ export default {
       type: Boolean
     }
   },
-  setup () {
-    const authUserStore = useAuthUserStore()
-    return {
-      authUserStore
-    }
-  },
   data () {
     return {
-      isHiddenPassword: true,
-      password: ''
+      isHiddenPassword: true
     }
   },
   computed: {
-    user () {
-      return this.authUserStore.user
-    }
+    ...mapState(useUserStore, ['user'])
   },
   methods: {
-    cancel () {
-      this.$emit('cancel')
-    },
-    next () {
-      this.$emit('next', this.password.trim())
-    }
+    ...mapActions(useUserStore, ['setUser'])
   }
 }
 </script>

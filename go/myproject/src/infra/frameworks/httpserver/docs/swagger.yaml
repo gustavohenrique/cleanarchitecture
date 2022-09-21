@@ -1,0 +1,84 @@
+basePath: /v1
+definitions:
+  models.HttpResponse:
+    properties:
+      data: {}
+      error:
+        type: string
+    type: object
+  todo.TodoJsonRequest:
+    properties:
+      id:
+        type: string
+      isDone:
+        type: boolean
+      title:
+        type: string
+    type: object
+  todo.TodoJsonResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      isDone:
+        type: boolean
+      title:
+        type: string
+    type: object
+host: localhost:8001
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Swagger Example
+  version: "1.0"
+paths:
+  /todo:
+    get:
+      consumes:
+      - application/json
+      description: Get all TODO items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/todo.TodoJsonResponse'
+              type: object
+    post:
+      consumes:
+      - application/json
+      description: Create TODO item
+      parameters:
+      - description: Payload
+        in: body
+        name: TODO
+        required: true
+        schema:
+          $ref: '#/definitions/todo.TodoJsonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/todo.TodoJsonResponse'
+              type: object
+schemes:
+- http
+- https
+swagger: "2.0"

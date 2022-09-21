@@ -10,7 +10,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import MyFlagList from '../list.vue'
 import MyFlagEn from '../en.vue'
 import MyFlagPt from '../pt.vue'
-import { useLocaleStore } from '../../../stores/locale'
+import { useI18nStore } from '../../../stores/i18n'
 
 const { expect } = chai
 
@@ -20,7 +20,7 @@ describe('MyFlagList', () => {
 
   beforeEach(() => {
     const pinia = setActivePinia(createPinia())
-    store = useLocaleStore()
+    store = useI18nStore()
     wrapper = shallowMount(MyFlagList, {
       global: {
         plugins: [pinia],

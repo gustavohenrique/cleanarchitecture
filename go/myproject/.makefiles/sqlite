@@ -1,4 +1,4 @@
-sqlite_file := $(shell cat config.local.yaml | grep -A1 sqlite | grep address | awk -F ': ' '{print $$2}')
+sqlite_file := $(shell cat $(config) | grep -A1 sqlite | grep address | awk -F ': ' '{print $$2}')
 
 migrate_sqlite: chmod
 	@bash -c "DATABASE_URL=$(sqlite_file) MIGRATIONS_DIR=$(CURDIR)/migrations/sqlite '$(scripts_dir)/sqlite.sh' apply"

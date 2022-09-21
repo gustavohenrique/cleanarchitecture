@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import { useLocaleStore } from 'stores/locale'
+import { useI18nStore } from 'stores/i18n'
 
 export default {
   setup () {
     return {
-      store: useLocaleStore()
+      store: useI18nStore()
     }
   },
   computed: {

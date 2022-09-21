@@ -1,7 +1,10 @@
-postgres_url := $(shell cat config.local.yaml| grep postgres | grep url | awk -F ': ' '{print $$2}')
+postgres_url := $(shell cat $(config) | grep postgres | grep url | awk -F ': ' '{print $$2}')
 
 migrate_postgres:
 	@docker exec -it postgres sh -c '/postgres.sh apply'
+
+drop_postgres:
+	@docker rm -f postgres 2>/dev/null || exit 0
 
 postgres: drop_postgres
 	@docker run -d --name postgres \
@@ -20,9 +23,6 @@ postgres: drop_postgres
 	&& sleep 3 \
 	&& docker exec postgres sh -c "psql $(postgres_url) < /migrations/schema.sql"
 	@$(MAKE) migrate_postgres
-
-drop_postgres:
-	@docker rm -f postgres 2>/dev/null || exit 0
 
 psql:
 	@docker exec -it postgres sh -c '/postgres.sh shell'

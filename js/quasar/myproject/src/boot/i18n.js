@@ -1,6 +1,6 @@
 import { boot } from 'quasar/wrappers'
-import i18n, { $t } from '../application/shared/i18n'
-import { useLocaleStore } from 'stores/locale'
+import i18n, { $t } from '../core/infra/i18n'
+import { useI18nStore } from 'stores/i18n'
 
 /*
  * Usage:
@@ -10,10 +10,10 @@ import { useLocaleStore } from 'stores/locale'
  */
 export default boot(async ({ app }) => {
   // Using store, all messages are updated when locale changes
-  const localeStore = useLocaleStore()
-  localeStore.setLocale(i18n.getLocale())
+  const store = useI18nStore()
+  store.setLocale(i18n.getLocale())
   app.config.globalProperties.$i18n = i18n
   app.config.globalProperties.$t = (key, params) => {
-    return $t(key, params, localeStore.lang)
+    return $t(key, params, store.lang)
   }
 })

@@ -13,7 +13,7 @@
         <q-item>
           <q-item-section>
             <my-avatar
-              :src="user.picture"
+              :src="user ? user.picture : ''"
               size="md"
               class="q-mt-xs"
             />
@@ -22,7 +22,7 @@
       </q-list>
       <q-list class="flex column">
         <q-item
-          v-for="i in menus"
+          v-for="i in availableMenus"
           :key="JSON.stringify(i)"
           tag="a"
           clickable
@@ -96,45 +96,23 @@
 </template>
 
 <script>
-import Alert from '../application/shared/alert'
-import { useAuthUserStore } from 'stores/user'
+import { mapState } from 'pinia'
+import { useUserStore } from 'stores/user'
 
 export default {
-  setup () {
-    const authUserStore = useAuthUserStore()
-    const { user } = authUserStore
-    return {
-      authUserStore,
-      user
-    }
-  },
-  async beforeCreate () {
-    /* Obtem os dados do usuario ao dar refresh da pagina
-       utilizando o token no localStorage */
-    // const user = await this.$accountController.getUserFromToken()
-    // if (user) {
-    //   this.authUserStore.setUser(user)
-    // }
-  },
-  created () {
-    this.menus = this.$accountController.getAvailableMenusFor(this.user)
-  },
-  mounted () {
-    const alert = new Alert()
-    this.$subscribe('notify', params => {
-      alert.notify(params)
-    })
-  },
-  unmounted () {
-    this.$unsubscribe('notify')
-  },
   data () {
     return {
       key: 0,
       lang: this.$i18n.getLocale(),
-      menus: [],
       leftDrawerOpen: true
     }
+  },
+  async created () {
+    const store = useUserStore()
+    await store.loadLocalUser()
+  },
+  computed: {
+    ...mapState(useUserStore, ['user', 'availableMenus'])
   },
   methods: {
     isActive (routeName) {

@@ -10,9 +10,12 @@
 
 const ESLintPlugin = require('eslint-webpack-plugin')
 const { configure } = require('quasar/wrappers')
+const filepath = require('path')
+const dotenv = require('dotenv')
 
 module.exports = configure(function (ctx) {
-  require('dotenv').config({ path: require('path').join(__dirname, `./.env.${process.env.NODE_ENV}`) })
+  dotenv.config({ path: filepath.join(__dirname, `./.env.${process.env.APP_ENV}`) })
+
   return {
     supportTS: false,
     // https://v2.quasar.dev/quasar-cli-webpack/prefetch-feature
@@ -21,10 +24,8 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     boot: [
       'components',
-      'bus',
       'logger',
-      'i18n',
-      'controllers'
+      'i18n'
     ],
 
     css: [
@@ -44,8 +45,6 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       env: {
-        VERSION: process.env.VERSION,
-        BUILD_AT: process.env.BUILD_AT,
         DEBUG: process.env.DEBUG,
         API_BASE_URL: process.env.API_BASE_URL,
         API_TIMEOUT: process.env.API_TIMEOUT
@@ -55,6 +54,10 @@ module.exports = configure(function (ctx) {
         chain.plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
       }
+    },
+
+    vendor: {
+      remove: ['highlight.js']
     },
 
     devServer: {
@@ -83,6 +86,7 @@ module.exports = configure(function (ctx) {
       },
       plugins: [
         'Dialog',
+        'Loading',
         'Notify'
       ]
     },
@@ -106,7 +110,7 @@ module.exports = configure(function (ctx) {
     },
 
     pwa: {
-      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
@@ -119,6 +123,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: '{{ .ProjectName }}',
         short_name: '{{ .ProjectName }}',
+        id: '/',
         description: '',
         display: 'standalone',
         orientation: 'portrait',

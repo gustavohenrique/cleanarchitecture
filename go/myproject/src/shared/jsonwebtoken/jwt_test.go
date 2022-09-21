@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"{{ .ProjectName }}/src/shared/jsonwebtoken"
-	"{{ .ProjectName }}/src/shared/test/assert"
+	"{{ .ProjectName }}/src/infra/test/assert"
 )
 
 const (

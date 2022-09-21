@@ -1,6 +1,6 @@
 <template>
   <my-auth-form-base
-    @save="next"
+    @save="$emit('next')"
   >
     <div class="text-center text-dolphin q-pb-md">
       <q-icon
@@ -10,9 +10,10 @@
     </div>
     <div>
       <q-input
+        :model-value="user.email"
+        @update:model-value="val => setUser({ email: val.trim() })"
         label="Email"
         data-qa="auth_email"
-        v-model="email"
         square
         dense
         :rules="[
@@ -37,21 +38,20 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from 'stores/user'
+
 export default {
   props: {
     loading: {
       type: Boolean
     }
   },
-  data () {
-    return {
-      email: ''
-    }
+  computed: {
+    ...mapState(useUserStore, ['user'])
   },
   methods: {
-    next () {
-      this.$emit('next', this.email)
-    }
+    ...mapActions(useUserStore, ['setUser'])
   }
 }
 </script>
