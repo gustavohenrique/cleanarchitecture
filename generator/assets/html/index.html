@@ -7,14 +7,17 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.prod.css" rel="stylesheet" type="text/css">
     <style type="text/css">
+/*
 body.screen--xs .my-card {
   width: 90vw;
 }
 body.screen--sm .my-card {
   width: 60vw;
 }
+*/
 .my-card {
-  width: 500px;
+  width: 50vw;
+  min-width: 600px;
   overflow-y: hidden;
 }
     </style>
@@ -41,6 +44,9 @@ body.screen--sm .my-card {
     <template id="my-form">
       <q-form ref="form" @submit.prevent="generate">
         <q-card square class="q-pa-md no-border-radius my-card">
+          <q-card-section>
+            <div class="text-h6">New project</div>
+          </q-card-section>
           <q-card-section>
             <q-radio
               v-model="engine"
@@ -78,6 +84,48 @@ body.screen--sm .my-card {
               maxlength="100"
             >
             </q-input>
+          </q-card-section>
+          <q-card-section v-if="isGolang">
+            <div>
+              <div class="text-h6">Databases</div>
+              <div class="row q-gutter-sm q-pl-none">
+                <q-checkbox
+                  v-for="item in databases"
+                  :key="item"
+                  v-model="selectedDatabases"
+                  :val="item"
+                  :label="item">
+                </q-checkbox>
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-section v-if="isGolang">
+            <div>
+              <div class="text-h6">Servers</div>
+              <div class="row q-gutter-sm q-pl-none">
+                <q-checkbox
+                  v-for="item in servers"
+                  :key="item"
+                  v-model="selectedServers"
+                  :val="item"
+                  :label="item">
+                </q-checkbox>
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-section v-if="isGolang">
+            <div>
+              <div class="text-h6">Clients</div>
+              <div class="row q-gutter-sm q-pl-none">
+                <q-checkbox
+                  v-for="item in clients"
+                  :key="item"
+                  v-model="selectedClients"
+                  :val="item"
+                  :label="item">
+                </q-checkbox>
+              </div>
+            </div>
           </q-card-section>
           <q-card-section>
             <q-separator class="q-mb-md"></q-separator>
@@ -117,6 +165,19 @@ body.screen--sm .my-card {
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.umd.prod.js"></script>
     <script>
+      const GOLANG = 'golang'
+      const QUASAR = 'quasar'
+      const NONE = 'None'
+
+      const POSTGRES = 'Postgres'
+      const SQLITE = 'Sqlite'
+      const DGRAPH = 'Dgraph'
+
+      const HTTP = 'HTTP'
+      const GRPC = 'gRPC'
+      const GRPC_WEB = 'gRPC-Web'
+      const NATS = 'Nats'
+
       const MyForm = {
         template: '#my-form',
         data() {
@@ -125,12 +186,52 @@ body.screen--sm .my-card {
             hasError: false,
             downloadUrl: '',
             projectName: 'myproject',
-            engine: 'golang'
+            engine: GOLANG,
+            selectedDatabases: [POSTGRES],
+            _selectedServers: [HTTP],
+            _selectedClients: [HTTP]
           }
         },
         computed: {
+          selectedServers: {
+            get() {
+              return [...new Set(this._selectedServers)]
+            },
+            set(newVal) {
+              if (newVal.indexOf(NATS) >= 0) {
+                this._selectedClients.push(NATS)
+              }
+              if (newVal.indexOf(GRPC_WEB) >= 0) {
+                newVal.push(HTTP)
+              }
+              this._selectedServers = newVal
+            }
+          },
+          selectedClients: {
+            get() {
+              return [...new Set(this._selectedClients)]
+            },
+            set(newVal) {
+              if (this._selectedServers.indexOf(NATS) >= 0) {
+                newVal.push(NATS)
+              }
+              this._selectedClients = newVal
+            }
+          },
+          databases() {
+            return [POSTGRES, SQLITE, DGRAPH]
+          },
+          servers() {
+            return [HTTP, GRPC, GRPC_WEB, NATS]
+          },
+          clients() {
+            return [HTTP, GRPC, NATS]
+          },
+          isGolang() {
+            return this.engine == GOLANG
+          },
           label() {
-            if (this.engine === 'golang') {
+            if (this.isGolang) {
               return 'Module name'
             }
             return 'Project name'
