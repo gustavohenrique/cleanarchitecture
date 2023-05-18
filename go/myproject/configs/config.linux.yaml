@@ -1,0 +1,57 @@
+debug: true
+auth:
+  disabled: false
+  jwt:
+    audience: web
+    secret: mystrongpass
+    expiration: 86400
+    header: x-auth-token
+log:
+  level: info
+  output: stdout
+  format: text
+http:
+  port: 8001
+  origins:
+    - "*"
+  tls:
+    enabled: false
+    key: ../tls/server.key
+    cert: ../tls/server.pem
+nats:
+  port: 4000
+  address: 0.0.0.0
+  debug: true
+  trace: true
+  nosigs: true
+  server_name: example-server
+  client_name: example-client
+  tls:
+    enabled: false
+    key: ../tls/server.key
+    cert: ../tls/server.pem
+grpc:
+  port: 9001
+  max_receive_msg_size: 5368709120 # 5MB
+  tls:
+    enabled: false
+    key: ../tls/server.key
+    cert: ../tls/server.pem
+websocket:
+  router_prefix: /ws
+  read_buffer_size: 1024
+  write_buffer_size: 1024
+  write_wait: 10
+  pong_wait: 60
+  ping_period: 54
+  max_message_size: 512
+store:
+  postgres:
+    url: postgres://admin:123456@127.0.0.1:5432/maindb?sslmode=disable
+    max_open_conns: 10
+    max_iddle_cons: 10
+    max_conn_lifetime: 480
+  sqlite:
+    address: database.db
+  dgraph:
+    address: localhost:9080

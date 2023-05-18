@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package {{ .ProjectName }};
-option go_package = ".;proto";
+option go_package = ".;pb";
 
 service TodoRpc {
   rpc Search(SearchRequest) returns (SearchResponse) {}

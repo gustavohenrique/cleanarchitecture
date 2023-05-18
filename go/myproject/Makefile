@@ -1,10 +1,11 @@
 .PHONY: bin proto mocks run start install setup
 go := $(shell which go)
 scripts_dir := $(CURDIR)/scripts
+configs_dir := $(CURDIR)/configs
 
-default_config := config.linux.yaml
+default_config := $(configs_dir)/config.linux.yaml
 ifeq ($(shell uname), Darwin)
-default_config := config.macos.yaml
+default_config := $(configs_dir)/config.macos.yaml
 endif
 ifndef config
 override config = $(default_config)
@@ -47,7 +48,8 @@ lint: mocks
 	@goimports -w cmd src
 	@staticcheck ./...
 
+swagger: docs
 docs:
-	@swag init -d ./src/infra/frameworks/httpserver -g httpserver.go -o src/infra/frameworks/httpserver/docs --parseDependency --parseInternal --parseDepth 5
+	@swag init -d ./src/infrastructure/servers/httpserver -g httpserver.go -o ./src/infrastructure/servers/httpserver/docs --parseDependency --parseInternal --parseDepth 5
 	@echo
 	@echo "Now open http://localhost:8001/docs/index.html"

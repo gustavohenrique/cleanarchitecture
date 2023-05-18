@@ -6,12 +6,10 @@ import (
 	"os"
 	"runtime/debug"
 
-	"{{ .ProjectName }}/src/domain/gateways"
-	"{{ .ProjectName }}/src/domain/services"
-	"{{ .ProjectName }}/src/infra/conf"
-	"{{ .ProjectName }}/src/infra/datastores"
-	"{{ .ProjectName }}/src/infra/frameworks"
-	"{{ .ProjectName }}/src/infra/logger"
+	"{{ .ProjectName }}/src/adapters/controllers"
+	"{{ .ProjectName }}/src/adapters/repositories"
+	"{{ .ProjectName }}/src/components/configurator"
+	"{{ .ProjectName }}/src/infrastructure"
 )
 
 func init() {
@@ -26,15 +24,22 @@ func main() {
 	if configFile == "" {
 		configFile = os.Getenv("CONFIG_FILE")
 	}
-	conf.Parse(configFile)
-	config := conf.Get()
 	fmt.Println("Using configuration file:", configFile)
 
-	logger.Configure()
+	config := configurator.Parse(configFile)
+	infra := infrastructure.New(config)
+	repos := repositories.New(infra.DataStores())
 
-	stores := datastores.With(config).New()
-	gates := gateways.With(config).Inject(stores)
-	servicez := services.With(config).Inject(gates)
-	servers := frameworks.New(config).Inject(servicez)
-	servers.Start()
+	httpServer := infra.HttpServer(controllers.NewHttpControllers(repos))
+	grpcServer := infra.GrpcServer(controllers.NewGrpcControllers(repos))
+
+	grpcWebServer := infra.GrpcWebServer(controllers.NewGrpcWebControllers(repos))
+	grpcWebServer.Configure(httpServer)
+
+	natsServer := infra.NatsServer(controllers.NewNatsControllers(repos))
+	natsServer.Configure()
+
+	go grpcServer.Start()
+	go natsServer.Start()
+	httpServer.Start()
 }
