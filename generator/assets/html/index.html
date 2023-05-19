@@ -46,37 +46,20 @@ body.screen--sm .my-card {
         <q-card square class="q-pa-md no-border-radius my-card">
           <q-card-section>
             <div class="text-h6">New project</div>
-          </q-card-section>
-          <q-card-section>
-            <q-radio
-              v-model="engine"
-              checked-icon="task_alt"
-              unchecked-icon="panorama_fish_eye"
-              dense
-              val="golang"
-              label="Golang"
-              class="q-pr-lg"
-            >
-            </q-radio>
-            <q-radio
-              v-model="engine"
-              checked-icon="task_alt"
-              unchecked-icon="panorama_fish_eye"
-              dense
-              val="quasar"
-              label="Quasar"
-            >
-            </q-radio>
-          </q-card-section>
-          <q-card-section>
+            <q-option-group
+              v-model="selectedEngine"
+              :options="engines"
+              class="q-pt-sm"
+              inline>
+            </q-option-group>
             <q-input
               v-model="projectName"
               :label="label"
               :disable="!!downloadUrl"
               stack-label
-              filled
               square
-              bg-color="blue-grey-1"
+              filled
+              class="q-pt-sm"
               :rules="[
               val => !!val || 'This filed is required',
               val => val.trim().length > 2 || 'At least 3 chars'
@@ -88,50 +71,46 @@ body.screen--sm .my-card {
           <q-card-section v-if="isGolang">
             <div>
               <div class="text-h6">Databases</div>
-              <div class="row q-gutter-sm q-pl-none">
-                <q-checkbox
-                  v-for="item in databases"
-                  :key="item"
-                  v-model="selectedDatabases"
-                  :val="item"
-                  :label="item">
-                </q-checkbox>
-              </div>
+              <q-option-group
+                v-model="selectedDatabases"
+                :options="databases"
+                type="toggle"
+                inline>
+              </q-option-group>
             </div>
-          </q-card-section>
-          <q-card-section v-if="isGolang">
-            <div>
+            <div class="q-pt-md">
               <div class="text-h6">Servers</div>
-              <div class="row q-gutter-sm q-pl-none">
-                <q-checkbox
-                  v-for="item in servers"
-                  :key="item"
-                  v-model="selectedServers"
-                  :val="item"
-                  :label="item">
-                </q-checkbox>
-              </div>
+              <q-option-group
+                v-model="selectedServers"
+                :options="servers"
+                type="toggle"
+                inline>
+              </q-option-group>
             </div>
-          </q-card-section>
-          <q-card-section v-if="isGolang">
-            <div>
+            <div class="q-pt-md">
               <div class="text-h6">Clients</div>
-              <div class="row q-gutter-sm q-pl-none">
-                <q-checkbox
-                  v-for="item in clients"
-                  :key="item"
-                  v-model="selectedClients"
-                  :val="item"
-                  :label="item">
-                </q-checkbox>
-              </div>
+              <q-option-group
+                v-model="selectedClients"
+                :options="clients"
+                type="toggle"
+                inline>
+              </q-option-group>
+            </div>
+            <div class="q-pt-md">
+              <div class="text-h6">SDKs</div>
+              <q-option-group
+                v-model="selectedSdks"
+                :options="sdks"
+                type="toggle"
+                inline>
+              </q-option-group>
             </div>
           </q-card-section>
           <q-card-section>
             <q-separator class="q-mb-md"></q-separator>
             <div class="flex row q-gutter-md justify-align">
               <q-btn
-                :disable="!!downloadUrl"
+                :disable="!!downloadUrl || !isValidForm"
                 :loading="loading"
                 unelevated
                 square
@@ -165,9 +144,10 @@ body.screen--sm .my-card {
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.umd.prod.js"></script>
     <script>
-      const GOLANG = 'golang'
-      const QUASAR = 'quasar'
-      const NONE = 'None'
+      const GOLANG = 'Golang'
+      const JS_HTTP = 'js_http'
+      const JS_GRPCWEB = 'js_grpcweb'
+      const QUASAR = 'Quasar'
 
       const POSTGRES = 'Postgres'
       const SQLITE = 'Sqlite'
@@ -186,10 +166,11 @@ body.screen--sm .my-card {
             hasError: false,
             downloadUrl: '',
             projectName: 'myproject',
-            engine: GOLANG,
+            selectedEngine: GOLANG,
             selectedDatabases: [POSTGRES],
             _selectedServers: [HTTP],
-            _selectedClients: [HTTP]
+            _selectedClients: [HTTP],
+            _selectedSdks: []
           }
         },
         computed: {
@@ -218,23 +199,72 @@ body.screen--sm .my-card {
               this._selectedClients = newVal
             }
           },
+          selectedSdks: {
+            get() {
+              return [...new Set(this._selectedSdks)]
+            },
+            set(newVal) {
+              const hasGolang = newVal.indexOf(GOLANG) >= 0
+              const hasJsHttp = newVal.indexOf(JS_HTTP) >= 0
+              const hasJsGrpcWeb = newVal.indexOf(JS_GRPCWEB) >= 0
+              if (hasGolang) {
+                  this._selectedServers.push(GRPC)
+              }
+              if (hasJsHttp) {
+                this._selectedServers.push(HTTP)
+              }
+              if (hasJsGrpcWeb) {
+                this._selectedServers.push(HTTP)
+                this._selectedServers.push(GRPC_WEB)
+              }
+              this._selectedSdks = newVal
+            }
+          },
           databases() {
-            return [POSTGRES, SQLITE, DGRAPH]
+            return [
+              {label: POSTGRES, value: POSTGRES},
+              {label: SQLITE, value: SQLITE},
+              {label: DGRAPH, value: DGRAPH}
+            ]
           },
           servers() {
-            return [HTTP, GRPC, GRPC_WEB, NATS]
+            return [
+              {label: HTTP, value: HTTP},
+              {label: GRPC, value: GRPC},
+              {label: GRPC_WEB, value: GRPC_WEB}
+            ]
           },
           clients() {
-            return [HTTP, GRPC, NATS]
+            return [
+              {value: HTTP, label: HTTP},
+              {value: GRPC, label: GRPC},
+              {value: NATS, label: NATS}
+            ]
+          },
+          sdks() {
+            return [
+              {label: 'Golang gRPC', value: GOLANG},
+              {label: 'Javascript (HTTP)', value: JS_HTTP},
+              {label: 'Javascript (gRPC-Web)', value: JS_GRPCWEB}
+            ]
+          },
+          engines() {
+            return [
+              {label: GOLANG, value: GOLANG},
+              {label: QUASAR, value: QUASAR}
+            ]
           },
           isGolang() {
-            return this.engine == GOLANG
+            return this.selectedEngine == GOLANG
           },
           label() {
             if (this.isGolang) {
               return 'Module name'
             }
             return 'Project name'
+          },
+          isValidForm() {
+            return this.selectedServers.length > 0 && this.selectedDatabases.length > 0
           }
         },
         methods: {
