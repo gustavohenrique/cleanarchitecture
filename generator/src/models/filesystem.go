@@ -70,8 +70,20 @@ func (d *Filesystem) GetExtensions() []string {
 	return strings.Split(engines[d.engine][EXTENSIONS], ",")
 }
 
-func (d *Filesystem) GetSkipDirs() []string {
-	return strings.Split(engines[d.engine][SKIP], ",")
+func (d *Filesystem) GetSkipDirs(p *Project) []string {
+	skip := strings.Split(engines[d.engine][SKIP], ",")
+	if p == nil {
+		return skip
+	}
+	if len(p.Clients) == 0 {
+		// skip = append(skip, filepath.Join("src", "infrastructure", "clients"))
+		skip = append(skip, "clients")
+	}
+	if len(p.Sdks) == 0 {
+		// skip = append(skip, filepath.Join("src", "infrastructure", "clients"))
+		skip = append(skip, "sdk")
+	}
+	return skip
 }
 
 func (d *Filesystem) GetRepo() string {

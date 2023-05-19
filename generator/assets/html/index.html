@@ -121,7 +121,7 @@ body.screen--sm .my-card {
               >
               </q-btn> 
               <div v-if="hasError" class="text-negative">
-                Something was wrong. We could not generate your {{ engine }} project.
+                Something was wrong. We could not generate your {{ selectedEngine }} project.
               </div>
               <q-btn
                 v-if="downloadUrl && !hasError"
@@ -144,19 +144,20 @@ body.screen--sm .my-card {
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.umd.prod.js"></script>
     <script>
-      const GOLANG = 'Golang'
+      const GOLANG = 'golang'
+      const QUASAR = 'quasar'
+      const GO_GRPC = 'go_grpc'
       const JS_HTTP = 'js_http'
       const JS_GRPCWEB = 'js_grpcweb'
-      const QUASAR = 'Quasar'
 
-      const POSTGRES = 'Postgres'
-      const SQLITE = 'Sqlite'
-      const DGRAPH = 'Dgraph'
+      const POSTGRES = 'postgres'
+      const SQLITE = 'sqlite'
+      const DGRAPH = 'dgraph'
 
-      const HTTP = 'HTTP'
-      const GRPC = 'gRPC'
-      const GRPC_WEB = 'gRPC-Web'
-      const NATS = 'Nats'
+      const HTTP = 'http'
+      const GRPC = 'grpc'
+      const GRPC_WEB = 'grpcweb'
+      const NATS = 'nats'
 
       const MyForm = {
         template: '#my-form',
@@ -222,36 +223,37 @@ body.screen--sm .my-card {
           },
           databases() {
             return [
-              {label: POSTGRES, value: POSTGRES},
-              {label: SQLITE, value: SQLITE},
-              {label: DGRAPH, value: DGRAPH}
+              {label: 'Postgres', value: POSTGRES},
+              {label: 'Sqlite', value: SQLITE},
+              {label: 'DGraph', value: DGRAPH}
             ]
           },
           servers() {
             return [
-              {label: HTTP, value: HTTP},
-              {label: GRPC, value: GRPC},
-              {label: GRPC_WEB, value: GRPC_WEB}
+              {label: 'HTTP', value: HTTP},
+              {label: 'gRPC', value: GRPC},
+              {label: 'gRPC-Web', value: GRPC_WEB},
+              {label: 'Nats', value: NATS}
             ]
           },
           clients() {
             return [
-              {value: HTTP, label: HTTP},
-              {value: GRPC, label: GRPC},
-              {value: NATS, label: NATS}
+              {label: 'HTTP', value: HTTP},
+              {label: 'gRPC', value: GRPC},
+              {label: 'Nats', value: NATS}
             ]
           },
           sdks() {
             return [
-              {label: 'Golang gRPC', value: GOLANG},
-              {label: 'Javascript (HTTP)', value: JS_HTTP},
-              {label: 'Javascript (gRPC-Web)', value: JS_GRPCWEB}
+              {label: 'gRPC (Go)', value: GO_GRPC},
+              {label: 'HTTP (Javascript)', value: JS_HTTP},
+              {label: 'gRPC-Web (Javascript)', value: JS_GRPCWEB}
             ]
           },
           engines() {
             return [
-              {label: GOLANG, value: GOLANG},
-              {label: QUASAR, value: QUASAR}
+              {label: 'Golang', value: GOLANG},
+              {label: 'Quasar (VueJS)', value: QUASAR}
             ]
           },
           isGolang() {
@@ -269,6 +271,7 @@ body.screen--sm .my-card {
         },
         methods: {
           generate() {
+            const { selectedEngine, selectedDatabases, selectedServers, selectedClients, selectedSdks } = this
             const form = this.$refs.form
             form.validate().then(success => {
               if (success) {
@@ -277,10 +280,13 @@ body.screen--sm .my-card {
                 if (projectName) {
                   projectName = projectName.replace('-', '_').replace(' ', '_')
                 }
-                const engine = this.engine
                 const req = {
-                  engine: engine,
-                  name: projectName
+                  engine: selectedEngine,
+                  name: projectName,
+                  databases: selectedDatabases,
+                  servers: selectedServers,
+                  clients: selectedClients,
+                  sdks: selectedSdks
                 };
                 const options = {
                   method: 'POST',

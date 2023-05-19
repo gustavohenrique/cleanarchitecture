@@ -4,13 +4,26 @@ import (
 	"strings"
 )
 
-const GOLANG = "golang"
-const QUASAR = "quasar"
+const (
+	GOLANG     = "golang"
+	QUASAR     = "quasar"
+	HTTP       = "http"
+	GRPC       = "grpc"
+	GRPCWEB    = "grpcweb"
+	NATS       = "nats"
+	GO_GRPC    = "go_grpc"
+	JS_HTTP    = "js_http"
+	JS_GRCPWEB = "js_grpcweb"
+)
 
 type Project struct {
 	Name         string            `json:"name"`
 	Engine       string            `json:"engine"`
 	Placeholders map[string]string `json:"placeholders"`
+	Databases    []string          `json:"databases"`
+	Servers      []string          `json:"servers"`
+	Clients      []string          `json:"clients"`
+	Sdks         []string          `json:"sdks"`
 }
 
 func NewProject(name, engine string) *Project {
@@ -44,5 +57,7 @@ func (p *Project) GetPlaceholders() map[string]string {
 func (p *Project) IsValid() bool {
 	hasEngine := p.Engine == GOLANG || p.Engine == QUASAR
 	hasProjectName := len(p.GetName()) > 2
+	hasAtLeatOneServer := len(p.Servers) > 0
+	hasAtLeatOneDb := len(p.Databases) > 0
 	return hasEngine && hasProjectName
 }

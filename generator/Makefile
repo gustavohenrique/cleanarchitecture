@@ -1,5 +1,5 @@
 repo_dir := $(CURDIR)/../
-dist_dir := /tmp/clean_architecture_generator/
+dist_dir := $(TMPDIR)/clean_architecture_generator/
 download_dir := $(dist_dir)
 resources_dir := $(CURDIR)/resources
 binary := generator
