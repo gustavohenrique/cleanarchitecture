@@ -48,13 +48,14 @@ func generate(w http.ResponseWriter, r *http.Request) {
 	}
 	filesystem := models.NewFilesystem(project.GetEngine())
 	extensions := filesystem.GetExtensions()
-	placeholders := project.GetPlaceholders()
+	templateData := project.GetTemplateData()
 	parsedDir, err := fileutils.
 		NewSed().
 		From(filesystem.GetRepo()).
 		To(filesystem.Dist(project.GetName())).
+		Exclude(filesystem.GetSkipDirs()).
 		Only(extensions).
-		Replace(placeholders).
+		Replace(templateData).
 		Run()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

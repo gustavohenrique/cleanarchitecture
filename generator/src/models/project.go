@@ -17,20 +17,20 @@ const (
 )
 
 type Project struct {
-	Name         string            `json:"name"`
-	Engine       string            `json:"engine"`
-	Placeholders map[string]string `json:"placeholders"`
-	Databases    []string          `json:"databases"`
-	Servers      []string          `json:"servers"`
-	Clients      []string          `json:"clients"`
-	Sdks         []string          `json:"sdks"`
+	Name         string                 `json:"name"`
+	Engine       string                 `json:"engine"`
+	Placeholders map[string]interface{} `json:"placeholders"`
+	Databases    []string               `json:"databases"`
+	Servers      []string               `json:"servers"`
+	Clients      []string               `json:"clients"`
+	Sdks         []string               `json:"sdks"`
 }
 
 func NewProject(name, engine string) *Project {
 	return &Project{
 		Name:   name,
 		Engine: engine,
-		Placeholders: map[string]string{
+		Placeholders: map[string]interface{}{
 			"ProjectName": name,
 		},
 	}
@@ -44,14 +44,35 @@ func (p *Project) GetEngine() string {
 	return p.Engine
 }
 
-func (p *Project) GetPlaceholders() map[string]string {
-	placeholders := p.Placeholders
-	if placeholders == nil {
-		placeholders = map[string]string{
+func (p *Project) GetTemplateData() map[string]interface{} {
+	templateData := p.Placeholders
+	if templateData == nil {
+		templateData = map[string]interface{}{
 			"ProjectName": p.GetName(),
 		}
 	}
-	return placeholders
+	hasHttpServer := p.contains(p.Servers, HTTP)
+	hasGrpcServer := p.contains(p.Servers, GRPC)
+	hasGrpcWebServer := p.contains(p.Servers, GRPCWEB)
+	hasNatsServer := p.contains(p.Servers, NATS)
+	hasHttpClient := p.contains(p.Clients, HTTP)
+	hasGrpcClient := p.contains(p.Clients, GRPC)
+	hasNatsClient := p.contains(p.Clients, NATS)
+	hasGoGrpcSdk := p.contains(p.Sdks, GO_GRPC)
+	hasJsGrpcWebSdk := p.contains(p.Sdks, JS_GRCPWEB)
+	hasJsHttpSdk := p.contains(p.Sdks, JS_HTTP)
+
+	templateData["HasHttpServer"] = hasHttpServer
+	templateData["HasGrpcServer"] = hasGrpcServer
+	templateData["HasGrpcWebServer"] = hasGrpcWebServer && hasHttpServer
+	templateData["HasNatsServer"] = hasNatsServer
+	templateData["HasHttpClient"] = hasHttpClient
+	templateData["HasGrpcClient"] = hasGrpcClient
+	templateData["HasNatsClient"] = hasNatsClient && hasNatsServer
+	templateData["HasGoGrpcSdk"] = hasGoGrpcSdk && hasGrpcServer
+	templateData["HasJsGrpcWebSdk"] = hasJsGrpcWebSdk && hasGrpcWebServer
+	templateData["HasJsHttpSdk"] = hasJsHttpSdk && hasHttpServer
+	return templateData
 }
 
 func (p *Project) IsValid() bool {
@@ -59,5 +80,14 @@ func (p *Project) IsValid() bool {
 	hasProjectName := len(p.GetName()) > 2
 	hasAtLeatOneServer := len(p.Servers) > 0
 	hasAtLeatOneDb := len(p.Databases) > 0
-	return hasEngine && hasProjectName
+	return hasEngine && hasProjectName && hasAtLeatOneDb && hasAtLeatOneServer
+}
+
+func (p *Project) contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }

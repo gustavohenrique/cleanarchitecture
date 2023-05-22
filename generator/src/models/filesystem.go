@@ -20,7 +20,7 @@ var engines = map[string]map[string]string{
 		REPO:       "go/myproject",
 		DIST:       "go_projects",
 		EXTENSIONS: ".go,.mod,.proto,.sh,.js",
-		SKIP:       "node_modules,coverage,mocks",
+		SKIP:       "node_modules,coverage,mocks,docs.go",
 	},
 	QUASAR: map[string]string{
 		REPO:       "js/quasar/myproject",

@@ -1,4 +1,5 @@
 repo_dir := $(CURDIR)/../
+$(eval TMPDIR := $(shell mktemp -d))
 dist_dir := $(TMPDIR)/clean_architecture_generator/
 download_dir := $(dist_dir)
 resources_dir := $(CURDIR)/resources

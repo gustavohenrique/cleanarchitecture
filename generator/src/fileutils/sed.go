@@ -12,10 +12,11 @@ import (
 )
 
 type Sed struct {
-	repoDir    string
+	repoDir      string
 	distDir      string
 	extensions   []string
-	placeholders map[string]string
+	excludeDirs  []string
+	placeholders map[string]interface{}
 }
 
 func NewSed() *Sed {
@@ -24,6 +25,11 @@ func NewSed() *Sed {
 
 func (pt *Sed) From(dir string) *Sed {
 	pt.repoDir = dir
+	return pt
+}
+
+func (pt *Sed) Exclude(dirs []string) *Sed {
+	pt.excludeDirs = dirs
 	return pt
 }
 
@@ -37,7 +43,7 @@ func (pt *Sed) Only(extensions []string) *Sed {
 	return pt
 }
 
-func (pt *Sed) Replace(placeholders map[string]string) *Sed {
+func (pt *Sed) Replace(placeholders map[string]interface{}) *Sed {
 	pt.placeholders = placeholders
 	return pt
 }
@@ -51,6 +57,11 @@ func (pt *Sed) walkDirFn(path string, fileInfo os.FileInfo, err error) error {
 	if err != nil {
 		logInfo(err)
 		return err
+	}
+	dirNameShouldBeIgnored := sliceContainsDir(pt.excludeDirs, path)
+	pathShouldBeIgnore := contains(path, pt.excludeDirs)
+	if dirNameShouldBeIgnored || pathShouldBeIgnore {
+		return nil
 	}
 	if !fileInfo.IsDir() {
 		filename := fileInfo.Name()
