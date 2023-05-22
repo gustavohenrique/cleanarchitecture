@@ -29,17 +29,37 @@ func main() {
 	config := configurator.Parse(configFile)
 	infra := infrastructure.New(config)
 	repos := repositories.New(infra.DataStores())
-
+{{ if .HasHttpServer }}
 	httpServer := infra.HttpServer(controllers.NewHttpControllers(repos))
+{{ end }}
+{{ if .HasGrpcServer }}
 	grpcServer := infra.GrpcServer(controllers.NewGrpcControllers(repos))
-
+{{ end }}
+{{ if .HasGrpcWebServer }}
 	grpcWebServer := infra.GrpcWebServer(controllers.NewGrpcWebControllers(repos))
 	grpcWebServer.Configure(httpServer)
-
+{{ end }}
+{{ if .HasNatsServer }}
 	natsServer := infra.NatsServer(controllers.NewNatsControllers(repos))
 	natsServer.Configure()
+{{ end }}
 
-	go grpcServer.Start()
+{{ if and .HasNatsServer .HasHttpServer }}
 	go natsServer.Start()
 	httpServer.Start()
+{{ end }}
+{{ if and .HasGrpcServer .HasHttpServer}}
+    go grpcServer.Start()
+	httpServer.Start()
+{{ else }}
+	{{ if .HasGrpcServer }}
+	grpcServer.Start()
+	{{ else }}
+		{{ if .HasNatsServer }}
+		natsServer.Start()
+		{{ else }}
+		httpServer.Start()
+		{{ end }}
+	{{ end }}
+{{ end }}
 }

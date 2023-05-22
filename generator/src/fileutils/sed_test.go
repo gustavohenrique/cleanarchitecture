@@ -16,7 +16,7 @@ func TestGenerateNewFilesWithTheProjectName(t *testing.T) {
 		To(filesystem.Dist(project.GetName())).
 		Exclude([]string{"docs"}).
 		Only(filesystem.GetExtensions()).
-		Replace(project.GetTemplateData()).
+		Replace(models.NewTemplateData().Of(*project)).
 		Run()
 	if err != nil || outputDir == "" {
 		t.Errorf("Output dir=%s and error=%s", outputDir, err)

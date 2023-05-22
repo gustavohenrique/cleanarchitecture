@@ -34,6 +34,7 @@ type Config struct {
 		Output string `env:"LOG_OUTPUT" yaml:"output" default:"stdout"`
 		Format string `env:"LOG_FORMAT" yaml:"format" default:"text"`
 	}
+{{ if or .HasGrpcServer .HasGrpcWebServer }}
 	Grpc struct {
 		Address           string   `env:"GRPC_ADDRESS" yaml:"address" default:"0.0.0.0"`
 		Port              int      `env:"GRPC_PORT" yaml:"port" default:"8002"`
@@ -46,6 +47,8 @@ type Config struct {
 			Cert    string `env:"GRPC_TLS_CERT" yaml:"cert"`
 		}
 	}
+{{ end }}
+{{ if .HasHttpServer }}
 	Http struct {
 		Address string   `env:"HTTP_ADDRESS" yaml:"address" default:"0.0.0.0"`
 		Port    int      `env:"HTTP_PORT" yaml:"port" default:"8001"`
@@ -56,6 +59,8 @@ type Config struct {
 			Cert    string `env:"HTTP_TLS_CERT" yaml:"cert"`
 		}
 	}
+{{ end }}
+{{ if .HasNatsServer }}
 	Nats struct {
 		Address    string `env:"NATS_ADDRESS" yaml:"address" default:"0.0.0.0"`
 		Port       int    `env:"NATS_PORT" yaml:"port" default:"8001"`
@@ -70,6 +75,7 @@ type Config struct {
 			Cert    string `env:"NATS_TLS_CERT" yaml:"cert"`
 		}
 	}
+{{ end }}
 	Websocket struct {
 		RouterPrefix    string `env:"WS_ROUTER_PREFIX" yaml:"router_prefix" default:"/ws"`
 		ReadBufferSize  int    `env:"WS_READ_BUFFER_SIZE" yaml:"read_buffer_size"`
@@ -84,6 +90,7 @@ type Config struct {
 		MaxMessageSize int64 `env:"WS_MAX_MESSAGE_SIZE" yaml:"max_message_size"`
 	}
 	Store struct {
+		{{ if .HasPostgres }}
 		Postgres struct {
 			URL             string `env:"STORE_POSTGRES_URL" yaml:"url" default:"postgres://admin:123456@127.0.0.1/maindb?sslmode=disable"`
 			MaxOpenConns    int    `env:"STORE_POSTGRES_MAX_OPEN_CONN" yaml:"max_open_conns"`
@@ -91,13 +98,18 @@ type Config struct {
 			MaxConnLifetime int    `env:"STORE_POSTGRES_MAX_CONN_LIFETIME" yaml:"max_conn_lifetime" default:"480"`
 			Schema          string `env:"STORE_POSTGRES_SCHEMA" yaml:"schema"`
 		}
+		{{ end }}
+		{{ if .HasSqlite }}
 		Sqlite struct {
 			Address string `env:"STORE_SQLITE_ADDRESS" yaml:"address" default:":memory:"`
 			Schema  string `env:"STORE_SQLITE_SCHEMA" yaml:"schema"`
 		}
+		{{ end }}
+		{{ if .HasDgraph }}
 		Dgraph struct {
 			Address string `env:"STORE_DGRAPH_ADDRESS" yaml:"address" default:"localhost:9080"`
 		}
+		{{ end }}
 	}
 }
 

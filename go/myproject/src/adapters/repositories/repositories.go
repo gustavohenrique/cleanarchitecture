@@ -11,7 +11,17 @@ type RepositoriesContainer struct {
 
 func New(datastores datastores.Stores) ports.Repositories {
 	repos := &RepositoriesContainer{}
-	repos.todoRepository = NewTodoRepository(datastores.Postgres())
+	{{ if .HasPostgres }}
+	repos.todoRepository = NewTodoPostgresRepository(datastores.Postgres())
+	{{ else }}
+		{{ if .HasSqlite }}
+	repos.todoRepository = NewTodoSqliteRepository(datastores.Sqlite())
+		{{ else }}
+			{{ if .HasDgraph }}
+	repos.todoRepository = NewTodoDgraphRepository(datastores.Dgraph())
+			{{ end }}
+		{{ end }}
+	{{ end }}
 	return repos
 }
 

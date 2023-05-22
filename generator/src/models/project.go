@@ -1,19 +1,8 @@
 package models
 
 import (
+	"fmt"
 	"strings"
-)
-
-const (
-	GOLANG     = "golang"
-	QUASAR     = "quasar"
-	HTTP       = "http"
-	GRPC       = "grpc"
-	GRPCWEB    = "grpcweb"
-	NATS       = "nats"
-	GO_GRPC    = "go_grpc"
-	JS_HTTP    = "js_http"
-	JS_GRCPWEB = "js_grpcweb"
 )
 
 type Project struct {
@@ -44,37 +33,6 @@ func (p *Project) GetEngine() string {
 	return p.Engine
 }
 
-func (p *Project) GetTemplateData() map[string]interface{} {
-	templateData := p.Placeholders
-	if templateData == nil {
-		templateData = map[string]interface{}{
-			"ProjectName": p.GetName(),
-		}
-	}
-	hasHttpServer := p.contains(p.Servers, HTTP)
-	hasGrpcServer := p.contains(p.Servers, GRPC)
-	hasGrpcWebServer := p.contains(p.Servers, GRPCWEB)
-	hasNatsServer := p.contains(p.Servers, NATS)
-	hasHttpClient := p.contains(p.Clients, HTTP)
-	hasGrpcClient := p.contains(p.Clients, GRPC)
-	hasNatsClient := p.contains(p.Clients, NATS)
-	hasGoGrpcSdk := p.contains(p.Sdks, GO_GRPC)
-	hasJsGrpcWebSdk := p.contains(p.Sdks, JS_GRCPWEB)
-	hasJsHttpSdk := p.contains(p.Sdks, JS_HTTP)
-
-	templateData["HasHttpServer"] = hasHttpServer
-	templateData["HasGrpcServer"] = hasGrpcServer
-	templateData["HasGrpcWebServer"] = hasGrpcWebServer && hasHttpServer
-	templateData["HasNatsServer"] = hasNatsServer
-	templateData["HasHttpClient"] = hasHttpClient
-	templateData["HasGrpcClient"] = hasGrpcClient
-	templateData["HasNatsClient"] = hasNatsClient && hasNatsServer
-	templateData["HasGoGrpcSdk"] = hasGoGrpcSdk && hasGrpcServer
-	templateData["HasJsGrpcWebSdk"] = hasJsGrpcWebSdk && hasGrpcWebServer
-	templateData["HasJsHttpSdk"] = hasJsHttpSdk && hasHttpServer
-	return templateData
-}
-
 func (p *Project) IsValid() bool {
 	hasEngine := p.Engine == GOLANG || p.Engine == QUASAR
 	hasProjectName := len(p.GetName()) > 2
@@ -83,11 +41,6 @@ func (p *Project) IsValid() bool {
 	return hasEngine && hasProjectName && hasAtLeatOneDb && hasAtLeatOneServer
 }
 
-func (p *Project) contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
+func (p Project) String() string {
+	return fmt.Sprintf("name=%s engine=%s servers=%s clientes=%s db=%s sdks=%s", p.GetName(), p.Engine, p.Servers, p.Clients, p.Databases, p.Sdks)
 }

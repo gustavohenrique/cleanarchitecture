@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"generator/src/models"
 )
 
 type Sed struct {
@@ -16,7 +18,7 @@ type Sed struct {
 	distDir      string
 	extensions   []string
 	excludeDirs  []string
-	placeholders map[string]interface{}
+	placeholders *models.TemplateData
 }
 
 func NewSed() *Sed {
@@ -43,7 +45,7 @@ func (pt *Sed) Only(extensions []string) *Sed {
 	return pt
 }
 
-func (pt *Sed) Replace(placeholders map[string]interface{}) *Sed {
+func (pt *Sed) Replace(placeholders *models.TemplateData) *Sed {
 	pt.placeholders = placeholders
 	return pt
 }

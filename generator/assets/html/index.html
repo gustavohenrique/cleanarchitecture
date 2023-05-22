@@ -185,6 +185,7 @@ body.screen--sm .my-card {
               }
               if (newVal.indexOf(GRPC_WEB) >= 0) {
                 newVal.push(HTTP)
+                this._selectedSdks.push(JS_GRPCWEB)
               }
               this._selectedServers = newVal
             }
