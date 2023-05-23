@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Clean Architecture Generator</title>
+    <title>Project Generator</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/quasar@2.7.1/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.12.0/dist/quasar.prod.css" rel="stylesheet" type="text/css">
     <style type="text/css">
 /*
 body.screen--xs .my-card {
@@ -19,6 +19,10 @@ body.screen--sm .my-card {
   width: 50vw;
   min-width: 600px;
   overflow-y: hidden;
+}
+.tech-card {
+  min-height: 100%;
+  width: 200px;
 }
     </style>
   </head>
@@ -43,100 +47,146 @@ body.screen--sm .my-card {
 
     <template id="my-form">
       <q-form ref="form" @submit.prevent="generate">
-        <q-card square class="q-pa-md no-border-radius my-card">
-          <q-card-section>
-            <div class="text-h6">New project</div>
-            <q-option-group
-              v-model="selectedEngine"
-              :options="engines"
-              class="q-pt-sm"
-              inline>
-            </q-option-group>
-            <q-input
-              v-model="projectName"
-              :label="label"
-              :disable="!!downloadUrl"
-              stack-label
-              square
-              filled
-              class="q-pt-sm"
-              :rules="[
-              val => !!val || 'This filed is required',
-              val => val.trim().length > 2 || 'At least 3 chars'
-              ]"
-              maxlength="100"
-            >
-            </q-input>
-          </q-card-section>
-          <q-card-section v-if="isGolang">
-            <div>
-              <div class="text-h6">Databases</div>
-              <q-option-group
-                v-model="selectedDatabases"
-                :options="databases"
-                type="toggle"
-                inline>
-              </q-option-group>
-            </div>
-            <div class="q-pt-md">
-              <div class="text-h6">Servers</div>
-              <q-option-group
-                v-model="selectedServers"
-                :options="servers"
-                type="toggle"
-                inline>
-              </q-option-group>
-            </div>
-            <div class="q-pt-md">
-              <div class="text-h6">Clients</div>
-              <q-option-group
-                v-model="selectedClients"
-                :options="clients"
-                type="toggle"
-                inline>
-              </q-option-group>
-            </div>
-            <div class="q-pt-md">
-              <div class="text-h6">SDKs</div>
-              <q-option-group
-                v-model="selectedSdks"
-                :options="sdks"
-                type="toggle"
-                inline>
-              </q-option-group>
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <q-separator class="q-mb-md"></q-separator>
-            <div class="flex row q-gutter-md justify-align">
-              <q-btn
-                :disable="!!downloadUrl || !isValidForm"
-                :loading="loading"
-                unelevated
-                square
-                type="submit"
-                color="primary"
-                label="Generate"
-                class="no-border-radius"
-              >
-              </q-btn> 
-              <div v-if="hasError" class="text-negative">
-                Something was wrong. We could not generate your {{ selectedEngine }} project.
+        <q-tabs
+          v-model="selectedEngine"
+          inline-label
+          align="left"
+          class="bg-grey-8 text-white shadow-2"
+        >
+          <q-tab name="golang" label="Golang"></q-tab>
+          <q-tab name="quasar" label="Quasar"></q-tab>
+        </q-tabs>
+        <q-card square flat class="q-pa-md no-border my-card bg-grey-1">
+          <q-tab-panels v-model="selectedEngine" animated class="">
+            <q-tab-panel name="golang">
+              <div>
+                <q-input
+                  v-model="projectName"
+                  :label="label"
+                  :disable="!!downloadUrl"
+                  stack-label
+                  :rules="[
+                  val => !!val || 'This filed is required',
+                  val => val.trim().length > 2 || 'At least 3 chars'
+                  ]"
+                  maxlength="100"
+                >
+                </q-input>
               </div>
-              <q-btn
-                v-if="downloadUrl && !hasError"
-                unelevated
-                square
-                type="href"
-                :href="downloadUrl"
-                target="_blank"
-                color="positive"
-                label="Download"
-                class="col no-border-radius"
-              >
-              </q-btn> 
+              <div class="text-h6">Components</div>
+              <div class="q-pt-sm row justify-between">
+                <q-card flat bordered square class="tech-card">
+                  <q-item dense>
+                    <q-item-section>
+                      <q-item-label>Databases</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator></q-separator>
+                  <q-card-section>
+                    <q-option-group
+                      v-model="selectedDatabases"
+                      :options="databases"
+                      type="toggle"
+                      >
+                    </q-option-group>
+                  </q-card-section>
+                </q-card>
+                <q-card flat bordered square class="tech-card">
+                  <q-item dense>
+                    <q-item-section>
+                      <q-item-label>Servers</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator></q-separator>
+                  <q-card-section>
+                    <q-option-group
+                      v-model="selectedServers"
+                      :options="servers"
+                      type="toggle"
+                      >
+                    </q-option-group>
+                  </q-card-section>
+                </q-card>
+                <q-card flat bordered square class="tech-card">
+                  <q-item dense>
+                    <q-item-section>
+                      <q-item-label>Clients</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator></q-separator>
+                  <q-card-section>
+                    <q-option-group
+                      v-model="selectedClients"
+                      :options="clients"
+                      type="toggle"
+                      >
+                    </q-option-group>
+                  </q-card-section>
+                </q-card>
+                <q-card flat bordered square class="tech-card">
+                  <q-item dense>
+                    <q-item-section>
+                      <q-item-label>SDKs</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator></q-separator>
+                  <q-card-section>
+                    <q-option-group
+                      v-model="selectedSdks"
+                      :options="sdks"
+                      type="toggle"
+                      >
+                    </q-option-group>
+                  </q-card-section>
+                </q-card>
+              </div>
+            </q-tab-panel>
+            <q-tab-panel name="quasar">
+              <div>
+                <q-input
+                  v-model="projectName"
+                  :label="label"
+                  :disable="!!downloadUrl"
+                  stack-label
+                  :rules="[
+                  val => !!val || 'This filed is required',
+                  val => val.trim().length > 2 || 'At least 3 chars'
+                  ]"
+                  maxlength="100"
+                >
+                </q-input>
+              </div>
+            </q-tab-panel>
+          </q-tab-panels>
+
+          <div class="flex row q-gutter-md justify-align q-mt-md">
+            <q-btn
+              :disable="!!downloadUrl || !isValidForm"
+              :loading="loading"
+              unelevated
+              square
+              type="submit"
+              color="primary"
+              label="Generate Project"
+              class="no-border-radius"
+            >
+            </q-btn> 
+            <div v-if="hasError" class="text-negative">
+              Something was wrong. We could not generate your {{ selectedEngine }} project.
             </div>
-          </q-card-section>
+            <q-btn
+              v-if="downloadUrl && !hasError"
+              unelevated
+              square
+              type="href"
+              :href="downloadUrl"
+              target="_blank"
+              color="positive"
+              label="Download"
+              class="col no-border-radius"
+            >
+            </q-btn> 
+          </div>
         </q-card>
       </q-form>
     </template>
@@ -247,8 +297,8 @@ body.screen--sm .my-card {
           sdks() {
             return [
               {label: 'gRPC (Go)', value: GO_GRPC},
-              {label: 'HTTP (Javascript)', value: JS_HTTP},
-              {label: 'gRPC-Web (Javascript)', value: JS_GRPCWEB}
+              {label: 'HTTP (JS)', value: JS_HTTP},
+              {label: 'gRPC-Web (JS)', value: JS_GRPCWEB}
             ]
           },
           engines() {
