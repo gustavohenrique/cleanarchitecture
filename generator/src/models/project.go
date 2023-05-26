@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+type BaseModel struct {
+	Name   string `json:"name"`
+	Fields []struct {
+		Name string `json:"name"`
+		Type string `json:"type"`
+	} `json:"fields"`
+}
+
 type Project struct {
 	Name         string                 `json:"name"`
 	Engine       string                 `json:"engine"`
@@ -13,6 +21,7 @@ type Project struct {
 	Servers      []string               `json:"servers"`
 	Clients      []string               `json:"clients"`
 	Sdks         []string               `json:"sdks"`
+	Models       []BaseModel            `json:"models"`
 }
 
 func NewProject(name, engine string) *Project {

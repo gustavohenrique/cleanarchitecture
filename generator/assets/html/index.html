@@ -61,7 +61,7 @@ body.screen--sm .my-card {
         <q-tab name="golang" label="Golang"></q-tab>
         <q-tab name="quasar" label="Quasar"></q-tab>
       </q-tabs>
-      <q-card  flat class="q-pa-md no-border my-card bg-grey-1">
+      <q-card flat class="q-pa-md no-border my-card bg-grey-1">
         <q-tab-panels v-model="selectedEngine" animated class="">
           <q-tab-panel name="golang">
             <div>
@@ -73,7 +73,7 @@ body.screen--sm .my-card {
             </div>
             <div class="text-h6">Components</div>
             <div class="q-pt-sm row justify-between q-gutter-md">
-              <q-card flat bordered  class="tech-card">
+              <q-card flat bordered class="tech-card">
                 <q-item dense>
                   <q-item-section>
                     <q-item-label class="text-subtitle1">Databases</q-item-label>
@@ -85,7 +85,7 @@ body.screen--sm .my-card {
                   </q-option-group>
                 </q-card-section>
               </q-card>
-              <q-card flat bordered  class="tech-card">
+              <q-card flat bordered class="tech-card">
                 <q-item dense>
                   <q-item-section>
                     <q-item-label class="text-subtitle1">Servers</q-item-label>
@@ -97,7 +97,7 @@ body.screen--sm .my-card {
                   </q-option-group>
                 </q-card-section>
               </q-card>
-              <q-card flat bordered  class="tech-card">
+              <q-card flat bordered class="tech-card">
                 <q-item dense>
                   <q-item-section>
                     <q-item-label class="text-subtitle1">Clients</q-item-label>
@@ -109,7 +109,7 @@ body.screen--sm .my-card {
                   </q-option-group>
                 </q-card-section>
               </q-card>
-              <q-card flat bordered  class="tech-card">
+              <q-card flat bordered class="tech-card">
                 <q-item dense>
                   <q-item-section>
                     <q-item-label class="text-subtitle1">SDKs</q-item-label>
@@ -124,19 +124,11 @@ body.screen--sm .my-card {
             </div>
             <div class="text-h6 q-pt-lg">Models</div>
             <div class="q-pt-sm row justify-start q-gutter-md">
-              <q-card v-for="(model, index) in models" :key="index" flat bordered  class="model-card">
+              <q-card v-for="(model, index) in models" :key="index" flat bordered class="model-card">
                 <q-item dense>
                   <q-item-section>
-                    <q-input
-                      v-if="isEditMode(model)"
-                      v-model="model.name"
-                      dense
-                      hide-bottom-space
-                      no-error-icon
-                      hide-hint
-                      maxlength="30"
-                      class="q-pa-none"
-                      >
+                    <q-input v-if="isEditMode(model)" v-model="model.name" dense hide-bottom-space no-error-icon
+                      hide-hint maxlength="30" class="q-pa-none">
                     </q-input>
                     <q-item-label v-else class="text-subtitle1">{{ model.name }}</q-item-label>
                   </q-item-section>
@@ -146,77 +138,43 @@ body.screen--sm .my-card {
                   <q-list dense>
                     <q-item dense v-for="(field, idx) in model.fields" :key="idx">
                       <q-item-section>
-                        <q-input
-                          v-if="isEditMode(model)"
-                          v-model="field.name"
-                          dense
-                          hide-bottom-space
-                          no-error-icon
-                          hide-hint
-                          maxlength="30"
-                          class="q-pa-none"
-                        >
+                        <q-input v-if="isEditMode(model)" v-model="field.name" dense hide-bottom-space no-error-icon
+                          hide-hint maxlength="30" class="q-pa-none">
                         </q-input>
                         <span v-else>
                           {{ field.name }}
                         </span></span>
                       </q-item-section>
                       <q-item-section avatar class="text-uppercase text-grey-8">
-                        <q-select
-                          v-if="isEditMode(model)"
-                          v-model="field.type"
-                          :options="primitives"
-                          dense
-                          hide-bottom-space
-                          no-error-icon
-                          hide-hint
-                        >
+                        <q-select v-if="isEditMode(model)" v-model="field.type" :options="primitives" dense
+                          hide-bottom-space no-error-icon hide-hint>
                         </q-select>
                         <span v-else>
                           {{ field.type }}
                         </span>
                       </q-item-section>
                       <q-item-section side>
-                        <q-btn
-                          icon="close"
-                          size="xs"
-                          dense
-                          unelevated
-                          :disable="model.fields.length === 1"
-                          @click="removeField(model, field)"
-                        >
+                        <q-btn icon="close" size="xs" dense unelevated :disable="model.fields.length === 1"
+                          @click="removeField(model, field)">
                         </q-btn>
                       </q-item-section>
                     </q-item>
                   </q-list>
                 </q-card-section>
                 <q-card-actions class="justify-start q-gutter-md q-pa-md">
-                  <q-btn v-if="!!selectedModel.name" color="primary" size="sm" icon="check" unelevated round dense @click="selectedModel={}"></q-btn>
-                  <q-btn v-else color="secondary" size="sm" icon="edit" unelevated round dense @click="editModel(model)"></q-btn>
+                  <q-btn v-if="!!selectedModel.name" color="primary" size="sm" icon="check" unelevated round dense
+                    @click="selectedModel={}"></q-btn>
+                  <q-btn v-else color="secondary" size="sm" icon="edit" unelevated round dense
+                    @click="editModel(model)"></q-btn>
                   <q-btn color="secondary" size="sm" icon="add" unelevated round dense @click="addField(model)"></q-btn>
-                  <q-btn
-                    color="negative"
-                    size="sm"
-                    icon="remove"
-                    unelevated
-                    round
-                    dense
-                    :disable="models.length === 1"
-                    @click="removeModel(model)"
-                  >
+                  <q-btn color="negative" size="sm" icon="remove" unelevated round dense :disable="models.length === 1"
+                    @click="removeModel(model)">
                   </q-btn>
                 </q-card-actions>
               </q-card>
             </div>
-            <q-btn
-              color="accent"
-              icon="add"
-              label="model"
-              unelevated
-              class="q-mt-md"
-              :disable="!!selectedModel.name"
-              @click="addModel"
-            >
+            <q-btn color="accent" icon="add" label="model" unelevated class="q-mt-md" :disable="!!selectedModel.name"
+              @click="addModel">
             </q-btn>
           </q-tab-panel>
           <q-tab-panel name="quasar">
@@ -231,13 +189,13 @@ body.screen--sm .my-card {
         </q-tab-panels>
 
         <div class="flex row q-gutter-md justify-align q-mt-md">
-          <q-btn :disable="!!downloadUrl || !isValidForm || !!selectedModel.name" :loading="loading" unelevated  type="submit"
-            color="primary" label="Generate Project">
+          <q-btn :disable="!!downloadUrl || !isValidForm || !!selectedModel.name" :loading="loading" unelevated
+            type="submit" color="primary" label="Generate Project">
           </q-btn>
           <div v-if="hasError" class="text-negative">
             Something was wrong. We could not generate your {{ selectedEngine }} project.
           </div>
-          <q-btn v-if="downloadUrl && !hasError" unelevated  type="href" :href="downloadUrl" target="_blank"
+          <q-btn v-if="downloadUrl && !hasError" unelevated type="href" :href="downloadUrl" target="_blank"
             color="positive" label="Download" class="col">
           </q-btn>
         </div>
@@ -428,7 +386,7 @@ body.screen--sm .my-card {
           model.fields = model.fields.filter(f => f.name !== field.name)
         },
         generate() {
-          const {selectedEngine, selectedDatabases, selectedServers, selectedClients, selectedSdks} = this
+          const {selectedEngine, selectedDatabases, selectedServers, selectedClients, selectedSdks, models} = this
           const form = this.$refs.form
           form.validate().then(success => {
             if (success) {
@@ -443,7 +401,8 @@ body.screen--sm .my-card {
                 databases: selectedDatabases,
                 servers: selectedServers,
                 clients: selectedClients,
-                sdks: selectedSdks
+                sdks: selectedSdks,
+                models: models
               };
               const options = {
                 method: 'POST',

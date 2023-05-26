@@ -1,11 +1,42 @@
 package models
 
+import "strings"
+
+const (
+	STRING = "string"
+	BOOL = "bool"
+	INT = "int"
+	FLOAT = "float"
+)
+
+type TemplateModelField struct {
+	Name string
+	Type string
+}
+
+func (t TemplateModelField) GoType() string {
+	if t.Type == FLOAT {
+		return "float32"
+	}
+	return t.Type
+}
+
+type TemplateModel struct {
+	Name   string
+	Fields []TemplateModelField
+}
+
+func (t TemplateModel) GetFormatedName() string {
+	return strings.ReplaceAll(strings.TrimSpace(strings.Title(t.Name)), "Model", "")
+}
+
 type TemplateData struct {
 	ProjectName      string
 	Databases        []string
 	Servers          []string
 	Clients          []string
 	Sdks             []string
+	Models           []TemplateModel
 	HasHttpServer    bool
 	HasGrpcServer    bool
 	HasGrpcWebServer bool
@@ -62,6 +93,20 @@ func (t *TemplateData) Of(p Project) *TemplateData {
 	t.HasGoGrpcSdk = hasGoGrpcSdk && hasGrpcServer
 	t.HasJsGrpcWebSdk = hasJsGrpcWebSdk || hasGrpcWebServer
 	t.HasJsHttpSdk = hasJsHttpSdk && t.HasHttpServer
+
+	models := []TemplateModel{}
+	for _, projectModel := range p.Models {
+		model := TemplateModel{}
+		model.Name = projectModel.Name
+		for _, projectModelField := range projectModel.Fields {
+			model.Fields = append(model.Fields, TemplateModelField{
+				Name: projectModelField.Name,
+				Type: projectModelField.Type,
+			})
+		}
+		models = append(models, model)
+	}
+	t.Models = models
 	return t
 }
 
