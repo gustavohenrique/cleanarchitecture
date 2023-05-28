@@ -45,8 +45,10 @@ func (n *NatsServer) RawServer() interface{} {
 
 func (n *NatsServer) Configure(params ...interface{}) {
 	client := natsclient.New(n.config)
-	todoController := n.controllers.With(client).TodoController()
-	todoController.SubscribeToNewTodo()
+	{{ range .Models }}
+	{{ .LowerCaseName }}Controller := n.controllers.With(client).{{ .CamelCaseName }}Controller()
+	{{ .LowerCaseName }}Controller.SubscribeToNew{{ .CamelCaseName }}()
+	{{ end }}
 }
 
 func (n *NatsServer) Start() error {

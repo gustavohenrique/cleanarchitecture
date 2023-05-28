@@ -6,13 +6,15 @@ import (
 	"{{ .ProjectName }}/src/domain/models"
 )
 
-type TodoUseCase interface {
-	Execute(ctx context.Context, model models.TodoModel) (models.TodoModel, error)
+{{ range .Models }}
+type {{ .CamelCaseName }}UseCase interface {
+	Execute(ctx context.Context, model models.{{ .CamelCaseName }}Model) (models.{{ .CamelCaseName }}Model, error)
 }
 
-type TodoRepository interface {
-	Create(ctx context.Context, model models.TodoModel) (models.TodoModel, error)
-	ReadOne(ctx context.Context, model models.TodoModel) (models.TodoModel, error)
-	Update(ctx context.Context, model models.TodoModel) (models.TodoModel, error)
-	Delete(ctx context.Context, model models.TodoModel) (models.TodoModel, error)
+type {{ .CamelCaseName }}Repository interface {
+	Create(ctx context.Context, model models.{{ .CamelCaseName }}Model) (models.{{ .CamelCaseName }}Model, error)
+	ReadOne(ctx context.Context, model models.{{ .CamelCaseName }}Model) (models.{{ .CamelCaseName }}Model, error)
+	Update(ctx context.Context, model models.{{ .CamelCaseName }}Model) (models.{{ .CamelCaseName }}Model, error)
+	Delete(ctx context.Context, model models.{{ .CamelCaseName }}Model) (models.{{ .CamelCaseName }}Model, error)
 }
+{{ end }}

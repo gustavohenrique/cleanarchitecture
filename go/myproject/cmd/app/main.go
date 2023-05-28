@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"runtime/debug"
+	"syscall"
 
 	"{{ .ProjectName }}/src/adapters/controllers"
 	"{{ .ProjectName }}/src/adapters/repositories"
@@ -44,22 +46,10 @@ func main() {
 	natsServer.Configure()
 {{ end }}
 
-{{ if and .HasNatsServer .HasHttpServer }}
-	go natsServer.Start()
-	httpServer.Start()
-{{ end }}
-{{ if and .HasGrpcServer .HasHttpServer}}
-    go grpcServer.Start()
-	httpServer.Start()
-{{ else }}
-	{{ if .HasGrpcServer }}
-	grpcServer.Start()
-	{{ else }}
-		{{ if .HasNatsServer }}
-		natsServer.Start()
-		{{ else }}
-		httpServer.Start()
-		{{ end }}
-	{{ end }}
-{{ end }}
+{{ if .HasNatsServer }}go natsServer.Start(){{ end }}
+{{ if .HasGrpcServer }}go grpcServer.Start(){{ end }}
+{{ if .HasHttpServer }}go httpServer.Start(){{ end }}
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+	<-quit
 }

@@ -1,7 +1,10 @@
 package models
 
-type TodoModel struct {
+{{ range .Models }}
+type {{ .Name }}Model struct {
 	Base
-	Title  string
-	IsDone bool
+	{{ range .Fields }}
+	{{ .GoName }} {{ .GoType }}
+	{{ end }}
 }
+{{ end }}

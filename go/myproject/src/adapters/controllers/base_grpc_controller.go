@@ -7,30 +7,27 @@ import (
 	"{{ .ProjectName }}/src/domain/ports"
 )
 
-type TodoGrpcController struct {
-	pb.UnimplementedTodoRpcServer
-	todoRepository ports.TodoRepository
+{{ range .Models }}
+type {{ .CamelCaseName }}GrpcController struct {
+	pb.Unimplemented{{ .CamelCaseName }}RpcServer
+	{{ .LowerCaseName }}Repository ports.{{ .CamelCaseName }}Repository
 }
 
-func NewTodoGrpcController(repos ports.Repositories) pb.TodoRpcServer {
-	return &TodoGrpcController{
-		todoRepository: repos.TodoRepository(),
+func New{{ .CamelCaseName }}GrpcController(repos ports.Repositories) pb.{{ .CamelCaseName }}RpcServer {
+	return &{{ .Name }}GrpcController{
+		{{ .LowerCaseName }}Repository: repos.{{ .CamelCaseName }}Repository(),
 	}
 }
 
-func (s *TodoGrpcController) Search(ctx context.Context, req *pb.SearchRequest) (*pb.SearchResponse, error) {
-	resp := &pb.SearchResponse{}
-	return resp, nil
-}
-
-func (s *TodoGrpcController) Create(ctx context.Context, req *pb.TodoItem) (*pb.TodoItem, error) {
+func (s *{{ .CamelCaseName }}GrpcController) Create(ctx context.Context, req *pb.{{ .CamelCaseName }}) (*pb.{{ .CamelCaseName }}, error) {
 	return req, nil
 }
 
-func (s *TodoGrpcController) Update(ctx context.Context, req *pb.TodoItem) (*pb.TodoItem, error) {
+func (s *{{ .CamelCaseName }}GrpcController) Update(ctx context.Context, req *pb.{{ .CamelCaseName }}) (*pb.{{ .CamelCaseName }}, error) {
 	return req, nil
 }
 
-func (s *TodoGrpcController) Remove(ctx context.Context, req *pb.TodoItem) (*pb.Nothing, error) {
+func (s *{{ .CamelCaseName }}GrpcController) Remove(ctx context.Context, req *pb.{{ .CamelCaseName }}) (*pb.Nothing, error) {
 	return nil, nil
 }
+{{ end }}

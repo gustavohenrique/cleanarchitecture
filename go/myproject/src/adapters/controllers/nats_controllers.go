@@ -7,7 +7,9 @@ import (
 
 type NatsControllers interface {
 	With(client natsclient.NatsClient) NatsControllers
-	TodoController() *TodoNatsController
+{{ range .Models }}
+	{{ .CamelCaseName }}Controller() *{{ .CamelCaseName }}NatsController
+{{ end }}
 }
 
 type NatsControllersContainer struct {
@@ -23,7 +25,8 @@ func (c *NatsControllersContainer) With(client natsclient.NatsClient) NatsContro
 	c.client = client
 	return c
 }
-
-func (c *NatsControllersContainer) TodoController() *TodoNatsController {
-	return NewTodoNatsController(c.repos, c.client)
+{{ range .Models }}
+func (c *NatsControllersContainer) {{ .CamelCaseName }}Controller() *{{ .CamelCaseName }}NatsController {
+	return New{{ .CamelCaseName }}NatsController(c.repos, c.client)
 }
+{{ end }}

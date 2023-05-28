@@ -9,45 +9,46 @@ import (
 	"{{ .ProjectName }}/src/wire"
 )
 
-type TodoHttpController struct {
-	todoRepository ports.TodoRepository
+{{ range .Models }}
+type {{ .CamelCaseName }}HttpController struct {
+	{{ .LowerCaseName }}Repository ports.{{ .CamelCaseName }}Repository
 }
 
-func NewTodoHttpController(repos ports.Repositories) *TodoHttpController {
-	return &TodoHttpController{
-		todoRepository: repos.TodoRepository(),
+func New{{ .CamelCaseName }}HttpController(repos ports.Repositories) *{{ .CamelCaseName }}HttpController {
+	return &{{ .CamelCaseName }}HttpController{
+		{{ .LowerCaseName }}Repository: repos.{{ .CamelCaseName }}Repository(),
 	}
 }
 
-// @Description Get TODO by ID
+// @Description Get {{ .LowerCaseName }} by ID
 // @Accept json
 // @Produce json
-// @Param id path string true "TODO ID"
-// @Router /v1/todo/{id} [get]
-// @Success 200 {object} wire.HttpResponse{data=wire.TodoHttpResponse}
+// @Param id path string true "{{ .LowerCaseName }} ID"
+// @Router /v1/{{ .LowerCaseName }}/{id} [get]
+// @Success 200 {object} wire.HttpResponse{data=wire.{{ .CamelCaseName }}HttpResponse}
 // @Failure 404 {object} wire.HttpResponse{}
-func (h *TodoHttpController) ReadOne(c echo.Context) error {
+func (h *{{ .CamelCaseName }}HttpController) ReadOne(c echo.Context) error {
 	ctx := c.Request().Context()
-	req := &wire.TodoHttpRequest{ID: c.Param("id")}
+	req := &wire.{{ .CamelCaseName }}HttpRequest{ID: c.Param("id")}
 	res := wire.NewHttpResponse()
-	found, err := h.todoRepository.ReadOne(ctx, req.ToModel())
+	found, err := h.{{ .LowerCaseName }}Repository.ReadOne(ctx, req.ToModel())
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, res.Error(err))
 	}
-	data := wire.TodoHttpResponse{}.Of(found)
+	data := wire.{{ .CamelCaseName }}HttpResponse{}.Of(found)
 	return c.JSON(http.StatusOK, res.Success(data))
 }
 
-// @Description Create TODO item
+// @Description Create {{ .LowerCaseName }} item
 // @Accept json
 // @Produce json
-// @Param TODO body wire.TodoHttpRequest true "Payload"
-// @Router /v1/todo [post]
-// @Success 201 {object} wire.HttpResponse{data=wire.TodoHttpResponse}
+// @Param {{ .LowerCaseName }} body wire.{{ .CamelCaseName }}HttpRequest true "Payload"
+// @Router /v1/{{ .LowerCaseName }} [post]
+// @Success 201 {object} wire.HttpResponse{data=wire.{{ .CamelCaseName }}HttpResponse}
 // @Failure 400 {object} wire.HttpResponse{}
 // @Failure 500 {object} wire.HttpResponse{}
-func (h *TodoHttpController) Create(c echo.Context) error {
-	var req wire.TodoHttpRequest
+func (h *{{ .CamelCaseName }}HttpController) Create(c echo.Context) error {
+	var req wire.{{ .CamelCaseName }}HttpRequest
 	res := wire.NewHttpResponse()
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, res.Error(err))
@@ -56,11 +57,12 @@ func (h *TodoHttpController) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, res.Error(err))
 	}
 	ctx := c.Request().Context()
-	saved, err := h.todoRepository.Create(ctx, req.ToModel())
+	saved, err := h.{{ .LowerCaseName }}Repository.Create(ctx, req.ToModel())
 	if err != nil {
-		// logger.Error("Failed to create a Todo:", err)
+		// logger.Error("Failed to create a {{ .CamelCaseName }}:", err)
 		return c.JSON(http.StatusInternalServerError, res.Error(err))
 	}
-	created := wire.TodoHttpResponse{}.Of(saved)
+	created := wire.{{ .CamelCaseName }}HttpResponse{}.Of(saved)
 	return c.JSON(http.StatusCreated, res.Success(created))
 }
+{{ end }}

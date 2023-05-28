@@ -19,10 +19,19 @@ type Sed struct {
 	extensions   []string
 	excludeDirs  []string
 	placeholders *models.TemplateData
+	funcs        template.FuncMap
 }
 
 func NewSed() *Sed {
-	return &Sed{}
+	funcs := template.FuncMap{
+		"inc": func(i int) int {
+			return i + 1
+		},
+		"inc2": func(i int) int {
+			return i + 2
+		},
+	}
+	return &Sed{funcs: funcs}
 }
 
 func (pt *Sed) From(dir string) *Sed {
@@ -77,7 +86,7 @@ func (pt *Sed) walkDirFn(path string, fileInfo os.FileInfo, err error) error {
 			logInfo("Failed to read repo file.", path, ". ERROR:", err)
 			return err
 		}
-		tpl, err := template.New("").Parse(string(content))
+		tpl, err := template.New("").Funcs(pt.funcs).Parse(string(content))
 		if err != nil {
 			logInfo("Failed to parse template", path, ". ERROR:", err)
 			return nil
@@ -85,7 +94,7 @@ func (pt *Sed) walkDirFn(path string, fileInfo os.FileInfo, err error) error {
 		var parsed bytes.Buffer
 		err = tpl.Execute(&parsed, pt.placeholders)
 		if err != nil {
-			logInfo("Failed to execute template.", err)
+			logInfo("Failed to execute template. path=", path, "error=", err)
 			return err
 		}
 		newDir := pt.getDistDirFrom(path)

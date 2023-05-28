@@ -249,11 +249,21 @@ body.screen--sm .my-card {
           selectedModel: {},
           models: [
             {
+              name: 'Account',
+              fields: [
+                {name: 'ID', type: TYPE_STRING},
+                {name: 'Email', type: TYPE_STRING},
+                {name: 'IsActive', type: TYPE_BOOL},
+                {name: 'Password', type: TYPE_STRING}
+              ]
+            },
+            {
               name: 'Todo',
               fields: [
-                {name: 'ID', type: 'string'},
-                {name: 'HasTotalEmployesFound', type: 'bool'},
-                {name: 'Title', type: 'string'}
+                {name: 'ID', type: TYPE_STRING},
+                {name: 'CreatedAt', type: TYPE_STRING},
+                {name: 'IsDone', type: TYPE_BOOL},
+                {name: 'Title', type: TYPE_STRING}
               ]
             }
           ]

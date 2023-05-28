@@ -71,7 +71,9 @@ func (g *GrpcWebServer) Configure(params ...interface{}) {
 		return nil
 	})
 
-	pb.RegisterTodoRpcServer(g.rawServer, g.controllers.TodoController())
+	{{ range .Models }}
+	pb.Register{{ .CamelCaseName }}RpcServer(g.rawServer, g.controllers.{{ .CamelCaseName }}Controller())
+	{{ end }}
 }
 
 // gRPC-Web uses the HTTPServer to run

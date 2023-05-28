@@ -1,24 +1,26 @@
 package models
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+
+	"generator/src/pluralize"
+)
 
 const (
 	STRING = "string"
-	BOOL = "bool"
-	INT = "int"
-	FLOAT = "float"
+	BOOL   = "bool"
+	INT    = "int"
+	FLOAT  = "float"
 )
 
-type TemplateModelField struct {
-	Name string
-	Type string
-}
+var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
+var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-func (t TemplateModelField) GoType() string {
-	if t.Type == FLOAT {
-		return "float32"
-	}
-	return t.Type
+func toSnakeCase(str string) string {
+	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
+	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
+	return strings.ToLower(snake)
 }
 
 type TemplateModel struct {
@@ -26,8 +28,20 @@ type TemplateModel struct {
 	Fields []TemplateModelField
 }
 
-func (t TemplateModel) GetFormatedName() string {
+func (t TemplateModel) CamelCaseName() string {
 	return strings.ReplaceAll(strings.TrimSpace(strings.Title(t.Name)), "Model", "")
+}
+
+func (t TemplateModel) LowerCaseName() string {
+	return strings.ToLower(t.CamelCaseName())
+}
+
+func (t TemplateModel) SnakeCaseName() string {
+	return toSnakeCase(t.Name)
+}
+
+func (t TemplateModel) SnakeCasePluralName() string {
+	return toSnakeCase(pluralize.NewClient().Plural(t.Name))
 }
 
 type TemplateData struct {

@@ -7,20 +7,22 @@ import (
 	"{{ .ProjectName }}/src/infrastructure/clients/natsclient"
 )
 
-type TodoNatsController struct {
-	todoRepository ports.TodoRepository
+{{ range .Models }}
+type {{ .CamelCaseName }}NatsController struct {
+	{{ .LowerCaseName }}Repository ports.{{ .CamelCaseName }}Repository
 	client         natsclient.NatsClient
 }
 
-func NewTodoNatsController(repos ports.Repositories, client natsclient.NatsClient) *TodoNatsController {
-	return &TodoNatsController{
-		todoRepository: repos.TodoRepository(),
+func New{{ .CamelCaseName }}NatsController(repos ports.Repositories, client natsclient.NatsClient) *{{ .CamelCaseName }}NatsController {
+	return &{{ .CamelCaseName }}NatsController{
+		{{ .LowerCaseName }}Repository: repos.{{ .CamelCaseName }}Repository(),
 		client:         client,
 	}
 }
 
-func (c *TodoNatsController) SubscribeToNewTodo() error {
-	return c.client.Subscribe("new-todo", func(message string) {
-		fmt.Println("new-todo event:", message)
+func (c *{{ .CamelCaseName }}NatsController) SubscribeToNew{{ .CamelCaseName }}() error {
+	return c.client.Subscribe("new-{{ .LowerCaseName }}", func(message string) {
+		fmt.Println("new-{{ .LowerCaseName }} event:", message)
 	})
 }
+{{ end }}

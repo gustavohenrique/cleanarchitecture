@@ -6,7 +6,9 @@ import (
 )
 
 type GrpcControllers interface {
-	TodoController() pb.TodoRpcServer
+{{ range .Models }}
+	{{ .CamelCaseName }}Controller() pb.{{ .CamelCaseName }}RpcServer
+{{ end }}
 }
 
 type GrpcControllersContainer struct {
@@ -16,7 +18,8 @@ type GrpcControllersContainer struct {
 func NewGrpcControllers(repos ports.Repositories) GrpcControllers {
 	return &GrpcControllersContainer{repos}
 }
-
-func (c *GrpcControllersContainer) TodoController() pb.TodoRpcServer {
-	return NewTodoGrpcController(c.repos)
+{{ range .Models }}
+func (c *GrpcControllersContainer) {{ .CamelCaseName }}Controller() pb.{{ .CamelCaseName }}RpcServer {
+	return New{{ .CamelCaseName }}GrpcController(c.repos)
 }
+{{ end }}

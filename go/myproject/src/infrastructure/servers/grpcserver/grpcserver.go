@@ -60,7 +60,9 @@ func (g *GrpcServer) RawServer() interface{} {
 }
 
 func (g *GrpcServer) Configure(params ...interface{}) {
-	pb.RegisterTodoRpcServer(g.rawServer, g.controllers.TodoController())
+	{{ range .Models }}
+	pb.Register{{ .CamelCaseName }}RpcServer(g.rawServer, g.controllers.{{ .CamelCaseName }}Controller())
+	{{ end }}
 }
 
 func (g *GrpcServer) Start() error {
