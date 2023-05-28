@@ -2,7 +2,7 @@
 go := $(shell which go)
 scripts_dir := $(CURDIR)/scripts
 configs_dir := $(CURDIR)/configs
-{{ if or .HasGrpcServer .HasGrpcWebServer }}grpc := $(scripts_dir)/grpc.sh{{ end }}
+{{ if or .HasGrpcServer .HasGrpcWebServer .HasGrpcClient }}grpc := $(scripts_dir)/grpc.sh{{ end }}
 {{ if or .HasGrpcWebServer }}grpcweb := $(scripts_dir)/grpcweb.sh{{ end }}
 default_config := $(configs_dir)/config.linux.yaml
 ifeq ($(shell uname), Darwin)
@@ -14,7 +14,7 @@ endif
 
 include .makefiles/*
 
-setup: install {{ if .HasHttpServer}}docs{{ end}} {{ if or .HasGrpcServer .HasGrpcWebServer }}install_grpc grpc{{ end }} {{ if .HasGrpcWebServer }}install_grpcweb grpcweb{{ end }} lint
+setup: install {{ if .HasHttpServer}}docs{{ end}} {{ if or .HasGrpcServer .HasGrpcWebServer .HasGrpcClient }}install_grpc grpc{{ end }} {{ if .HasGrpcWebServer }}install_grpcweb grpcweb{{ end }} lint
 
 chmod:
 	@chmod +x $(scripts_dir)/*
@@ -53,7 +53,7 @@ docs:
 	@echo
 	@echo "API docs available in http://localhost:8001/docs/index.html"
 {{ end }}
-{{ if or .HasGrpcServer .HasGrpcWebServer }}
+{{ if or .HasGrpcServer .HasGrpcWebServer .HasGrpcClient }}
 install_grpc:
 	@sh $(grpc) install
 grpc:

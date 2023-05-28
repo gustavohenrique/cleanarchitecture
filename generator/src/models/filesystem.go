@@ -16,13 +16,13 @@ const (
 )
 
 var engines = map[string]map[string]string{
-	GOLANG: map[string]string{
+	GOLANG: {
 		REPO:       "go/myproject",
 		DIST:       "go_projects",
 		EXTENSIONS: ".go,.mod,.proto,.sh,.js",
 		SKIP:       "node_modules,coverage,mocks,docs.go",
 	},
-	QUASAR: map[string]string{
+	QUASAR: {
 		REPO:       "js/quasar/myproject",
 		DIST:       "quasar_projects",
 		EXTENSIONS: ".js,.json",
@@ -90,24 +90,36 @@ func (d *Filesystem) GetSkipDirs(t *TemplateData) []string {
 	if !t.HasDgraph {
 		skip = append(skip, "_"+DGRAPH, DGRAPH, DGRAPH+".sh")
 	}
+
 	if !t.HasHttpServer {
 		skip = append(skip, HTTP+"server", "_"+HTTP, HTTP+"_", "static", "web")
 	}
 	if !t.HasGrpcWebServer {
-		skip = append(skip, GRPCWEB+"server", "_"+GRPCWEB, GRPCWEB+"_", GRPCWEB+".sh", GRPC+".sh")
+		skip = append(skip, GRPCWEB+"server", "_"+GRPCWEB, GRPCWEB+"_", GRPCWEB+".sh")
 	}
 	if !t.HasGrpcServer {
 		skip = append(skip, GRPC+"server", "_"+GRPC+"_", GRPC+"_")
 	}
-	if !t.HasGrpcServer && !t.HasGrpcWebServer {
+	if !t.HasGrpcServer && !t.HasGrpcClient {
+		skip = append(skip, GRPC+".sh")
+	}
+	if !t.HasGrpcServer && !t.HasGrpcWebServer && !t.HasGrpcClient {
 		skip = append(skip, "proto")
 	}
 	if !t.HasNatsServer {
 		skip = append(skip, NATS+"server", "_"+NATS, NATS+"_")
 	}
+
 	if !t.HasNatsClient {
 		skip = append(skip, NATS+"client")
 	}
+	if !t.HasHttpClient {
+		skip = append(skip, HTTP+"client")
+	}
+	if !t.HasGrpcClient {
+		skip = append(skip, GRPC+"client")
+	}
+
 	if !t.HasJsHttpSdk {
 		skip = append(skip, "js_rest")
 	}
