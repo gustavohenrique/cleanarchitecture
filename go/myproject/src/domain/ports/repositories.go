@@ -1,5 +1,7 @@
 package ports
 
 type Repositories interface {
-	TodoRepository() TodoRepository
+	{{ range .Models }}
+	{{ .CamelCaseName }}Repository() {{ .CamelCaseName }}Repository
+	{{ end }}
 }

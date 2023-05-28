@@ -42,21 +42,25 @@ func generate(w http.ResponseWriter, r *http.Request) {
 	var project models.Project
 	err := decoder.Decode(&project)
 	if err != nil || !project.IsValid() {
+		log.Println("[ERROR] project is valid?", project.IsValid(), "error=", err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(getMessage(err))
 		return
 	}
+	log.Println("[DEBUG]", project)
 	filesystem := models.NewFilesystem(project.GetEngine())
 	extensions := filesystem.GetExtensions()
-	placeholders := project.GetPlaceholders()
+	templateData := models.NewTemplateData().Of(project)
 	parsedDir, err := fileutils.
 		NewSed().
 		From(filesystem.GetRepo()).
-		To(filesystem.Dist(project.GetName())).
+		To(filesystem.Dist(templateData.ProjectName)).
+		Exclude(filesystem.GetSkipDirs(templateData)).
 		Only(extensions).
-		Replace(placeholders).
+		Replace(templateData).
 		Run()
 	if err != nil {
+		log.Println("[ERROR]", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(getMessage(err))
 		return
@@ -65,10 +69,11 @@ func generate(w http.ResponseWriter, r *http.Request) {
 		NewCompress().
 		Input(parsedDir).
 		Output(filesystem.GetDownload()).
-		Name(project.GetName()).
-		Exclude(filesystem.GetSkipDirs()).
+		Name(templateData.ProjectName).
+		Exclude(filesystem.GetSkipDirs(templateData)).
 		Run()
 	if err != nil {
+		log.Println("[ERROR]", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(getMessage(err))
 		return

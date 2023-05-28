@@ -45,15 +45,16 @@ func (n *NatsServer) RawServer() interface{} {
 
 func (n *NatsServer) Configure(params ...interface{}) {
 	client := natsclient.New(n.config)
-	todoController := n.controllers.With(client).TodoController()
-	todoController.SubscribeToNewTodo()
+	{{ range .Models }}
+	{{ .LowerCaseName }}Controller := n.controllers.With(client).{{ .CamelCaseName }}Controller()
+	{{ .LowerCaseName }}Controller.SubscribeToNew{{ .CamelCaseName }}()
+	{{ end }}
 }
 
 func (n *NatsServer) Start() error {
-	// if err := server.Run(n.rawServer); err != nil {
-	// return err
-	// }
-	go n.rawServer.Start()
+	if err := server.Run(n.rawServer); err != nil {
+		return err
+	}
 	var tls string
 	if n.config.Nats.TLS.Enabled {
 		tls = "(TLS enabled)"
@@ -61,6 +62,6 @@ func (n *NatsServer) Start() error {
 	address := n.config.Nats.Address
 	port := n.config.Nats.Port
 	fmt.Printf("⇨ nats server started on %s%s:%d%s %s\n", string("\033[32m"), address, port, string("\033[0m"), tls)
-	n.rawServer.Shutdown()
+	n.rawServer.WaitForShutdown()
 	return nil
 }

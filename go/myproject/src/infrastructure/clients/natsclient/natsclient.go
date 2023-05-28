@@ -18,7 +18,6 @@ type NatsClient interface {
 type natsClient struct {
 	config   *configurator.Config
 	conn     *nats.Conn
-	hostname string
 }
 
 func New(config *configurator.Config) NatsClient {

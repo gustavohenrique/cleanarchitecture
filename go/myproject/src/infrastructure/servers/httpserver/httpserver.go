@@ -74,9 +74,11 @@ func (s *HttpServer) Configure(params ...interface{}) {
 	v1 := e.Group("/v1")
 	// s.addJwtMiddlewareTo(v1)
 
-	todo := v1.Group("/todo")
-	todoController := s.controllers.TodoController()
-	todo.GET("", todoController.ReadOne)
+	{{ range .Models }}
+	{{ .LowerCaseName }} := v1.Group("/{{ .LowerCaseName }}")
+	{{ .LowerCaseName }}Controller := s.controllers.{{ .CamelCaseName }}Controller()
+	{{ .LowerCaseName }}.GET("", {{ .LowerCaseName }}Controller.ReadOne)
+	{{ end }}
 }
 
 func (s *HttpServer) Start() error {

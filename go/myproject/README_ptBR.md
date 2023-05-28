@@ -43,7 +43,7 @@ As decisões para alcançar as premissas foram:
 ```
 .
 ├── cmd/                               # The place where main.go lives
-│   ├── webapp/
+│   ├── app/
 │   │   └── main.go
 ├── src/
 │   ├── adapters/
@@ -168,7 +168,8 @@ Instale as dependências com `make setup` e siga as instruções para a instala�
 make setup     # Instala as dependências
 make sqlite    # Cria um arquivo database.db utilizando migrations/sqlite/schema.sql
 make postgres  # Cria um container Docker rodando Postgres utilizando migrations/postgres/schema.sql
-make proto     # Roda o compilador protoc para gerar os stubs a partir do assets/static/main.proto
+make grpc      # Roda o compilador protoc para gerar os stubs a partir do assets/static/main.proto
+make grpcweb   # Roda o compilador protoc para gerar o client/SDK em Javasript
 make lint      # Roda o goimports para formatar o código Go
 make docs      # Cria doc swagger
 make mocks     # Cria mocks para os testes

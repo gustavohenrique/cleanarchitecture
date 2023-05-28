@@ -3,7 +3,9 @@ package controllers
 import "{{ .ProjectName }}/src/domain/ports"
 
 type HttpControllers interface {
-	TodoController() *TodoHttpController
+{{ range .Models }}
+	{{ .CamelCaseName }}Controller() *{{ .CamelCaseName }}HttpController
+{{ end }}
 }
 
 type HttpControllersContainer struct {
@@ -13,7 +15,8 @@ type HttpControllersContainer struct {
 func NewHttpControllers(repos ports.Repositories) HttpControllers {
 	return &HttpControllersContainer{repos}
 }
-
-func (c *HttpControllersContainer) TodoController() *TodoHttpController {
-	return NewTodoHttpController(c.repos)
+{{ range .Models }}
+func (c *HttpControllersContainer) {{ .CamelCaseName }}Controller() *{{ .CamelCaseName }}HttpController {
+	return New{{ .CamelCaseName }}HttpController(c.repos)
 }
+{{ end }}

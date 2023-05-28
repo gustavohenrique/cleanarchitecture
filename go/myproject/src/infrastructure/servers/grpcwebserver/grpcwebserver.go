@@ -23,10 +23,10 @@ type GrpcWebServer struct {
 	rawServer   *grpc.Server
 	wrappedGrpc *grpcweb.WrappedGrpcServer
 	config      *configurator.Config
-	controllers controllers.GrpcControllers
+	controllers controllers.GrpcWebControllers
 }
 
-func New(config *configurator.Config, controllers controllers.GrpcControllers) servers.Server {
+func New(config *configurator.Config, controllers controllers.GrpcWebControllers) servers.Server {
 	var opts []grpc.ServerOption
 	opts = append(opts, serverInterceptor(controllers))
 
@@ -71,7 +71,9 @@ func (g *GrpcWebServer) Configure(params ...interface{}) {
 		return nil
 	})
 
-	pb.RegisterTodoRpcServer(g.rawServer, g.controllers.TodoController())
+	{{ range .Models }}
+	pb.Register{{ .CamelCaseName }}RpcServer(g.rawServer, g.controllers.{{ .CamelCaseName }}Controller())
+	{{ end }}
 }
 
 // gRPC-Web uses the HTTPServer to run
@@ -92,7 +94,7 @@ func shouldSkip(method string) bool {
 }
 
 // It's like a middleware for gRPC.
-func serverInterceptor(controllers controllers.GrpcControllers) grpc.ServerOption {
+func serverInterceptor(controllers controllers.GrpcWebControllers) grpc.ServerOption {
 	return grpc.UnaryInterceptor(
 		func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 			if req != nil && shouldSkip(info.FullMethod) {

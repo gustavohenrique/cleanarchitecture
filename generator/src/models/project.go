@@ -1,23 +1,34 @@
 package models
 
 import (
+	"fmt"
 	"strings"
 )
 
-const GOLANG = "golang"
-const QUASAR = "quasar"
+type BaseModel struct {
+	Name   string `json:"name"`
+	Fields []struct {
+		Name string `json:"name"`
+		Type string `json:"type"`
+	} `json:"fields"`
+}
 
 type Project struct {
-	Name         string            `json:"name"`
-	Engine       string            `json:"engine"`
-	Placeholders map[string]string `json:"placeholders"`
+	Name         string                 `json:"name"`
+	Engine       string                 `json:"engine"`
+	Placeholders map[string]interface{} `json:"placeholders"`
+	Databases    []string               `json:"databases"`
+	Servers      []string               `json:"servers"`
+	Clients      []string               `json:"clients"`
+	Sdks         []string               `json:"sdks"`
+	Models       []BaseModel            `json:"models"`
 }
 
 func NewProject(name, engine string) *Project {
 	return &Project{
 		Name:   name,
 		Engine: engine,
-		Placeholders: map[string]string{
+		Placeholders: map[string]interface{}{
 			"ProjectName": name,
 		},
 	}
@@ -31,18 +42,14 @@ func (p *Project) GetEngine() string {
 	return p.Engine
 }
 
-func (p *Project) GetPlaceholders() map[string]string {
-	placeholders := p.Placeholders
-	if placeholders == nil {
-		placeholders = map[string]string{
-			"ProjectName": p.GetName(),
-		}
-	}
-	return placeholders
-}
-
 func (p *Project) IsValid() bool {
 	hasEngine := p.Engine == GOLANG || p.Engine == QUASAR
 	hasProjectName := len(p.GetName()) > 2
-	return hasEngine && hasProjectName
+	hasAtLeatOneServer := len(p.Servers) > 0
+	hasAtLeatOneDb := len(p.Databases) > 0
+	return hasEngine && hasProjectName && hasAtLeatOneDb && hasAtLeatOneServer
+}
+
+func (p Project) String() string {
+	return fmt.Sprintf("name=%s engine=%s servers=%s clientes=%s db=%s sdks=%s", p.GetName(), p.Engine, p.Servers, p.Clients, p.Databases, p.Sdks)
 }

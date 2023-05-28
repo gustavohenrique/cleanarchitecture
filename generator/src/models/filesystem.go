@@ -20,7 +20,7 @@ var engines = map[string]map[string]string{
 		REPO:       "go/myproject",
 		DIST:       "go_projects",
 		EXTENSIONS: ".go,.mod,.proto,.sh,.js",
-		SKIP:       "node_modules,coverage,mocks",
+		SKIP:       "node_modules,coverage,mocks,docs.go",
 	},
 	QUASAR: map[string]string{
 		REPO:       "js/quasar/myproject",
@@ -70,8 +70,51 @@ func (d *Filesystem) GetExtensions() []string {
 	return strings.Split(engines[d.engine][EXTENSIONS], ",")
 }
 
-func (d *Filesystem) GetSkipDirs() []string {
-	return strings.Split(engines[d.engine][SKIP], ",")
+func (d *Filesystem) GetSkipDirs(t *TemplateData) []string {
+	skip := strings.Split(engines[d.engine][SKIP], ",")
+	if t == nil {
+		return skip
+	}
+	if len(t.Clients) == 0 {
+		skip = append(skip, "clients")
+	}
+	if len(t.Sdks) == 0 {
+		skip = append(skip, "sdk")
+	}
+	if !t.HasPostgres {
+		skip = append(skip, "_"+POSTGRES, POSTGRES, POSTGRES+".sh")
+	}
+	if !t.HasSqlite {
+		skip = append(skip, "_"+SQLITE, SQLITE, SQLITE+".sh")
+	}
+	if !t.HasDgraph {
+		skip = append(skip, "_"+DGRAPH, DGRAPH, DGRAPH+".sh")
+	}
+	if !t.HasHttpServer {
+		skip = append(skip, HTTP+"server", "_"+HTTP, HTTP+"_", "static", "web")
+	}
+	if !t.HasGrpcWebServer {
+		skip = append(skip, GRPCWEB+"server", "_"+GRPCWEB, GRPCWEB+"_", GRPCWEB+".sh", GRPC+".sh")
+	}
+	if !t.HasGrpcServer {
+		skip = append(skip, GRPC+"server", "_"+GRPC+"_", GRPC+"_")
+	}
+	if !t.HasGrpcServer && !t.HasGrpcWebServer {
+		skip = append(skip, "proto")
+	}
+	if !t.HasNatsServer {
+		skip = append(skip, NATS+"server", "_"+NATS, NATS+"_")
+	}
+	if !t.HasNatsClient {
+		skip = append(skip, NATS+"client")
+	}
+	if !t.HasJsHttpSdk {
+		skip = append(skip, "js_rest")
+	}
+	if !t.HasGoGrpcSdk {
+		skip = append(skip, "go_grpc")
+	}
+	return skip
 }
 
 func (d *Filesystem) GetRepo() string {
