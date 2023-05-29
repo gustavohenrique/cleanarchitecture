@@ -2,7 +2,8 @@
 
 proto_source_dir="assets/static/proto"
 
-function install_protoc {
+install_protoc()
+{
 	go install google.golang.org/protobuf/cmd/protoc-gen-go
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	echo
@@ -14,7 +15,8 @@ function install_protoc {
 	echo "cp protoc/bin/* \${BINDIR}"
 }
 
-function generate_go {
+generate_go()
+{
     go_proto_out_dir="pb"
 	echo "Generating Go stubs..."
 	mkdir -p ${go_proto_out_dir} || echo

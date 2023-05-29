@@ -3,9 +3,15 @@ package datastores
 import (
 	"{{ .ProjectName }}/src/components/configurator"
 	"{{ .ProjectName }}/src/infrastructure/datastores/db"
+{{ if .HasDgraph }}
 	"{{ .ProjectName }}/src/infrastructure/datastores/dgraph"
+{{ end }}
+{{ if .HasPostgres }}
 	"{{ .ProjectName }}/src/infrastructure/datastores/postgres"
+{{ end }}
+{{ if .HasSqlite }}
 	"{{ .ProjectName }}/src/infrastructure/datastores/sqlite"
+{{ end }}
 )
 
 type Stores interface {
