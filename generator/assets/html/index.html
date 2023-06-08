@@ -57,7 +57,7 @@ body.screen--sm .my-card {
 
   <template id="my-form">
     <q-form ref="form" @submit.prevent="generate">
-      <q-tabs v-model="selectedEngine" inline-label align="left" class="bg-grey-8 text-white" indicator-color="black">
+      <q-tabs v-model="selectedEngine" inline-label align="left" class="bg-grey-4" indicator-color="black">
         <q-tab name="golang" label="Golang"></q-tab>
         <q-tab name="quasar" label="Quasar"></q-tab>
       </q-tabs>
@@ -189,29 +189,14 @@ body.screen--sm .my-card {
         </q-tab-panels>
 
         <div class="flex row q-gutter-md justify-align q-mt-md">
-          <q-btn
-            :disable="!!downloadUrl || !isValidForm || !!selectedModel.name"
-            :loading="loading"
-            unelevated
-            type="submit"
-            color="primary"
-            label="Generate Project"
-            style="width: 170px"
-          >
+          <q-btn :disable="!isValidForm || !!selectedModel.name" :loading="loading" unelevated type="submit"
+            color="primary" label="Generate Project" style="width: 170px">
           </q-btn>
           <div v-if="hasError" class="text-negative">
             Something was wrong. We could not generate your {{ selectedEngine }} project.
           </div>
-          <q-btn
-            v-if="downloadUrl && !hasError"
-            unelevated
-            type="href"
-            :href="downloadUrl"
-            target="_blank"
-            color="positive"
-            label="Download now"
-            style="width: 170px"
-          >
+          <q-btn v-if="downloadUrl && !hasError" unelevated type="href" :href="downloadUrl" target="_blank"
+            color="positive" label="Download now" style="width: 170px">
           </q-btn>
         </div>
       </q-card>

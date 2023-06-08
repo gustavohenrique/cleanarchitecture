@@ -1,5 +1,6 @@
 package assets
 
+{{ if .HasHttpServer }}
 import (
 	"embed"
 	"io/fs"
@@ -42,3 +43,4 @@ func (w WebPage) Lookup(filename string) (string, error) {
 	})
 	return string(content), err
 }
+{{ end }}

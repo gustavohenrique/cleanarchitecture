@@ -1,5 +1,6 @@
 package assets
 
+{{ if .HasHttpServer }}
 import (
 	"embed"
 	"io/fs"
@@ -24,3 +25,4 @@ func (w StaticFile) GetFS() http.Handler {
 	httpFS := http.FS(files)
 	return http.FileServer(httpFS)
 }
+{{ end }}

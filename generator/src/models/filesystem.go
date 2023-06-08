@@ -91,8 +91,11 @@ func (d *Filesystem) GetSkipDirs(t *TemplateData) []string {
 		skip = append(skip, "_"+DGRAPH, DGRAPH, DGRAPH+".sh")
 	}
 
+	if !t.HasHttpServer && !t.HasGrpcServer {
+		skip = append(skip, "assets")
+	}
 	if !t.HasHttpServer {
-		skip = append(skip, HTTP+"server", "_"+HTTP, HTTP+"_", "static", "web")
+		skip = append(skip, HTTP+"server", "_"+HTTP, HTTP+"_", "web")
 	}
 	if !t.HasGrpcWebServer {
 		skip = append(skip, GRPCWEB+"server", "_"+GRPCWEB, GRPCWEB+"_", GRPCWEB+".sh")
